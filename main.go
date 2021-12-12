@@ -7,9 +7,13 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/Tackem-org/Global/indocker"
+	"github.com/Tackem-org/Global/global"
 	"github.com/Tackem-org/Global/logging"
+	"github.com/Tackem-org/Global/registerService"
+	pb "github.com/Tackem-org/Proto/pb/registration"
 	"github.com/Tackem-org/User/flags"
+	"github.com/Tackem-org/User/gprcServer"
+	"github.com/Tackem-org/User/web"
 	flag "github.com/spf13/pflag"
 )
 
@@ -17,34 +21,54 @@ func main() {
 	flag.Parse()
 	fmt.Println("Starting Tackem User System")
 
-	if !indocker.Check() {
+	if !global.InDockerCheck() {
 		return
 	}
 	logging.Setup(*flags.LogFile, *flags.Verbose)
 	logging.Info("Logger Started")
+	global.RegistrationData = registerService.NewRegister()
+	global.RegistrationData.Setup("user", "system", false, true, []*pb.NavItem{
+		{
+			LinkType: pb.LinkType_User,
+			Title:    "User",
+			Icon:     "user",
+			Path:     "user/",
+		},
+		{
+			LinkType: pb.LinkType_Admin,
+			Title:    "Users",
+			Icon:     "users",
+			Path:     "user/",
+		},
+	})
 
-	// wg := &sync.WaitGroup{}
-	// wg.Add(2)
-	// gprcServer.Run(wg)
-	// //ADD IN OTHER SUB SYSTEMS HERE WHEN CODED
-	// web.Run(wg)
-	// captureInterupt(wg)
+	logging.Info("Setup Registration Data")
+	wg := &sync.WaitGroup{}
 
-	// wg.Wait()
+	logging.Info("Setup Web System Data")
+	web.Setup()
+	gprcServer.Run(wg)
+
+	if !global.RegistrationData.Connect() {
+		shutdown(wg)
+	}
+	logging.Info("Registration Done")
+	captureInterupt(wg)
+	wg.Wait()
 }
 
 func shutdown(wg *sync.WaitGroup) {
-	// gprcServer.Shutdown(wg)
-	// logging.Info("Shutdown gRPC Server")
+	global.RegistrationData.Disconnect()
+	logging.Info("DeRegistration Done")
+	gprcServer.Shutdown(wg)
+	logging.Info("Shutdown gRPC Server")
 
-	// logging.Info("Shutdown Web Server")
-	// config.Shutdown()
-	// logging.Info("Closed Config")
 	logging.Info("Closing Logger")
 	logging.Shutdown()
 	fmt.Println("Shutdown Complete Exiting Cleanly")
 	os.Exit(0)
 }
+
 func captureInterupt(wg *sync.WaitGroup) {
 	termChan := make(chan os.Signal)
 	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT)
