@@ -26,8 +26,8 @@ func main() {
 	}
 	logging.Setup(*flags.LogFile, *flags.Verbose)
 	logging.Info("Logger Started")
-	global.RegistrationData = registerService.NewRegister()
-	global.RegistrationData.Setup("user", "system", false, true, []*pb.NavItem{
+	registerService.Data = registerService.NewRegister()
+	registerService.Data.Setup("user", "system", false, true, []*pb.NavItem{
 		{
 			LinkType: pb.LinkType_User,
 			Title:    "User",
@@ -49,7 +49,7 @@ func main() {
 	web.Setup()
 	gprcServer.Run(wg)
 
-	if !global.RegistrationData.Connect() {
+	if !registerService.Data.Connect() {
 		shutdown(wg)
 	}
 	logging.Info("Registration Done")
@@ -58,7 +58,7 @@ func main() {
 }
 
 func shutdown(wg *sync.WaitGroup) {
-	global.RegistrationData.Disconnect()
+	registerService.Data.Disconnect()
 	logging.Info("DeRegistration Done")
 	gprcServer.Shutdown(wg)
 	logging.Info("Shutdown gRPC Server")
