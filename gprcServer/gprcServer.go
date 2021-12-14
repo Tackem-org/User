@@ -5,7 +5,7 @@ import (
 	"net"
 	"sync"
 
-	"github.com/Tackem-org/Global/checkerserver"
+	"github.com/Tackem-org/Global/checkerServer"
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/registerService"
 	"github.com/Tackem-org/Global/remoteWebSystem"
@@ -46,5 +46,5 @@ func Shutdown(wg *sync.WaitGroup) {
 func registerSystems() {
 	//add services here
 	pbremoteweb.RegisterRemoteWebServer(server, remoteWebSystem.NewServer())
-	pbchecker.RegisterCheckerServer(server, checkerserver.NewCheckerServer())
+	pbchecker.RegisterCheckerServer(server, checkerServer.NewCheckerServer())
 }
