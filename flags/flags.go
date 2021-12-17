@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	DatabaseFile = flag.StringP("database", "d", "/database/User.db", "Database Location")
+	DatabaseFile = flag.StringP("database", "d", "/config/User.db", "Database Location")
 	LogFile      = flag.StringP("log", "l", "/logs/User.log", "Log Location")
 	Verbose      = flag.BoolP("verbose", "v", false, "Outputs the log to the screen")
 )

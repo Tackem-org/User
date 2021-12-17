@@ -11,6 +11,8 @@ import (
 	"github.com/Tackem-org/Global/remoteWebSystem"
 	pbchecker "github.com/Tackem-org/Proto/pb/checker"
 	pbremoteweb "github.com/Tackem-org/Proto/pb/remoteweb"
+	pbuser "github.com/Tackem-org/Proto/pb/user"
+	"github.com/Tackem-org/User/userServer"
 	"google.golang.org/grpc"
 )
 
@@ -18,7 +20,7 @@ var (
 	server *grpc.Server
 )
 
-func Run(wg *sync.WaitGroup) {
+func Setup(wg *sync.WaitGroup) {
 	server = grpc.NewServer()
 	registerSystems()
 
@@ -44,7 +46,9 @@ func Shutdown(wg *sync.WaitGroup) {
 }
 
 func registerSystems() {
-	//add services here
 	pbremoteweb.RegisterRemoteWebServer(server, remoteWebSystem.NewServer())
-	pbchecker.RegisterCheckerServer(server, checkerServer.NewCheckerServer())
+	pbchecker.RegisterCheckerServer(server, checkerServer.NewServer())
+
+	//add services here
+	pbuser.RegisterUserServer(server, userServer.NewUserServer())
 }

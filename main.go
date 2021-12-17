@@ -7,12 +7,13 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/Tackem-org/Global/global"
+	"github.com/Tackem-org/Global/helpers"
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/registerService"
 	pb "github.com/Tackem-org/Proto/pb/registration"
 	"github.com/Tackem-org/User/flags"
 	"github.com/Tackem-org/User/gprcServer"
+	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/web"
 	flag "github.com/spf13/pflag"
 )
@@ -21,11 +22,12 @@ func main() {
 	flag.Parse()
 	fmt.Println("Starting Tackem User System")
 
-	if !global.InDockerCheck() {
+	if !helpers.InDockerCheck() {
 		return
 	}
 	logging.Setup(*flags.LogFile, *flags.Verbose)
 	logging.Info("Logger Started")
+
 	registerService.Data = registerService.NewRegister()
 	registerService.Data.Setup("user", "system", false, true, []*pb.NavItem{
 		{
@@ -45,28 +47,41 @@ func main() {
 	logging.Info("Setup Registration Data")
 	wg := &sync.WaitGroup{}
 
-	logging.Info("Setup Web System Data")
+	logging.Info("Setup Database")
+	model.Setup()
+
+	logging.Info("Setup Web Service")
 	web.Setup()
-	gprcServer.Run(wg)
+
+	logging.Info("Setup GPRC Service")
+	gprcServer.Setup(wg)
 
 	if !registerService.Data.Connect() {
-		shutdown(wg)
+		shutdown(wg, false)
 	}
 	logging.Info("Registration Done")
 	captureInterupt(wg)
 	wg.Wait()
+	fmt.Println("Shutdown Complete Exiting Cleanly")
+	os.Exit(0)
 }
 
-func shutdown(wg *sync.WaitGroup) {
-	registerService.Data.Disconnect()
-	logging.Info("DeRegistration Done")
+func shutdown(wg *sync.WaitGroup, registered bool) {
+
+	if registered {
+		registerService.Data.Disconnect()
+		logging.Info("DeRegistration Done")
+	}
+
 	gprcServer.Shutdown(wg)
 	logging.Info("Shutdown gRPC Server")
 
+	web.Shutdown(wg)
+	logging.Info("Shutdown Web Server")
+
 	logging.Info("Closing Logger")
 	logging.Shutdown()
-	fmt.Println("Shutdown Complete Exiting Cleanly")
-	os.Exit(0)
+
 }
 
 func captureInterupt(wg *sync.WaitGroup) {
@@ -75,7 +90,7 @@ func captureInterupt(wg *sync.WaitGroup) {
 
 	go func(wg *sync.WaitGroup) {
 		<-termChan
-		logging.Warning("SIGTERM received. Shutdown process initiated\n")
-		shutdown(wg)
+		logging.Warning("SIGTERM received. Shutdown process initiated")
+		shutdown(wg, true)
 	}(wg)
 }
