@@ -17,7 +17,6 @@ type User struct {
 
 func (u *User) AfterFind(tx *gorm.DB) (err error) {
 	if u.Password != "" {
-		// tx.Statement.SetColumn("password", "")
 		u.Password = ""
 	}
 	return

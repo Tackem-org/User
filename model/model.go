@@ -6,7 +6,6 @@ import (
 
 	"github.com/Tackem-org/Global/helpers"
 	"github.com/Tackem-org/Global/logging"
-	"github.com/Tackem-org/User/flags"
 	"github.com/Tackem-org/User/password"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -17,10 +16,24 @@ var (
 	DB *gorm.DB
 )
 
-func Setup() {
+func Setup(dbFile string) {
 
 	password.SetupSalt()
-	setupDB()
+	var err error
+	DB, err = gorm.Open(sqlite.Open(dbFile), &gorm.Config{
+		Logger: logger.New(
+			logging.CustomLogger("GORM"),
+			logger.Config{
+				SlowThreshold:             time.Second,
+				LogLevel:                  logger.Warn,
+				IgnoreRecordNotFoundError: true,
+				Colorful:                  false,
+			},
+		),
+	})
+	if err != nil {
+		panic("failed to Open database")
+	}
 
 	DB.AutoMigrate(&User{})
 	DB.AutoMigrate(&Group{})
@@ -44,23 +57,5 @@ func Setup() {
 			Permissions: []*Permission{},
 		})
 
-	}
-}
-
-func setupDB() {
-	var err error
-	DB, err = gorm.Open(sqlite.Open(*flags.DatabaseFile), &gorm.Config{
-		Logger: logger.New(
-			logging.CustomLogger("GORM"),
-			logger.Config{
-				SlowThreshold:             time.Second,
-				LogLevel:                  logger.Warn,
-				IgnoreRecordNotFoundError: true,
-				Colorful:                  false,
-			},
-		),
-	})
-	if err != nil {
-		panic("failed to Open database")
 	}
 }

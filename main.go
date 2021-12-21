@@ -1,96 +1,67 @@
 package main
 
 import (
-	"fmt"
-	"os"
-	"os/signal"
-	"sync"
-	"syscall"
-
-	"github.com/Tackem-org/Global/helpers"
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/registerService"
+	"github.com/Tackem-org/Global/remoteWebSystem"
+	"github.com/Tackem-org/Global/runner"
+	"github.com/Tackem-org/Global/system"
 	pb "github.com/Tackem-org/Proto/pb/registration"
-	"github.com/Tackem-org/User/flags"
-	"github.com/Tackem-org/User/gprcServer"
+	pbuser "github.com/Tackem-org/Proto/pb/user"
 	"github.com/Tackem-org/User/model"
+	"github.com/Tackem-org/User/static"
+	"github.com/Tackem-org/User/userServer"
 	"github.com/Tackem-org/User/web"
-	flag "github.com/spf13/pflag"
+	"github.com/spf13/pflag"
+	"google.golang.org/grpc"
+)
+
+var (
+	databaseFile = pflag.StringP("database", "d", "/config/User.db", "Database Location")
+	logFile      = pflag.StringP("log", "l", "/logs/User.log", "Log Location")
+	verbose      = pflag.BoolP("verbose", "v", false, "Outputs the log to the screen")
 )
 
 func main() {
-	flag.Parse()
-	fmt.Println("Starting Tackem User System")
-
-	if !helpers.InDockerCheck() {
-		return
-	}
-	logging.Setup(*flags.LogFile, *flags.Verbose)
-	logging.Info("Logger Started")
-
-	registerService.Data = registerService.NewRegister()
-	registerService.Data.Setup("user", "system", false, true, []*pb.NavItem{
-		{
-			LinkType: pb.LinkType_User,
-			Title:    "User",
-			Icon:     "user",
-			Path:     "user/",
+	pflag.Parse()
+	runner.Run(system.SetupData{
+		BaseData: registerService.BaseData{
+			ServiceName: "user",
+			ServiceType: "system",
+			Multi:       false,
+			WebAccess:   true,
+			NavItems: []*pb.NavItem{
+				{
+					LinkType: pb.LinkType_User,
+					Title:    "User",
+					Icon:     "user",
+					Path:     "user/",
+				},
+				{
+					LinkType: pb.LinkType_Admin,
+					Title:    "Users",
+					Icon:     "users",
+					Path:     "user/",
+				},
+			},
 		},
-		{
-			LinkType: pb.LinkType_Admin,
-			Title:    "Users",
-			Icon:     "users",
-			Path:     "user/",
+		LogFile:    *logFile,
+		VerboseLog: *verbose,
+		GPRCSystems: func(server *grpc.Server) {
+			pbuser.RegisterUserServer(server, userServer.NewUserServer())
 		},
+		WebSystems: func() {
+			remoteWebSystem.Setup(&static.FS)
+			remoteWebSystem.AddPath("/", web.RootPage)
+			remoteWebSystem.AddAdminPath("/", web.AdminRootPage)
+			remoteWebSystem.AddPath("{{number:userid}}", web.UserIDPage)
+			remoteWebSystem.AddPath("{{string:username}}", web.UserNamePage)
+		},
+		MainSystem: program,
 	})
+}
 
-	logging.Info("Setup Registration Data")
-	wg := &sync.WaitGroup{}
-
+func program() {
 	logging.Info("Setup Database")
-	model.Setup()
-
-	logging.Info("Setup Web Service")
-	web.Setup()
-
-	logging.Info("Setup GPRC Service")
-	gprcServer.Setup(wg)
-
-	if !registerService.Data.Connect() {
-		shutdown(wg, false)
-	}
-	logging.Info("Registration Done")
-	captureInterupt(wg)
-	wg.Wait()
-	fmt.Println("Shutdown Complete Exiting Cleanly")
-	os.Exit(0)
-}
-
-func shutdown(wg *sync.WaitGroup, registered bool) {
-
-	if registered {
-		registerService.Data.Disconnect()
-		logging.Info("DeRegistration Done")
-	}
-
-	gprcServer.Shutdown(wg)
-	logging.Info("Shutdown gRPC Server")
-
-	web.Shutdown(wg)
-	logging.Info("Shutdown Web Server")
-
-	logging.Info("Closing Logger")
-	logging.Shutdown()
-
-}
-
-func captureInterupt(wg *sync.WaitGroup) {
-	termChan := make(chan os.Signal)
-	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT)
-
-	go func(wg *sync.WaitGroup) {
-		<-termChan
-		logging.Warning("SIGTERM received. Shutdown process initiated")
-		shutdown(wg, true)
-	}(wg)
+	model.Setup(*databaseFile)
 }
