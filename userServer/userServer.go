@@ -46,51 +46,51 @@ func (u *UserServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginR
 	}, nil
 }
 
-func (u *UserServer) Logout(ctx context.Context, in *pb.TokenRequest) (*pb.SuccessResponse, error) {
+func (u *UserServer) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.LogoutResponse, error) {
 	for index, s := range sessions {
 		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
 			sessions = append(sessions[:index], sessions[index+1:]...)
-			return &pb.SuccessResponse{
+			return &pb.LogoutResponse{
 				Success: true,
 			}, nil
 		}
 	}
-	return &pb.SuccessResponse{
+	return &pb.LogoutResponse{
 		Success:      false,
 		ErrorMessage: "Session Not Found",
 	}, nil
 }
 
-func (u *UserServer) Check(ctx context.Context, in *pb.TokenRequest) (*pb.SuccessResponse, error) {
+func (u *UserServer) Check(ctx context.Context, in *pb.CheckRequest) (*pb.CheckResponse, error) {
 	for _, s := range sessions {
 		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
-			return &pb.SuccessResponse{
+			return &pb.CheckResponse{
 				Success: true,
 			}, nil
 		}
 	}
-	return &pb.SuccessResponse{
+	return &pb.CheckResponse{
 		Success:      false,
 		ErrorMessage: "Session Not Found",
 	}, nil
 }
 
-func (u *UserServer) GetUserID(ctx context.Context, in *pb.TokenRequest) (*pb.UserIDResponse, error) {
+func (u *UserServer) GetUserID(ctx context.Context, in *pb.GetUserIDRequest) (*pb.GetUserIDResponse, error) {
 	for _, s := range sessions {
 		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
-			return &pb.UserIDResponse{
+			return &pb.GetUserIDResponse{
 				Success: true,
 				UserId:  s.UserID,
 			}, nil
 		}
 	}
-	return &pb.UserIDResponse{
+	return &pb.GetUserIDResponse{
 		Success:      false,
 		ErrorMessage: "Session Not Found",
 	}, nil
 }
 
-func (u *UserServer) IsAdmin(ctx context.Context, in *pb.TokenRequest) (*pb.IsAdminResponse, error) {
+func (u *UserServer) IsAdmin(ctx context.Context, in *pb.IsAdminRequest) (*pb.IsAdminResponse, error) {
 	for _, s := range sessions {
 		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
 			var user model.User
