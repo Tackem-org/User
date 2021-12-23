@@ -2,9 +2,7 @@ package main
 
 import (
 	"github.com/Tackem-org/Global/logging"
-	"github.com/Tackem-org/Global/registerService"
-	"github.com/Tackem-org/Global/remoteWebSystem"
-	"github.com/Tackem-org/Global/runner"
+
 	"github.com/Tackem-org/Global/system"
 	pb "github.com/Tackem-org/Proto/pb/registration"
 	pbuser "github.com/Tackem-org/Proto/pb/user"
@@ -24,8 +22,8 @@ var (
 
 func main() {
 	pflag.Parse()
-	runner.Run(system.SetupData{
-		BaseData: registerService.BaseData{
+	system.Run(system.SetupData{
+		BaseData: system.BaseData{
 			ServiceName: "user",
 			ServiceType: "system",
 			Multi:       false,
@@ -51,11 +49,11 @@ func main() {
 			pbuser.RegisterUserServer(server, userServer.NewUserServer())
 		},
 		WebSystems: func() {
-			remoteWebSystem.Setup(&static.FS)
-			remoteWebSystem.AddPath("/", web.RootPage)
-			remoteWebSystem.AddAdminPath("/", web.AdminRootPage)
-			remoteWebSystem.AddPath("{{number:userid}}", web.UserIDPage)
-			remoteWebSystem.AddPath("{{string:username}}", web.UserNamePage)
+			system.WebSetup(&static.FS)
+			system.WebAddPath("/", web.RootPage)
+			system.WebAddAdminPath("/", web.AdminRootPage)
+			system.WebAddPath("{{number:userid}}", web.UserIDPage)
+			system.WebAddPath("{{string:username}}", web.UserNamePage)
 		},
 		MainSystem: program,
 	})

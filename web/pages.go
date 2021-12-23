@@ -1,11 +1,9 @@
 package web
 
-import (
-	"github.com/Tackem-org/Global/remoteWebSystem"
-)
+import "github.com/Tackem-org/Global/system"
 
-func RootPage(in *remoteWebSystem.WebRequest) (*remoteWebSystem.WebReturn, error) {
-	return &remoteWebSystem.WebReturn{
+func RootPage(in *system.WebRequest) (*system.WebReturn, error) {
+	return &system.WebReturn{
 		FilePath: "root",
 		PageData: map[string]interface{}{
 			"Test": "Testing Data Here",
@@ -13,9 +11,9 @@ func RootPage(in *remoteWebSystem.WebRequest) (*remoteWebSystem.WebReturn, error
 	}, nil
 }
 
-func UserNamePage(in *remoteWebSystem.WebRequest) (*remoteWebSystem.WebReturn, error) {
+func UserNamePage(in *system.WebRequest) (*system.WebReturn, error) {
 	if in.PathVariables["username"] == "Tom" {
-		return &remoteWebSystem.WebReturn{
+		return &system.WebReturn{
 			FilePath: "user",
 			PageData: map[string]interface{}{
 				"Test":   "Good User Name",
@@ -23,7 +21,7 @@ func UserNamePage(in *remoteWebSystem.WebRequest) (*remoteWebSystem.WebReturn, e
 			},
 		}, nil
 	}
-	return &remoteWebSystem.WebReturn{
+	return &system.WebReturn{
 		FilePath: "user",
 		PageData: map[string]interface{}{
 			"Test":   "Bad User Name",
@@ -32,9 +30,9 @@ func UserNamePage(in *remoteWebSystem.WebRequest) (*remoteWebSystem.WebReturn, e
 	}, nil
 }
 
-func UserIDPage(in *remoteWebSystem.WebRequest) (*remoteWebSystem.WebReturn, error) {
+func UserIDPage(in *system.WebRequest) (*system.WebReturn, error) {
 	if in.PathVariables["userid"] == "1" {
-		return &remoteWebSystem.WebReturn{
+		return &system.WebReturn{
 			FilePath: "user",
 			PageData: map[string]interface{}{
 				"Test":   "Good User ID",
@@ -42,7 +40,7 @@ func UserIDPage(in *remoteWebSystem.WebRequest) (*remoteWebSystem.WebReturn, err
 			},
 		}, nil
 	}
-	return &remoteWebSystem.WebReturn{
+	return &system.WebReturn{
 		FilePath: "user",
 		PageData: map[string]interface{}{
 			"Test":   "Bad user ID",
