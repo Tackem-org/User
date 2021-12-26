@@ -41,6 +41,12 @@ func main() {
 					Icon:     "users",
 					Path:     "user/",
 				},
+				{
+					LinkType: pb.LinkType_Main,
+					Title:    "Users",
+					Icon:     "users",
+					Path:     "user/",
+				},
 			},
 		},
 		LogFile:    *logFile,
