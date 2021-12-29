@@ -33,13 +33,13 @@ func main() {
 					LinkType: pb.LinkType_User,
 					Title:    "User",
 					Icon:     "user",
-					Path:     "user",
+					Path:     "user/",
 				},
 				{
 					LinkType: pb.LinkType_Admin,
 					Title:    "Users",
 					Icon:     "users",
-					Path:     "user",
+					Path:     "user/",
 				},
 			},
 		},
@@ -52,8 +52,8 @@ func main() {
 			system.WebSetup(&static.FS)
 			system.WebAddPath("/", web.RootPage)
 			system.WebAddAdminPath("/", web.AdminRootPage)
-			system.WebAddPath("{{number:userid}}", web.UserIDPage)
-			system.WebAddPath("{{string:username}}", web.UserNamePage)
+			system.WebAddPath("/{{number:userid}}", web.UserIDPage)
+			system.WebAddPath("/{{string:username}}", web.UserNamePage)
 		},
 		MainSystem: program,
 	})
