@@ -32,26 +32,22 @@ func SetupSalt() {
 		}
 		f.Close()
 	} else {
-		createSaltFile()
-	}
-}
-
-func createSaltFile() {
-	f, err := os.Create(saltFile)
-	if err != nil {
-		logging.Error("Error In Creating Salt File:" + err.Error())
-	}
-	_, err = rand.Read(salt)
-	if err != nil {
-		logging.Error("Error In Generating Salt Bytes:" + err.Error())
-	}
-	_, err = f.Write(salt)
-	if err != nil {
-		logging.Error("Error In Writing Salt File:" + err.Error())
-	}
-	err = f.Close()
-	if err != nil {
-		logging.Error("Error In Closing Salt File:" + err.Error())
+		f, err := os.Create(saltFile)
+		if err != nil {
+			logging.Error("Error In Creating Salt File:" + err.Error())
+		}
+		_, err = rand.Read(salt)
+		if err != nil {
+			logging.Error("Error In Generating Salt Bytes:" + err.Error())
+		}
+		_, err = f.Write(salt)
+		if err != nil {
+			logging.Error("Error In Writing Salt File:" + err.Error())
+		}
+		err = f.Close()
+		if err != nil {
+			logging.Error("Error In Closing Salt File:" + err.Error())
+		}
 	}
 }
 
