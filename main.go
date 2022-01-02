@@ -62,6 +62,7 @@ func main() {
 			system.WebSetup(&static.FS)
 			system.WebAddPath("/", web.RootPage)
 			system.WebAddAdminPath("/", web.AdminRootPage)
+			system.WebAddAdminPath("/{{number:userid}}", web.AdminUserIDPage)
 			system.WebAddPath("/{{number:userid}}", web.UserIDPage)
 			system.WebAddPath("/{{string:username}}", web.UserNamePage)
 		},

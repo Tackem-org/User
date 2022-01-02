@@ -18,7 +18,6 @@ func AdminRootPage(in *system.WebRequest) (*system.WebReturn, error) {
 	users := []arpud{}
 	rows, _ := model.DB.Find(&user).Rows()
 	for rows.Next() {
-		// ScanRows is a method of `gorm.DB`, it can be used to scan a row into a struct
 		model.DB.ScanRows(rows, &user)
 		users = append(users, arpud{
 			ID:       uint64(user.ID),
@@ -32,7 +31,17 @@ func AdminRootPage(in *system.WebRequest) (*system.WebReturn, error) {
 		FilePath: "admin/root",
 		PageData: map[string]interface{}{
 			"Users": users,
-			"Test":  "Testing Admin Data Here",
+		},
+	}, nil
+}
+
+func AdminUserIDPage(in *system.WebRequest) (*system.WebReturn, error) {
+	var user model.User
+	model.DB.First(&user, in.PathVariables["userid"])
+	return &system.WebReturn{
+		FilePath: "admin/user",
+		PageData: map[string]interface{}{
+			"User": user,
 		},
 	}, nil
 }

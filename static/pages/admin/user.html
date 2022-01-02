@@ -1,0 +1,41 @@
+{{define "content"}}
+<div>
+    <table>
+        <tbody>
+            <tr>
+                <th>ID</th>
+                <td>{{.Page.User.ID}}</td>
+            </tr>
+            <tr>
+                <th>Username</th>
+                <td>{{.Page.User.Username}}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{.Page.User.Password}}</td>
+            </tr>
+            <tr>
+                <th>Disabled</th>
+                <td>
+                    {{ if .Page.User.Disabled }}
+                    <i class="fa fa-check-circle"></i>
+                    {{else}}
+                    <i class="fa fa-times-circle"></i>
+                    {{end}}
+                </td>
+            </tr>
+            <tr>
+                <th>Admin</th>
+                <td>
+                    {{ if .Page.User.IsAdmin }}
+                    <i class="fa fa-check-circle"></i>
+                    {{else}}
+                    <i class="fa fa-times-circle"></i>
+                    {{end}}
+                </td>
+            </tr>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{{end}}

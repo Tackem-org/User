@@ -1,0 +1,58 @@
+{{define "content"}}
+<div>
+    <table>
+        <thead>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Disabled</th>
+            <th>Admin</th>
+            <th></th>
+        </thead>
+        <tbody>
+            {{range .Page.Users }}
+            {{if ne .ID 0. }}
+            <tr>
+                <td>{{.ID}}</td>
+                <td><input type="text" name="username" value="{{.Username}}"></td>
+                <td><input type="text" name="password" value="{{.Password}}"></td>
+                <td>
+                    <label class="switch">
+                        <input type="checkbox" name="disabled" {{if .Disabled}}checked{{end}}>
+                        <span class="slider"></span>
+                    </label>
+                </td>
+                <td>
+                    <label class="switch">
+                        <input type="checkbox" name="isadmin" {{if .IsAdmin}}checked{{end}}>
+                        <span class="slider"></span>
+                    </label>
+                </td>
+                <td>
+                    <input type="button" name="deleteUser" value="Delete">
+                </td>
+            </tr>
+            {{end}}
+            {{end}}
+            <tr>
+                <td></td>
+                <td><input type="text" name="username" value=""></td>
+                <td><input type="text" name="password" value=""></td>
+                <td>
+                    <label class="switch">
+                        <input type="checkbox" name="disabled">
+                        <span class="slider"></span>
+                    </label>
+                </td>
+                <td>
+                    <label class="switch">
+                        <input type="checkbox" name="isadmin">
+                        <span class="slider"></span>
+                    </label>
+                </td>
+                <td><input type="button" name="addUser" value="Add"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{{end}}
