@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	sessions []session
+	Sessions []session
 )
 
 type UserServer struct {
@@ -47,9 +47,9 @@ func (u *UserServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginR
 }
 
 func (u *UserServer) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.LogoutResponse, error) {
-	for index, s := range sessions {
+	for index, s := range Sessions {
 		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
-			sessions = append(sessions[:index], sessions[index+1:]...)
+			Sessions = append(Sessions[:index], Sessions[index+1:]...)
 			return &pb.LogoutResponse{
 				Success: true,
 			}, nil
@@ -62,7 +62,7 @@ func (u *UserServer) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.Logo
 }
 
 func (u *UserServer) Check(ctx context.Context, in *pb.CheckRequest) (*pb.CheckResponse, error) {
-	for _, s := range sessions {
+	for _, s := range Sessions {
 		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
 			return &pb.CheckResponse{
 				Success: true,
@@ -76,7 +76,7 @@ func (u *UserServer) Check(ctx context.Context, in *pb.CheckRequest) (*pb.CheckR
 }
 
 func (u *UserServer) GetUserID(ctx context.Context, in *pb.GetUserIDRequest) (*pb.GetUserIDResponse, error) {
-	for _, s := range sessions {
+	for _, s := range Sessions {
 		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
 			return &pb.GetUserIDResponse{
 				Success: true,
@@ -91,7 +91,7 @@ func (u *UserServer) GetUserID(ctx context.Context, in *pb.GetUserIDRequest) (*p
 }
 
 func (u *UserServer) IsAdmin(ctx context.Context, in *pb.IsAdminRequest) (*pb.IsAdminResponse, error) {
-	for _, s := range sessions {
+	for _, s := range Sessions {
 		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
 			var user model.User
 			model.DB.First(&user, s.UserID)
@@ -114,6 +114,6 @@ func newSession(userID uint64, iPAddress string, expiryTime time.Duration) strin
 		IPAddress:    iPAddress,
 		ExpireTime:   time.Now().Add(expiryTime),
 	}
-	sessions = append(sessions, new)
+	Sessions = append(Sessions, new)
 	return new.SessionToken
 }

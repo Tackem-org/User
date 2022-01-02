@@ -1,0 +1,25 @@
+main#admin-user td {
+  height: 2rem;
+  line-height: 2rem;
+  font-size: 2rem;
+  vertical-align: middle;
+}
+
+main#admin-user td > input[type="text"] {
+  font-size: 2rem;
+  background-color: inherit;
+  border: none;
+  width: 100%;
+  height: 100%;
+  line-height: 2rem;
+  vertical-align: middle;
+}
+
+main#admin-user td > input[type="button"] {
+  font-size: 2rem;
+  width: 100%;
+  height: 100%;
+  line-height: 2rem;
+  vertical-align: middle;
+}
+/*# sourceMappingURL=user.css.map */
