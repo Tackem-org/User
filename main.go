@@ -35,23 +35,16 @@ func main() {
 		BaseData: system.BaseData{
 			ServiceName: "user",
 			ServiceType: "system",
-			Multi:       false,
-			SingleRun:   false,
-			WebAccess:   true,
-			NavItems: []*pb.NavItem{
-				{
-					LinkType: pb.LinkType_User,
-					Title:    "User",
-					Icon:     "user",
-					Path:     "/",
-				},
-				{
-					LinkType: pb.LinkType_Admin,
-					Title:    "Users",
-					Icon:     "users",
-					Path:     "/",
-				},
+			Version: system.Versionstruct{
+				Major:  0,
+				Minor:  1,
+				Hotfix: 0,
+				Suffix: "ALPHA",
 			},
+			Multi:     false,
+			SingleRun: false,
+			WebAccess: true,
+			NavItems:  []*pb.NavItem{{LinkType: pb.LinkType_User, Title: "User", Icon: "user", Path: "/"}, {LinkType: pb.LinkType_Admin, Title: "Users", Icon: "users", Path: "/"}},
 		},
 		LogFile:    *logFile,
 		VerboseLog: *verbose,
