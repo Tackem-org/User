@@ -12,6 +12,8 @@ require (
 	gorm.io/gorm v1.22.4
 )
 
+require github.com/xhit/go-str2duration/v2 v2.0.0 // indirect
+
 require (
 	github.com/golang/protobuf v1.5.0 // indirect
 	github.com/google/uuid v1.3.0
