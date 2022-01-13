@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/Tackem-org/Global/logging"
+	"github.com/Tackem-org/Global/logging/debug"
 
 	"github.com/Tackem-org/Global/system"
 	pb "github.com/Tackem-org/Proto/pb/registration"
@@ -48,7 +49,7 @@ func main() {
 		},
 		LogFile:    *logFile,
 		VerboseLog: *verbose,
-		DebugLevel: 0,
+		DebugLevel: debug.NONE,
 		GPRCSystems: func(server *grpc.Server) {
 			pbuser.RegisterUserServer(server, &userServer.UserServer{})
 		},
