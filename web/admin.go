@@ -1,6 +1,8 @@
 package web
 
 import (
+	"github.com/Tackem-org/Global/logging"
+	"github.com/Tackem-org/Global/logging/debug"
 	"github.com/Tackem-org/Global/system"
 	"github.com/Tackem-org/User/model"
 )
@@ -14,6 +16,7 @@ type arpud struct {
 }
 
 func AdminRootPage(in *system.WebRequest) (*system.WebReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.AdminRootPage(in *system.WebRequest) (*system.WebReturn, error)]")
 	user := model.User{}
 	users := []arpud{}
 	rows, _ := model.DB.Find(&user).Rows()
@@ -36,6 +39,7 @@ func AdminRootPage(in *system.WebRequest) (*system.WebReturn, error) {
 }
 
 func AdminUserIDPage(in *system.WebRequest) (*system.WebReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.AdminUserIDPage(in *system.WebRequest) (*system.WebReturn, error)]")
 	var user model.User
 	model.DB.First(&user, in.PathVariables["userid"])
 	return &system.WebReturn{

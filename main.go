@@ -48,8 +48,9 @@ func main() {
 		},
 		LogFile:    *logFile,
 		VerboseLog: *verbose,
+		DebugLevel: 0,
 		GPRCSystems: func(server *grpc.Server) {
-			pbuser.RegisterUserServer(server, userServer.NewUserServer())
+			pbuser.RegisterUserServer(server, &userServer.UserServer{})
 		},
 		WebSystems: func() {
 			system.WebSetup(&static.FS)

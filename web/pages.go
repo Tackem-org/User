@@ -1,8 +1,13 @@
 package web
 
-import "github.com/Tackem-org/Global/system"
+import (
+	"github.com/Tackem-org/Global/logging"
+	"github.com/Tackem-org/Global/logging/debug"
+	"github.com/Tackem-org/Global/system"
+)
 
 func RootPage(in *system.WebRequest) (*system.WebReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.RootPage(in *system.WebRequest) (*system.WebReturn, error)]")
 	return &system.WebReturn{
 		FilePath: "root",
 		PageData: map[string]interface{}{
@@ -12,6 +17,7 @@ func RootPage(in *system.WebRequest) (*system.WebReturn, error) {
 }
 
 func UserNamePage(in *system.WebRequest) (*system.WebReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.UserNamePage(in *system.WebRequest) (*system.WebReturn, error)]")
 	if in.PathVariables["username"] == "Tom" {
 		return &system.WebReturn{
 			FilePath: "user",
@@ -31,6 +37,7 @@ func UserNamePage(in *system.WebRequest) (*system.WebReturn, error) {
 }
 
 func UserIDPage(in *system.WebRequest) (*system.WebReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.UserIDPage(in *system.WebRequest) (*system.WebReturn, error)]")
 	if in.PathVariables["userid"] == "1" {
 		return &system.WebReturn{
 			FilePath: "user",

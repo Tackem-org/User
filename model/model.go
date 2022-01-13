@@ -6,6 +6,7 @@ import (
 
 	"github.com/Tackem-org/Global/helpers"
 	"github.com/Tackem-org/Global/logging"
+	"github.com/Tackem-org/Global/logging/debug"
 	"github.com/Tackem-org/User/password"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -17,7 +18,7 @@ var (
 )
 
 func Setup(dbFile string) {
-
+	logging.Debugf(debug.FUNCTIONCALLS, "CALLED:[model.Setup(dbFile string)] {dbFile=%s}", dbFile)
 	password.SetupSalt()
 	var err error
 	DB, err = gorm.Open(sqlite.Open(dbFile), &gorm.Config{

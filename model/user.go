@@ -1,6 +1,8 @@
 package model
 
 import (
+	"github.com/Tackem-org/Global/logging"
+	"github.com/Tackem-org/Global/logging/debug"
 	"gorm.io/gorm"
 )
 
@@ -16,6 +18,7 @@ type User struct {
 }
 
 func (u *User) AfterFind(tx *gorm.DB) (err error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[model.(u *User) AfterFind(tx *gorm.DB) (err error)]")
 	if u.Password != "" {
 		u.Password = ""
 	}
