@@ -45,9 +45,9 @@ func main() {
 			Multi:     false,
 			SingleRun: false,
 			WebAccess: true,
-			NavItems:  []*pb.NavItem{
+			NavItems: []*pb.NavItem{
 				{LinkType: pb.LinkType_User, Title: "User", Icon: "user", Path: "/"},
-				{LinkType: pb.LinkType_Admin, Title: "Users", Icon: "users", Path: "/"}
+				{LinkType: pb.LinkType_Admin, Title: "Users", Icon: "users", Path: "/"},
 			},
 		},
 		LogFile:    *logFile,
