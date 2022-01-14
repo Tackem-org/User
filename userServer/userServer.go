@@ -2,6 +2,7 @@ package userServer
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/Tackem-org/Global/helpers"
@@ -29,7 +30,7 @@ type session struct {
 }
 
 func (u *UserServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResponse, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[userServer.]")
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[userServer.(u *UserServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResponse, error)]")
 	var user model.User
 	result := model.DB.Where(&model.User{Username: in.Username, Password: password.Hash(in.Password)}).Find(&user)
 	if result.RowsAffected == 1 {
@@ -47,7 +48,7 @@ func (u *UserServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginR
 }
 
 func (u *UserServer) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.LogoutResponse, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[userServer.]")
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[userServer.(u *UserServer) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.LogoutResponse, error) {]")
 	for index, s := range Sessions {
 		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
 			Sessions = append(Sessions[:index], Sessions[index+1:]...)
@@ -63,7 +64,7 @@ func (u *UserServer) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.Logo
 }
 
 func (u *UserServer) Check(ctx context.Context, in *pb.CheckRequest) (*pb.CheckResponse, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[userServer.]")
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[userServer.(u *UserServer) Check(ctx context.Context, in *pb.CheckRequest) (*pb.CheckResponse, error)]")
 	for _, s := range Sessions {
 		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
 			return &pb.CheckResponse{
@@ -78,7 +79,7 @@ func (u *UserServer) Check(ctx context.Context, in *pb.CheckRequest) (*pb.CheckR
 }
 
 func (u *UserServer) GetUserID(ctx context.Context, in *pb.GetUserIDRequest) (*pb.GetUserIDResponse, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[userServer.]")
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[userServer.(u *UserServer) GetUserID(ctx context.Context, in *pb.GetUserIDRequest) (*pb.GetUserIDResponse, error)]")
 	for _, s := range Sessions {
 		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
 			return &pb.GetUserIDResponse{
@@ -93,8 +94,30 @@ func (u *UserServer) GetUserID(ctx context.Context, in *pb.GetUserIDRequest) (*p
 	}, nil
 }
 
+func (u *UserServer) GetWebBaseData(ctx context.Context, in *pb.GetWebBaseDataRequest) (*pb.GetWebBaseDataResponse, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[userServer.(u *UserServer) GetWebBaseData(context.Context, *GetWebBaseDataRequest) (*GetWebBaseDataResponse, error)]")
+	for _, s := range Sessions {
+		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
+			var user model.User
+			model.DB.First(&user, s.UserID)
+			return &pb.GetWebBaseDataResponse{
+				Success:         true,
+				Name:            user.Username,
+				Initial:         strings.ToUpper(string(user.Username[0])),
+				Icon:            user.Icon,
+				BackgroundColor: user.BackgroundColor,
+				IsAdmin:         user.IsAdmin,
+			}, nil
+		}
+	}
+	return &pb.GetWebBaseDataResponse{
+		Success:      false,
+		ErrorMessage: "Session Not Found",
+	}, nil
+
+}
 func (u *UserServer) IsAdmin(ctx context.Context, in *pb.IsAdminRequest) (*pb.IsAdminResponse, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[userServer.]")
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[userServer.(u *UserServer) IsAdmin(ctx context.Context, in *pb.IsAdminRequest) (*pb.IsAdminResponse, error)]")
 	for _, s := range Sessions {
 		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
 			var user model.User

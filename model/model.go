@@ -49,13 +49,13 @@ func Setup(dbFile string) {
 		f.Close()
 
 		DB.Create(&User{
-			Model:       gorm.Model{},
-			Username:    "admin",
-			Password:    password.Hash(newPassword),
-			Disabled:    false,
-			IsAdmin:     true,
-			Groups:      []*Group{},
-			Permissions: []*Permission{},
+			ID:              0,
+			Username:        "admin",
+			Password:        password.Hash(newPassword),
+			Disabled:        false,
+			IsAdmin:         true,
+			Icon:            "",
+			BackgroundColor: "#160686",
 		})
 
 	}
