@@ -13,8 +13,8 @@ import (
 	pb "github.com/Tackem-org/Proto/pb/registration"
 	pbuser "github.com/Tackem-org/Proto/pb/user"
 	"github.com/Tackem-org/User/model"
+	"github.com/Tackem-org/User/server"
 	"github.com/Tackem-org/User/static"
-	"github.com/Tackem-org/User/userServer"
 	"github.com/Tackem-org/User/web"
 	"github.com/spf13/pflag"
 	"google.golang.org/grpc"
@@ -53,8 +53,8 @@ func main() {
 		LogFile:    *logFile,
 		VerboseLog: *verbose,
 		DebugLevel: debug.NONE,
-		GPRCSystems: func(server *grpc.Server) {
-			pbuser.RegisterUserServer(server, &userServer.UserServer{})
+		GPRCSystems: func(grpcs *grpc.Server) {
+			pbuser.RegisterUserServer(grpcs, &server.UserServer{})
 		},
 		WebSystems: func() {
 			system.WebSetup(&static.FS)
@@ -79,10 +79,10 @@ func main() {
 
 func saveData() {
 
-	if len(userServer.Sessions) == 0 {
+	if len(server.Sessions) == 0 {
 		return
 	}
-	b, _ := json.Marshal(userServer.Sessions)
+	b, _ := json.Marshal(server.Sessions)
 	reader := bytes.NewReader(b)
 	file, _ := os.Create(tempSavePath)
 	defer file.Close()
@@ -92,6 +92,6 @@ func saveData() {
 func loadData() {
 	file, _ := os.Open(tempSavePath)
 	defer file.Close()
-	json.NewDecoder(file).Decode(&userServer.Sessions)
+	json.NewDecoder(file).Decode(&server.Sessions)
 	os.Remove(tempSavePath)
 }
