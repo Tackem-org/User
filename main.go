@@ -64,7 +64,7 @@ func main() {
 			system.WebAddPath("/{{number:userid}}", web.UserIDPage)
 			system.WebAddPath("/{{string:username}}", web.UserNamePage)
 		},
-		MainSystem: func() {
+		MainSetup: func() {
 			logging.Info("Setup Database")
 			model.Setup(*databaseFile)
 			if _, err := os.Stat(tempSavePath); !os.IsNotExist(err) {
