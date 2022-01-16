@@ -16,42 +16,30 @@ func RootPage(in *system.WebRequest) (*system.WebReturn, error) {
 	}, nil
 }
 
-func UserNamePage(in *system.WebRequest) (*system.WebReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.UserNamePage(in *system.WebRequest) (*system.WebReturn, error)]")
-	if in.PathVariables["username"] == "Tom" {
-		return &system.WebReturn{
-			FilePath: "user",
-			PageData: map[string]interface{}{
-				"Test":   "Good User Name",
-				"userid": in.PathVariables["username"],
-			},
-		}, nil
-	}
+func EditPage(in *system.WebRequest) (*system.WebReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.EditPage(in *system.WebRequest) (*system.WebReturn, error)]")
 	return &system.WebReturn{
-		FilePath: "user",
-		PageData: map[string]interface{}{
-			"Test":   "Bad User Name",
-			"userid": in.PathVariables["username"],
-		},
+		FilePath: "edit",
+		PageData: map[string]interface{}{},
 	}, nil
 }
 
 func UserIDPage(in *system.WebRequest) (*system.WebReturn, error) {
 	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.UserIDPage(in *system.WebRequest) (*system.WebReturn, error)]")
-	if in.PathVariables["userid"] == "1" {
-		return &system.WebReturn{
-			FilePath: "user",
-			PageData: map[string]interface{}{
-				"Test":   "Good User ID",
-				"userid": in.PathVariables["userid"],
-			},
-		}, nil
-	}
 	return &system.WebReturn{
-		FilePath: "user",
+		FilePath: "view/userid",
 		PageData: map[string]interface{}{
-			"Test":   "Bad user ID",
-			"userid": in.PathVariables["userid"],
+			"UserID": in.PathVariables["userid"],
+		},
+	}, nil
+}
+
+func UserNamePage(in *system.WebRequest) (*system.WebReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.UserNamePage(in *system.WebRequest) (*system.WebReturn, error)]")
+	return &system.WebReturn{
+		FilePath: "view/username",
+		PageData: map[string]interface{}{
+			"UserName": in.PathVariables["username"],
 		},
 	}, nil
 }

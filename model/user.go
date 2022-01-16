@@ -15,8 +15,8 @@ type User struct {
 	IsAdmin         bool          `gorm:"not null;default:false"`
 	Groups          []*Group      `gorm:"many2many:groups;"`
 	Permissions     []*Permission `gorm:"many2many:permissions;"`
-	Icon            string
-	BackgroundColor string `gorm:"not null"`
+	Icon            string        `gorm:"default:'';"`
+	BackgroundColor string        `gorm:"not null"`
 }
 
 func (u *User) AfterFind(tx *gorm.DB) (err error) {

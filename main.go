@@ -36,11 +36,10 @@ func main() {
 		BaseData: system.BaseData{
 			ServiceName: "user",
 			ServiceType: "system",
-			Version: system.Versionstruct{
+			Version: structs.Version{
 				Major:  0,
-				Minor:  1,
+				Minor:  0,
 				Hotfix: 0,
-				Suffix: "ALPHA",
 			},
 			Multi:     false,
 			SingleRun: false,
@@ -58,11 +57,12 @@ func main() {
 		},
 		WebSystems: func() {
 			system.WebSetup(&static.FS)
-			system.WebAddPath("/", web.RootPage)
 			system.WebAddAdminPath("/", web.AdminRootPage)
 			system.WebAddAdminPath("/{{number:userid}}", web.AdminUserIDPage)
-			system.WebAddPath("/{{number:userid}}", web.UserIDPage)
-			system.WebAddPath("/{{string:username}}", web.UserNamePage)
+			system.WebAddPath("/", web.RootPage)
+			system.WebAddPath("/edit", web.EditPage)
+			system.WebAddPath("/view/{{number:userid}}", web.UserIDPage)
+			system.WebAddPath("/view/{{string:username}}", web.UserNamePage)
 		},
 		MainSetup: func() {
 			logging.Info("Setup Database")
