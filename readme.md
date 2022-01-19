@@ -1,5 +1,5 @@
 # Tackem User
-User System For Tackem System
+User Service For Tackem System
 
 ## Folders to Mount
 - /config
@@ -16,7 +16,7 @@ User System For Tackem System
     - <https://www.w3schools.com/jsref/met_win_btoa.asp>
 
 - Edit User (as Admin)
-- Include a group system that pages can register new groups
+- Include a group service that pages can register new groups
 - Groups and individual users should be able to inheret permissions for "actions"/pages (and eventually API too.) API will be a copy of the Remote Web system but will be more spaced around only serving json data and will need to take methods into account more.
 
 ## Using

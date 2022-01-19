@@ -8,6 +8,7 @@ import (
 
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/logging/debug"
+	"github.com/Tackem-org/Global/structs"
 
 	"github.com/Tackem-org/Global/system"
 	pb "github.com/Tackem-org/Proto/pb/registration"
