@@ -47,7 +47,11 @@ func main() {
 			WebAccess: true,
 			NavItems: []*pb.NavItem{
 				{LinkType: pb.LinkType_User, Title: "User", Icon: "user", Path: "/"},
-				{LinkType: pb.LinkType_Admin, Title: "Users", Icon: "users", Path: "/"},
+				{LinkType: pb.LinkType_Admin, Title: "Users", Icon: "users", Path: "/", SubLinks: []*pb.NavItem{
+					{LinkType: pb.LinkType_Admin, Title: "Groups", Icon: "user-shield", Path: "/groups"},
+					{LinkType: pb.LinkType_Admin, Title: "Permissions", Icon: "key", Path: "/permissions"},
+				},
+				},
 			},
 		},
 		LogFile:    *logFile,
@@ -59,7 +63,9 @@ func main() {
 		WebSystems: func() {
 			system.WebSetup(&static.FS)
 			system.WebAddAdminPath("/", web.AdminRootPage)
-			system.WebAddAdminPath("/{{number:userid}}", web.AdminUserIDPage)
+			system.WebAddAdminPath("/edit/{{number:userid}}", web.AdminUserIDPage)
+			system.WebAddAdminPath("/groups", web.AdminGroupsPage)
+			system.WebAddAdminPath("/permissions", web.AdminPermissionsPage)
 			system.WebAddPath("/", web.RootPage)
 			system.WebAddPath("/edit", web.EditPage)
 			system.WebAddPath("/view/{{number:userid}}", web.UserIDPage)

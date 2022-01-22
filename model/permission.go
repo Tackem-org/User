@@ -1,12 +1,17 @@
 package model
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 )
 
 type Permission struct {
-	gorm.Model
-	Name   string
-	Users  []*User  `gorm:"many2many:users_permissions;"`
-	Groups []*Group `gorm:"many2many:groups_permissions;"`
+	ID        uint64 `gorm:"primaryKey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Name      string
+	Users     []*User  `gorm:"many2many:user_permissions;"`
+	Groups    []*Group `gorm:"many2many:group_permissions;"`
 }

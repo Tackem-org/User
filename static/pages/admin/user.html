@@ -8,30 +8,32 @@
             </tr>
             <tr>
                 <th>Username</th>
-                <td>{{.Page.User.Username}}</td>
+                <td><input type="text" name="username" value="{{.Page.User.Username}}"></td>
             </tr>
             <tr>
                 <th>Password</th>
-                <td>{{.Page.User.Password}}</td>
+                <td><input type="text" name="password" value="{{.Page.User.Password}}"></td>
             </tr>
             <tr>
                 <th>Disabled</th>
                 <td>
-                    {{ if .Page.User.Disabled }}
-                    <i class="fa fa-check-circle"></i>
-                    {{else}}
-                    <i class="fa fa-times-circle"></i>
-                    {{end}}
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="disabled" {{if .Page.User.Disabled}}checked{{end}}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
                 </td>
             </tr>
             <tr>
                 <th>Admin</th>
                 <td>
-                    {{ if .Page.User.IsAdmin }}
-                    <i class="fa fa-check-circle"></i>
-                    {{else}}
-                    <i class="fa fa-times-circle"></i>
-                    {{end}}
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="isadmin" {{if .Page.User.IsAdmin}}checked{{end}}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
                 </td>
             </tr>
             </tr>

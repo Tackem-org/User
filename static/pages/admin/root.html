@@ -2,14 +2,16 @@
 <div>
     <table>
         <thead>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Disabled</th>
-            <th>Admin</th>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Disabled</th>
+                <th>Admin</th>
+            </tr>
         </thead>
         <tbody>
             {{range .Page.Users }}
-            <tr href="{{$.Baseurl}}admin/user/{{.ID}}">
+            <tr href="{{$.Baseurl}}admin/user/edit/{{.ID}}">
                 <td>{{.ID}}</td>
                 <td>{{.Username}}</td>
                 <td>

@@ -36,9 +36,9 @@ func Setup(dbFile string) {
 		panic("failed to Open database")
 	}
 
-	DB.AutoMigrate(&User{})
-	DB.AutoMigrate(&Group{})
-	DB.AutoMigrate(&Permission{})
+	if err := DB.AutoMigrate(&Permission{}, &Group{}, &User{}); err != nil {
+		logging.Fatal("unable autoMigrateDB - " + err.Error())
+	}
 
 	var count int64
 	DB.Model(&User{}).Count(&count)
@@ -58,5 +58,24 @@ func Setup(dbFile string) {
 			BackgroundColor: "#160686",
 		})
 
+	}
+	DB.Model(&Permission{}).Count(&count)
+	if count == 0 {
+		p := []Permission{
+			{Name: "view_own_user_profile"},
+			{Name: "view_other_user_profile"},
+			{Name: "edit_own_user_profile"},
+			{Name: "edit_other_user_profile"},
+		}
+		DB.Create(&p)
+	}
+	DB.Model(&Group{}).Count(&count)
+	if count == 0 {
+		p := []Group{
+			{Name: "user"},
+			{Name: "super_user"},
+			{Name: "power_user"},
+		}
+		DB.Create(&p)
 	}
 }

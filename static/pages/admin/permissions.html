@@ -1,0 +1,24 @@
+{{define "content"}}
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Groups</th>
+                <th>Users</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .Page.permissions }}
+            <tr>
+                <td>{{.ID}}</td>
+                <td>{{.Name}}</td>
+                <td>{{.GroupsCount}}</td>
+                <td>{{.UserCount}}</td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+</div>
+{{end}}

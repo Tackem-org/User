@@ -22,4 +22,8 @@
   line-height: 2rem;
   vertical-align: middle;
 }
+
+#admin-user-groups table th:last-of-type {
+  background-color: inherit;
+}
 /*# sourceMappingURL=user.css.map */

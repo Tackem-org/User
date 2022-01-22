@@ -1,0 +1,40 @@
+{{define "content"}}
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th class="rotate45">
+                    <div><span>User Count</span></div>
+                </th>
+                {{range .Page.Permissions }}
+                <th class="rotate45">
+                    <div><span>{{.Title}}</span></div>
+                </th>
+                {{end}}
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .Page.Groups }}
+            <tr>
+                <td>{{.ID}}</td>
+                <td>{{.Name}}</td>
+                <td>{{.UserCount}}</td>
+                {{$Name := .Name}}
+                {{range .Permissions }}
+                <td>
+                    <input type="checkbox" data-group="{{$Name}}" data-Permission="{{.Name}}" {{if
+                        .Active}}checked{{end}}>
+                </td>
+                {{end}}
+                <td>
+                    <input type="button" value="delete" data-group="{{.Name}}">
+                </td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+</div>
+{{end}}
