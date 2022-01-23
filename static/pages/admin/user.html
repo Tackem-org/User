@@ -1,10 +1,19 @@
 {{define "content"}}
 <div>
+    <h2>Details</h2>
     <table>
         <tbody>
             <tr>
                 <th>ID</th>
                 <td>{{.Page.User.ID}}</td>
+            </tr>
+            <tr>
+                <th>Created At</th>
+                <td>{{.Page.User.CreatedAt}}</td>
+            </tr>
+            <tr>
+                <th>Updated At</th>
+                <td>{{.Page.User.UpdatedAt}}</td>
             </tr>
             <tr>
                 <th>Username</th>
@@ -36,7 +45,62 @@
                     </div>
                 </td>
             </tr>
+
+            <tr>
+                <input type="button" value="delete">
             </tr>
+        </tbody>
+    </table>
+</div>
+<div>
+    <h2>Groups</h2>
+    <table>
+        <thead>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Active</th>
+        </thead>
+        <tbody>
+            {{range .Page.Groups}}
+            <tr>
+                <td>{{.ID}}</td>
+                <td>{{.Title}}</td>
+                <td>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" {{if .Active}}checked{{end}}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+</div>
+<div>
+    <h2>Permissions</h2>
+    <table>
+        <thead>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Active</th>
+        </thead>
+        <tbody>
+            {{range .Page.Permissions}}
+            <tr>
+                <td>{{.ID}}</td>
+                <td>{{.Title}}</td>
+                <td>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" {{if .Active}}checked{{end}}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </td>
+            </tr>
+            {{end}}
         </tbody>
     </table>
 </div>

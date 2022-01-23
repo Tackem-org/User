@@ -49,11 +49,18 @@ func Setup(dbFile string) {
 		f.Close()
 
 		DB.Create(&User{
-			ID:              0,
 			Username:        "admin",
 			Password:        password.Hash(newPassword),
 			Disabled:        false,
 			IsAdmin:         true,
+			Icon:            "",
+			BackgroundColor: "#160686",
+		})
+		DB.Create(&User{
+			Username:        "user",
+			Password:        password.Hash("user"),
+			Disabled:        false,
+			IsAdmin:         false,
 			Icon:            "",
 			BackgroundColor: "#160686",
 		})
@@ -62,10 +69,14 @@ func Setup(dbFile string) {
 	DB.Model(&Permission{}).Count(&count)
 	if count == 0 {
 		p := []Permission{
-			{Name: "view_own_user_profile"},
-			{Name: "view_other_user_profile"},
-			{Name: "edit_own_user_profile"},
-			{Name: "edit_other_user_profile"},
+			{Name: "system_user_view_own_user_profile"},
+			{Name: "system_user_view_other_user_profile"},
+			{Name: "system_user_edit_own_user_profile"},
+			{Name: "system_user_edit_other_user_profile"},
+
+			{Name: "system_user_edit_group_permissions"},
+			{Name: "system_user_add_group"},
+			{Name: "system_user_delete_group"},
 		}
 		DB.Create(&p)
 	}

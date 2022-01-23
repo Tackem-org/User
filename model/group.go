@@ -11,7 +11,7 @@ type Group struct {
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
-	Name        string
-	Users       []*User      `gorm:"many2many:user_groups;"`
-	Permissions []Permission `gorm:"many2many:group_permissions;"`
+	Name        string         `gorm:"unique;not null"`
+	Users       []*User        `gorm:"many2many:user_groups;"`
+	Permissions []Permission   `gorm:"many2many:group_permissions;"`
 }

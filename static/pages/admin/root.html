@@ -7,10 +7,20 @@
                 <th>Username</th>
                 <th>Disabled</th>
                 <th>Admin</th>
+                <th>Groups (Count)</th>
+                <th>Permissions (Count)</th>
             </tr>
         </thead>
         <tbody>
             {{range .Page.Users }}
+            {{$view := true}}
+            {{if .IsAdmin}}
+            {{if not .User.IsAdmin }}
+            {{$view := false}}
+            {{end}}
+            {{end}}
+
+            {{if $view}}
             <tr href="{{$.Baseurl}}admin/user/edit/{{.ID}}">
                 <td>{{.ID}}</td>
                 <td>{{.Username}}</td>
@@ -28,7 +38,18 @@
                     <i class="fa fa-times-circle"></i>
                     {{end}}
                 </td>
+                <td>
+                    {{ if not .IsAdmin }}
+                    {{ .GroupsCount }}
+                    {{end}}
+                </td>
+                <td>
+                    {{ if not .IsAdmin }}
+                    {{ .PermissionsCount }}
+                    {{end}}
+                </td>
             </tr>
+            {{end}}
             {{end}}
         </tbody>
     </table>

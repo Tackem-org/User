@@ -89,13 +89,18 @@
         }
 
         MessageListener(e) {
-            var data = (JSON.parse(e.data))['data'];
+            let edata = JSON.parse(e.data);
+            console.log(edata);
+            let data = edata['data'];
             switch (data['command']) {
                 case 'setgroup':
                     break;
                 case 'addgroup':
+                    if (edata['status'] != 200) {
+                        alert(edata['error_message']);
+                        break;
+                    }
                     $('input[type="text"').val("");
-
                     let $template = $($('template').html());
                     $template.prop('id', `group${data['groupid']}`)
                     $template.find('td:first-of-type').html(data['groupid'])
@@ -122,7 +127,9 @@
         var $tbody = $('table tbody');
 
         $tbody.find('tr').sort(function (a, b) {
-            return $(a).attr('id') > $(b).attr('id') ? 1 : $(a).attr('id') < $(b).attr('id') ? -1 : 0;
+            let aid = parseInt($(a).attr('id').replace("group", ""));
+            let bid = parseInt($(b).attr('id').replace("group", ""));
+            return aid > bid ? 1 : aid < bid ? -1 : 0;
         }).appendTo($tbody);
     }
 })();

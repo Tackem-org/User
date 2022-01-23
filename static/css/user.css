@@ -1,29 +1,66 @@
 #admin-user td {
-  height: 2rem;
-  line-height: 2rem;
-  font-size: 2rem;
+  height: 1.5rem;
   vertical-align: middle;
 }
 
+#admin-user td:nth-of-type(3), #admin-user td:nth-of-type(4) {
+  text-align: center;
+}
+
 #admin-user td > input[type="text"] {
-  font-size: 2rem;
   background-color: inherit;
   border: none;
   width: 100%;
   height: 100%;
-  line-height: 2rem;
   vertical-align: middle;
 }
 
 #admin-user td > input[type="button"] {
-  font-size: 2rem;
   width: 100%;
   height: 100%;
-  line-height: 2rem;
   vertical-align: middle;
+}
+
+#admin-user-edit > div {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 1rem;
 }
 
 #admin-user-groups table th:last-of-type {
   background-color: inherit;
+}
+
+#admin-user-groups table tr:last-of-type {
+  background-color: white;
+}
+
+#admin-user-groups table tr:last-of-type td:first-of-type {
+  padding: 0;
+}
+
+#admin-user-groups table input[type="text"], #admin-user-groups table input[type="button"] {
+  border: 0;
+  width: 100%;
+  margin: 0px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+#admin-user-groups table input[type="text"]::-webkit-input-placeholder, #admin-user-groups table input[type="button"]::-webkit-input-placeholder {
+  text-align: center;
+}
+
+#admin-user-groups table input[type="text"]:-ms-input-placeholder, #admin-user-groups table input[type="button"]:-ms-input-placeholder {
+  text-align: center;
+}
+
+#admin-user-groups table input[type="text"]::-ms-input-placeholder, #admin-user-groups table input[type="button"]::-ms-input-placeholder {
+  text-align: center;
+}
+
+#admin-user-groups table input[type="text"]::placeholder, #admin-user-groups table input[type="button"]::placeholder {
+  text-align: center;
 }
 /*# sourceMappingURL=user.css.map */

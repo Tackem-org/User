@@ -6,7 +6,7 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th class="rotate45">
-                    <div><span>User Count</span></div>
+                    <div><span>User&nbsp;Count</span></div>
                 </th>
                 {{range .Page.Permissions }}
                 <th class="rotate45">
@@ -25,7 +25,19 @@
                 {{$ID := .ID}}
                 {{range .Permissions }}
                 <td>
-                    <input type="checkbox" data-group="{{$ID}}" data-permission="{{.ID}}" {{if .Active}}checked{{end}}>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" data-group="{{$ID}}" data-permission="{{.ID}}" {{if
+                                .Active}}checked{{end}}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    {{else}}
+                    {{ if .Active }}
+                    <i class="fa fa-check-circle"></i>
+                    {{else}}
+                    <i class="fa fa-times-circle"></i>
+                    {{end}}
                 </td>
                 {{end}}
                 <td>
@@ -34,15 +46,13 @@
             </tr>
             {{end}}
             <tr id="zgroup">
-
                 <td colspan="{{.Page.CreateLength}}">
-                    <input type="text">
+                    <input type="text" placeholder="Add Group">
                 </td>
                 <td>
                     <input type="button" value="add">
                 </td>
             </tr>
-
         </tbody>
     </table>
     <template>
@@ -52,7 +62,12 @@
             <td>0</td>
             {{range .Page.Permissions }}
             <td>
-                <input type="checkbox" data-group="" data-permission="{{.ID}}" {{if .Active}}checked{{end}}>
+                <div class="switch">
+                    <label>
+                        <input type="checkbox" data-group="" data-permission="{{.ID}}">
+                        <span class="slider"></span>
+                    </label>
+                </div>
             </td>
             {{end}}
             <td>
@@ -61,5 +76,4 @@
         </tr>
     </template>
 </div>
-<h1>TODO PRETTYFY THIS PAGE</h1>
 {{end}}

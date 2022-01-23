@@ -10,6 +10,7 @@ import (
 	pb "github.com/Tackem-org/Proto/pb/user"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/password"
+	"gorm.io/gorm/clause"
 )
 
 func (u *UserServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResponse, error) {
@@ -82,14 +83,16 @@ func (u *UserServer) GetWebBaseData(ctx context.Context, in *pb.GetWebBaseDataRe
 	for _, s := range Sessions {
 		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
 			var user model.User
-			model.DB.First(&user, s.UserID)
+			model.DB.Preload(clause.Associations).First(&user, s.UserID)
 			return &pb.GetWebBaseDataResponse{
 				Success:         true,
+				ErrorMessage:    "",
 				Name:            user.Username,
 				Initial:         strings.ToUpper(string(user.Username[0])),
 				Icon:            user.Icon,
 				BackgroundColor: user.BackgroundColor,
 				IsAdmin:         user.IsAdmin,
+				Permissions:     user.AllPermissionStrings(),
 			}, nil
 		}
 	}

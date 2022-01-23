@@ -30,3 +30,17 @@ func (u *User) AfterFind(tx *gorm.DB) (err error) {
 	}
 	return
 }
+
+func (u *User) AllPermissionStrings() []string {
+	var s []string
+	for _, p := range u.Permissions {
+		s = append(s, p.Name)
+	}
+	for _, g := range u.Groups {
+		for _, p := range g.Permissions {
+			s = append(s, p.Name)
+
+		}
+	}
+	return s
+}
