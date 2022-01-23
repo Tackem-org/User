@@ -18,23 +18,48 @@
         </thead>
         <tbody>
             {{range .Page.Groups }}
-            <tr>
+            <tr id="group{{.ID}}">
                 <td>{{.ID}}</td>
                 <td>{{.Name}}</td>
                 <td>{{.UserCount}}</td>
-                {{$Name := .Name}}
+                {{$ID := .ID}}
                 {{range .Permissions }}
                 <td>
-                    <input type="checkbox" data-group="{{$Name}}" data-Permission="{{.Name}}" {{if
-                        .Active}}checked{{end}}>
+                    <input type="checkbox" data-group="{{$ID}}" data-permission="{{.ID}}" {{if .Active}}checked{{end}}>
                 </td>
                 {{end}}
                 <td>
-                    <input type="button" value="delete" data-group="{{.Name}}">
+                    <input type="button" value="delete" data-group="{{.ID}}">
                 </td>
             </tr>
             {{end}}
+            <tr id="zgroup">
+
+                <td colspan="{{.Page.CreateLength}}">
+                    <input type="text">
+                </td>
+                <td>
+                    <input type="button" value="add">
+                </td>
+            </tr>
+
         </tbody>
     </table>
+    <template>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>0</td>
+            {{range .Page.Permissions }}
+            <td>
+                <input type="checkbox" data-group="" data-permission="{{.ID}}" {{if .Active}}checked{{end}}>
+            </td>
+            {{end}}
+            <td>
+                <input type="button" value="delete" data-group="">
+            </td>
+        </tr>
+    </template>
 </div>
+<h1>TODO PRETTYFY THIS PAGE</h1>
 {{end}}

@@ -1,4 +1,4 @@
-package web
+package admin
 
 import (
 	"strings"
@@ -87,8 +87,9 @@ func AdminGroupsPage(in *system.WebRequest) (*system.WebReturn, error) {
 	return &system.WebReturn{
 		FilePath: "admin/groups",
 		PageData: map[string]interface{}{
-			"Groups":      groupsList,
-			"Permissions": allPermissionsList,
+			"Groups":       groupsList,
+			"Permissions":  allPermissionsList,
+			"CreateLength": len(allPermissionsList) + 3,
 		},
 	}, nil
 }
@@ -139,4 +140,55 @@ func checkActivePermissions(findID uint64, gp []model.Permission) bool {
 		}
 	}
 	return false
+}
+
+func AdminGroupsWebSocket(in *system.WebSocketRequest) (*system.WebSocketReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.AdminGroupsWebSocket(in *system.WebSocketRequest) (*system.WebSocketReturn, error)]")
+
+	d := in.Data
+	switch d["command"] {
+	case "setgroup":
+		var g model.Group
+		var p model.Permission
+		model.DB.First(&g, d["groupid"])
+		model.DB.First(&p, d["permissionid"])
+		if d["checked"] == true {
+			model.DB.Model(&g).Association("Permissions").Append(&p)
+			model.DB.Save(&g)
+		} else {
+			model.DB.Model(&g).Association("Permissions").Delete(&p)
+			model.DB.Save(&g)
+		}
+		return &system.WebSocketReturn{
+			StatusCode:   200,
+			ErrorMessage: "",
+			Data:         d,
+		}, nil
+	case "addgroup":
+		g := model.Group{
+			Name: d["name"].(string),
+		}
+		model.DB.Create(&g)
+		d["groupid"] = g.ID
+		return &system.WebSocketReturn{
+			StatusCode:   200,
+			ErrorMessage: "",
+			Data:         d,
+		}, nil
+	case "deletegroup":
+		var g model.Group
+		model.DB.First(&g, d["groupid"])
+		model.DB.Delete(&g)
+		return &system.WebSocketReturn{
+			StatusCode:   200,
+			ErrorMessage: "",
+			Data:         d,
+		}, nil
+	default:
+		return &system.WebSocketReturn{
+			StatusCode:   200,
+			ErrorMessage: "command not found",
+			Data:         map[string]interface{}{},
+		}, nil
+	}
 }

@@ -17,6 +17,7 @@ import (
 	"github.com/Tackem-org/User/server"
 	"github.com/Tackem-org/User/static"
 	"github.com/Tackem-org/User/web"
+	"github.com/Tackem-org/User/web/admin"
 	"github.com/spf13/pflag"
 	"google.golang.org/grpc"
 )
@@ -62,10 +63,11 @@ func main() {
 		},
 		WebSystems: func() {
 			system.WebSetup(&static.FS)
-			system.WebAddAdminPath("/", web.AdminRootPage)
-			system.WebAddAdminPath("/edit/{{number:userid}}", web.AdminUserIDPage)
-			system.WebAddAdminPath("/groups", web.AdminGroupsPage)
-			system.WebAddAdminPath("/permissions", web.AdminPermissionsPage)
+			system.WebAddAdminPath("/", admin.AdminRootPage)
+			system.WebAddAdminPath("/edit/{{number:userid}}", admin.AdminUserIDPage)
+			system.WebAddAdminPath("/groups", admin.AdminGroupsPage)
+			system.WebAddAdminWebSocket("/groups.ws", admin.AdminGroupsWebSocket)
+			system.WebAddAdminPath("/permissions", admin.AdminPermissionsPage)
 			system.WebAddPath("/", web.RootPage)
 			system.WebAddPath("/edit", web.EditPage)
 			system.WebAddPath("/view/{{number:userid}}", web.UserIDPage)
