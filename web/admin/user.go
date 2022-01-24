@@ -62,3 +62,26 @@ func AdminUserIDPage(in *system.WebRequest) (*system.WebReturn, error) {
 		},
 	}, nil
 }
+
+func AdminEditUserWebSocket(in *system.WebSocketRequest) (*system.WebSocketReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.AdminEditUserWebSocket(in *system.WebSocketRequest) (*system.WebSocketReturn, error)]")
+
+	d := in.Data
+	// userID := d["userid"]
+	switch d["command"] {
+	// case "changeusername":
+	// case "updatepassword":
+	// case "changedisabled":
+	// case "changeisadmin":
+	// case "deleteuser":
+	// case "setgroup":
+	// case "setpermission":
+
+	default:
+		return &system.WebSocketReturn{
+			StatusCode:   200,
+			ErrorMessage: "command not found",
+			Data:         map[string]interface{}{},
+		}, nil
+	}
+}
