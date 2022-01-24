@@ -23,6 +23,7 @@
                 <th>Password</th>
                 <td><input type="text" name="password" value="{{.Page.User.Password}}"></td>
             </tr>
+            {{if .User.CheckID .Page.User.ID}}
             <tr>
                 <th>Disabled</th>
                 <td>
@@ -45,9 +46,11 @@
                     </div>
                 </td>
             </tr>
-
+            {{end}}
+            //todo continue adding extra fields from user model (Icon and background colour)
             <tr>
-                <input type="button" value="delete">
+                <th>Delete</th>
+                <td><input type="button" value="delete"></td>
             </tr>
         </tbody>
     </table>

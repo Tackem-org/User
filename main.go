@@ -67,6 +67,7 @@ func main() {
 			system.WebAddAdminPath("/edit/{{number:userid}}", admin.AdminUserIDPage)
 			system.WebAddAdminPath("/groups", admin.AdminGroupsPage)
 			system.WebAddAdminWebSocket("/groups.ws", admin.AdminGroupsWebSocket)
+			system.WebAddAdminWebSocket("/edituser.ws", admin.AdminEditUserWebSocket)
 			system.WebAddAdminPath("/permissions", admin.AdminPermissionsPage)
 			system.WebAddPath("/", web.RootPage)
 			system.WebAddPath("/edit", web.EditPage)

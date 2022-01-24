@@ -2,7 +2,7 @@
     let socket;
 
     $(() => {
-        let url = new URL(window.location.href)
+        let url = new URL(window.location.href);
         url.protocol = 'ws';
         url.pathname = url.pathname + '.ws';
         socket = new Socket(url.href);
@@ -10,12 +10,12 @@
     });
 
     function setupEvents() {
-        $("input").off("click");
+        $('input').off('click');
         $('input[type="checkbox"]').on('click', function () {
             socket.SaveGroupItem(
                 $(this).prop('checked'),
-                $(this).data("group"),
-                $(this).data("permission"),
+                $(this).data('group'),
+                $(this).data('permission'),
             )
         });
 
@@ -26,7 +26,7 @@
                 )
             } else if ($(this).val() == 'delete') {
                 let name = $(this).parent().parent().find('td:nth-of-type(2)').html();
-                if (confirm("Are you Sure you want to delete " + name)) {
+                if (confirm('Are you Sure you want to delete ' + name)) {
                     socket.DeleteGroupItem(
                         $(this).data("group"),
                     )
@@ -90,7 +90,6 @@
 
         MessageListener(e) {
             let edata = JSON.parse(e.data);
-            console.log(edata);
             let data = edata['data'];
             switch (data['command']) {
                 case 'setgroup':
@@ -115,7 +114,7 @@
                     sortTablebyID();
                     break;
                 default:
-                    console.log("ERROR COMMAND NOT KNOWN SKIPPING: ", e.data);
+                    console.log('ERROR COMMAND NOT KNOWN SKIPPING:', e.data);
                     break;
             }
 
@@ -127,8 +126,8 @@
         var $tbody = $('table tbody');
 
         $tbody.find('tr').sort(function (a, b) {
-            let aid = parseInt($(a).attr('id').replace("group", ""));
-            let bid = parseInt($(b).attr('id').replace("group", ""));
+            let aid = parseInt($(a).attr('id').replace('group', ''));
+            let bid = parseInt($(b).attr('id').replace('group', ''));
             return aid > bid ? 1 : aid < bid ? -1 : 0;
         }).appendTo($tbody);
     }

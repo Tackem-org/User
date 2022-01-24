@@ -87,6 +87,7 @@ func (u *UserServer) GetWebBaseData(ctx context.Context, in *pb.GetWebBaseDataRe
 			return &pb.GetWebBaseDataResponse{
 				Success:         true,
 				ErrorMessage:    "",
+				UserId:          user.ID,
 				Name:            user.Username,
 				Initial:         strings.ToUpper(string(user.Username[0])),
 				Icon:            user.Icon,
