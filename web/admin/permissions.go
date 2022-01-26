@@ -1,6 +1,8 @@
 package admin
 
 import (
+	"strings"
+
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/logging/debug"
 	"github.com/Tackem-org/Global/system"
@@ -26,6 +28,7 @@ func AdminPermissionsPage(in *system.WebRequest) (*system.WebReturn, error) {
 		sp = append(sp, sPermissions{
 			ID:          r.ID,
 			Name:        r.Name,
+			Title:       strings.ReplaceAll(r.Name, "_", " "),
 			GroupsCount: len(r.Groups),
 			UserCount:   len(r.Users),
 		})

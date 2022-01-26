@@ -13,7 +13,7 @@
             {{range .Page.permissions }}
             <tr>
                 <td>{{.ID}}</td>
-                <td>{{.Name}}</td>
+                <td>{{.Title | ToTitle}}</td>
                 <td>{{.GroupsCount}}</td>
                 <td>{{.UserCount}}</td>
             </tr>

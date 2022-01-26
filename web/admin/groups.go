@@ -47,6 +47,7 @@ func AdminGroupsPage(in *system.WebRequest) (*system.WebReturn, error) {
 		groupsList = append(groupsList, sGroups{
 			ID:          group.ID,
 			Name:        group.Name,
+			Title:       strings.ReplaceAll(group.Name, "_", " "),
 			Permissions: groupPermissions,
 			UserCount:   len(group.Users),
 		})
@@ -79,40 +80,39 @@ func AdminGroupsWebSocket(in *system.WebSocketRequest) (*system.WebSocketReturn,
 			model.DB.Model(&g).Association("Permissions").Delete(&p)
 			model.DB.Save(&g)
 		}
-		return &system.WebSocketReturn{
-			StatusCode: http.StatusOK,
-			Data:       d,
-		}, nil
 	case "addgroup":
+		val, ok := d["name"].(string)
+		if !ok {
+			return &system.WebSocketReturn{
+				StatusCode:   http.StatusNotAcceptable,
+				ErrorMessage: "New Group Name Must Be Unique",
+			}, nil
+		}
+		val = strings.ReplaceAll(val, " ", "_")
+		val = strings.ToLower(val)
 		g := model.Group{
-			Name: d["name"].(string),
+			Name: val,
 		}
 		result := model.DB.Create(&g)
 		if result.Error != nil {
 			return &system.WebSocketReturn{
 				StatusCode:   http.StatusNotAcceptable,
 				ErrorMessage: "New Group Name Must Be Unique",
-				Data:         d,
 			}, nil
 		}
 		d["groupid"] = g.ID
-		return &system.WebSocketReturn{
-			StatusCode: http.StatusOK,
-			Data:       d,
-		}, nil
 	case "deletegroup":
 		var g model.Group
 		model.DB.First(&g, d["groupid"])
 		model.DB.Delete(&g)
-		return &system.WebSocketReturn{
-			StatusCode: http.StatusOK,
-			Data:       d,
-		}, nil
 	default:
 		return &system.WebSocketReturn{
 			StatusCode:   http.StatusOK,
 			ErrorMessage: "command not found",
-			Data:         map[string]interface{}{},
 		}, nil
 	}
+	return &system.WebSocketReturn{
+		StatusCode: http.StatusOK,
+		Data:       d,
+	}, nil
 }
