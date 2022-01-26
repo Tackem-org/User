@@ -12,7 +12,10 @@ require (
 	gorm.io/gorm v1.22.5
 )
 
-require github.com/xhit/go-str2duration/v2 v2.0.0 // indirect
+require (
+	github.com/xhit/go-str2duration/v2 v2.0.0 // indirect
+	golang.org/x/image v0.0.0-20211028202545-6944b10bf410 // indirect
+)
 
 require (
 	github.com/golang/protobuf v1.5.2 // indirect

@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 
@@ -16,6 +17,9 @@ import (
 func (u *UserServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResponse, error) {
 	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[server.(u *UserServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResponse, error)]")
 	var user model.User
+	logging.Info(in.Username)
+	logging.Info(in.Password)
+	logging.Info(password.Hash(in.Password))
 	result := model.DB.Where(&model.User{Username: in.Username, Password: password.Hash(in.Password)}).Find(&user)
 	if result.RowsAffected == 1 {
 		session := newSession(user.ID, in.GetIpAddress(), time.Duration(in.GetExpiryTime()))
@@ -84,16 +88,23 @@ func (u *UserServer) GetWebBaseData(ctx context.Context, in *pb.GetWebBaseDataRe
 		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
 			var user model.User
 			model.DB.Preload(clause.Associations).First(&user, s.UserID)
+			var icon string
+			if strings.HasPrefix(user.Icon, "data:") || strings.HasPrefix(user.Icon, "http") {
+				icon = user.Icon
+			} else if user.Icon != "" {
+				icon = fmt.Sprintf("user/static/img/icons/%s", user.Icon)
+			} else {
+				icon = ""
+			}
 			return &pb.GetWebBaseDataResponse{
-				Success:         true,
-				ErrorMessage:    "",
-				UserId:          user.ID,
-				Name:            user.Username,
-				Initial:         strings.ToUpper(string(user.Username[0])),
-				Icon:            user.Icon,
-				BackgroundColor: user.BackgroundColor,
-				IsAdmin:         user.IsAdmin,
-				Permissions:     user.AllPermissionStrings(),
+				Success:      true,
+				ErrorMessage: "",
+				UserId:       user.ID,
+				Name:         user.Username,
+				Initial:      strings.ToUpper(string(user.Username[0])),
+				Icon:         icon,
+				IsAdmin:      user.IsAdmin,
+				Permissions:  user.AllPermissionStrings(),
 			}, nil
 		}
 	}

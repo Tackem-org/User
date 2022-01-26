@@ -21,10 +21,38 @@
   vertical-align: middle;
 }
 
-#admin-user-edit > div {
-  display: inline-block;
-  vertical-align: top;
-  margin-right: 1rem;
+#admin-user-edit > div:first-of-type {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: row-reverse;
+          flex-direction: row-reverse;
+  margin-bottom: 1rem;
+}
+
+#admin-user-edit > div:not(:first-of-type) {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: start;
+}
+
+#admin-user-edit > div:not(:first-of-type) [colspan="2"] {
+  text-align: center;
+}
+
+#admin-user-edit > div:not(:first-of-type) #usericon {
+  width: 64px;
 }
 
 #admin-user-groups table th:last-of-type {

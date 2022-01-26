@@ -1,7 +1,12 @@
 {{define "content"}}
 <div>
-    <h2>Details</h2>
+    <input type="button" name="delete" value="delete user">
+</div>
+<div>
     <table>
+        <thead>
+            <th colspan="2">Details</th>
+        </thead>
         <tbody>
             <tr>
                 <th>ID</th>
@@ -13,17 +18,16 @@
             </tr>
             <tr>
                 <th>Updated At</th>
-                <td>{{.Page.User.UpdatedAt}}</td>
+                <td id="updatedat">{{.Page.User.UpdatedAt}}</td>
             </tr>
             <tr>
                 <th>Username</th>
-                <td><input type="text" name="username" value="{{.Page.User.Username}}"></td>
+                <td><input type="text" id="username" value="{{.Page.User.Username}}"></td>
             </tr>
             <tr>
                 <th>Password</th>
-                <td><input type="text" name="password" value="{{.Page.User.Password}}"></td>
+                <td><input type="password" id="password" value=""></td>
             </tr>
-            {{if .User.CheckID .Page.User.ID}}
             <tr>
                 <th>Disabled</th>
                 <td>
@@ -46,32 +50,29 @@
                     </div>
                 </td>
             </tr>
-            {{end}}
-            //todo continue adding extra fields from user model (Icon and background colour)
             <tr>
-                <th>Delete</th>
-                <td><input type="button" value="delete"></td>
+                <th>Icon (File)</th>
+                <td><img id="usericon" src="{{.Page.User.Icon | URLSAFE}}">
+
+                    <input type="file" name="icon" value="">
+                    <input type="button" name="clearicon" value="Clear Icon">
+                </td>
             </tr>
         </tbody>
     </table>
-</div>
-<div>
-    <h2>Groups</h2>
+
     <table>
         <thead>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Active</th>
+            <th colspan="2">Groups</th>
         </thead>
         <tbody>
             {{range .Page.Groups}}
             <tr>
-                <td>{{.ID}}</td>
-                <td>{{.Title}}</td>
+                <td>{{.Title | ToTitle}}</td>
                 <td>
                     <div class="switch">
                         <label>
-                            <input type="checkbox" {{if .Active}}checked{{end}}>
+                            <input type="checkbox" name="groups[]" data-group="{{.ID}}" {{if .Active}}checked{{end}}>
                             <span class="slider"></span>
                         </label>
                     </div>
@@ -80,24 +81,19 @@
             {{end}}
         </tbody>
     </table>
-</div>
-<div>
-    <h2>Permissions</h2>
     <table>
         <thead>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Active</th>
+            <th colspan="2">Permissions</th>
         </thead>
         <tbody>
             {{range .Page.Permissions}}
             <tr>
-                <td>{{.ID}}</td>
-                <td>{{.Title}}</td>
+                <td>{{.Title | ToTitle}}</td>
                 <td>
                     <div class="switch">
                         <label>
-                            <input type="checkbox" {{if .Active}}checked{{end}}>
+                            <input type="checkbox" name="permissions[]" data-permission="{{.ID}}" {{if
+                                .Active}}checked{{end}}>
                             <span class="slider"></span>
                         </label>
                     </div>
@@ -106,5 +102,6 @@
             {{end}}
         </tbody>
     </table>
+
 </div>
 {{end}}

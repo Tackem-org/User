@@ -17,10 +17,21 @@
             vertical-align: middle
 
 #admin-user-edit
-    &>div
-        display: inline-block
-        vertical-align: top
-        margin-right: 1rem
+    &>div:first-of-type
+        display: flex
+        flex-direction: row-reverse
+        margin-bottom: 1rem
+
+    &>div:not(:first-of-type)
+        display: flex
+        flex-direction: row
+        justify-content: space-around
+        align-items: start
+        [colspan="2"]
+            text-align: center
+
+        #usericon
+            width: 64px
 
 #admin-user-groups
     table

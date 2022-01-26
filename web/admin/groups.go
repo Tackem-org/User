@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"net/http"
 	"strings"
 
 	"github.com/Tackem-org/Global/logging"
@@ -79,9 +80,8 @@ func AdminGroupsWebSocket(in *system.WebSocketRequest) (*system.WebSocketReturn,
 			model.DB.Save(&g)
 		}
 		return &system.WebSocketReturn{
-			StatusCode:   200,
-			ErrorMessage: "",
-			Data:         d,
+			StatusCode: http.StatusOK,
+			Data:       d,
 		}, nil
 	case "addgroup":
 		g := model.Group{
@@ -90,29 +90,27 @@ func AdminGroupsWebSocket(in *system.WebSocketRequest) (*system.WebSocketReturn,
 		result := model.DB.Create(&g)
 		if result.Error != nil {
 			return &system.WebSocketReturn{
-				StatusCode:   400,
+				StatusCode:   http.StatusNotAcceptable,
 				ErrorMessage: "New Group Name Must Be Unique",
 				Data:         d,
 			}, nil
 		}
 		d["groupid"] = g.ID
 		return &system.WebSocketReturn{
-			StatusCode:   200,
-			ErrorMessage: "",
-			Data:         d,
+			StatusCode: http.StatusOK,
+			Data:       d,
 		}, nil
 	case "deletegroup":
 		var g model.Group
 		model.DB.First(&g, d["groupid"])
 		model.DB.Delete(&g)
 		return &system.WebSocketReturn{
-			StatusCode:   200,
-			ErrorMessage: "",
-			Data:         d,
+			StatusCode: http.StatusOK,
+			Data:       d,
 		}, nil
 	default:
 		return &system.WebSocketReturn{
-			StatusCode:   200,
+			StatusCode:   http.StatusOK,
 			ErrorMessage: "command not found",
 			Data:         map[string]interface{}{},
 		}, nil
