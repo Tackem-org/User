@@ -82,8 +82,8 @@ func (u *UserServer) GetUserID(ctx context.Context, in *pb.GetUserIDRequest) (*p
 	}, nil
 }
 
-func (u *UserServer) GetWebBaseData(ctx context.Context, in *pb.GetWebBaseDataRequest) (*pb.GetWebBaseDataResponse, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[server.(u *UserServer) GetWebBaseData(context.Context, *GetWebBaseDataRequest) (*GetWebBaseDataResponse, error)]")
+func (u *UserServer) GetWebBaseData(ctx context.Context, in *pb.GetWebBaseDataRequest) (*pb.GetBaseDataResponse, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[server.(u *UserServer) GetWebBaseData(context.Context, *GetWebBaseDataRequest) (*GetBaseDataResponse, error)]")
 	for _, s := range Sessions {
 		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
 			var user model.User
@@ -96,7 +96,7 @@ func (u *UserServer) GetWebBaseData(ctx context.Context, in *pb.GetWebBaseDataRe
 			} else {
 				icon = ""
 			}
-			return &pb.GetWebBaseDataResponse{
+			return &pb.GetBaseDataResponse{
 				Success:      true,
 				ErrorMessage: "",
 				UserId:       user.ID,
@@ -108,12 +108,38 @@ func (u *UserServer) GetWebBaseData(ctx context.Context, in *pb.GetWebBaseDataRe
 			}, nil
 		}
 	}
-	return &pb.GetWebBaseDataResponse{
+	return &pb.GetBaseDataResponse{
 		Success:      false,
 		ErrorMessage: "Session Not Found",
 	}, nil
 
 }
+
+func (u *UserServer) GetBaseData(ctx context.Context, in *pb.GetBaseDataRequest) (*pb.GetBaseDataResponse, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[server.(u *UserServer) GetBaseData(context.Context, *GetBaseDataRequest) (*GetBaseDataResponse, error)]")
+
+	var user model.User
+	model.DB.Preload(clause.Associations).First(&user, in.UserId)
+	var icon string
+	if strings.HasPrefix(user.Icon, "data:") || strings.HasPrefix(user.Icon, "http") {
+		icon = user.Icon
+	} else if user.Icon != "" {
+		icon = fmt.Sprintf("user/static/img/icons/%s", user.Icon)
+	} else {
+		icon = ""
+	}
+	return &pb.GetBaseDataResponse{
+		Success:      true,
+		ErrorMessage: "",
+		UserId:       user.ID,
+		Name:         user.Username,
+		Initial:      strings.ToUpper(string(user.Username[0])),
+		Icon:         icon,
+		IsAdmin:      user.IsAdmin,
+		Permissions:  user.AllPermissionStrings(),
+	}, nil
+}
+
 func (u *UserServer) IsAdmin(ctx context.Context, in *pb.IsAdminRequest) (*pb.IsAdminResponse, error) {
 	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[server.(u *UserServer) IsAdmin(ctx context.Context, in *pb.IsAdminRequest) (*pb.IsAdminResponse, error)]")
 	for _, s := range Sessions {
