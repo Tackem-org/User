@@ -48,7 +48,7 @@ func main() {
 			WebAccess: true,
 			NavItems: []*pb.NavItem{
 				// {LinkType: pb.LinkType_User, Title: "User", Icon: "user", Path: "/"},
-				{LinkType: pb.LinkType_User, Title: "Change Password", Icon: "user", Path: "/password"},
+				{LinkType: pb.LinkType_User, Title: "Change Password", Icon: "user", Path: "/password", Permission: "system_user_change_own_password"},
 				{LinkType: pb.LinkType_Admin, Title: "Users", Icon: "users", Path: "/", SubLinks: []*pb.NavItem{
 					{LinkType: pb.LinkType_Admin, Title: "Groups", Icon: "user-shield", Path: "/groups"},
 					{LinkType: pb.LinkType_Admin, Title: "Permissions", Icon: "key", Path: "/permissions"},

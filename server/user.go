@@ -17,9 +17,6 @@ import (
 func (u *UserServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResponse, error) {
 	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[server.(u *UserServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResponse, error)]")
 	var user model.User
-	logging.Info(in.Username)
-	logging.Info(in.Password)
-	logging.Info(password.Hash(in.Password))
 	result := model.DB.Where(&model.User{Username: in.Username, Password: password.Hash(in.Password)}).Find(&user)
 	if result.RowsAffected == 1 {
 		session := newSession(user.ID, in.GetIpAddress(), time.Duration(in.GetExpiryTime()))

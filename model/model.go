@@ -67,10 +67,7 @@ func Setup(dbFile string) {
 	DB.Model(&Permission{}).Count(&count)
 	if count == 0 {
 		p := []Permission{
-			{Name: "system_user_view_own_user_profile"},
-			{Name: "system_user_view_other_user_profile"},
-			{Name: "system_user_edit_own_user_profile"},
-			{Name: "system_user_edit_other_user_profile"},
+			{Name: "system_user_change_own_password"},
 		}
 		DB.Create(&p)
 	}

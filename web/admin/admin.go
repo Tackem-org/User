@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-type UserData struct {
+type AdminUserData struct {
 	ID               uint64
 	Username         string
 	Password         string
@@ -21,10 +21,10 @@ type UserData struct {
 func AdminRootPage(in *system.WebRequest) (*system.WebReturn, error) {
 	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.AdminRootPage(in *system.WebRequest) (*system.WebReturn, error)]")
 	var users []model.User
-	lusers := []UserData{}
+	lusers := []AdminUserData{}
 	model.DB.Preload(clause.Associations).Find(&users)
 	for _, user := range users {
-		lusers = append(lusers, UserData{
+		lusers = append(lusers, AdminUserData{
 			ID:               uint64(user.ID),
 			Username:         user.Username,
 			Password:         "",
