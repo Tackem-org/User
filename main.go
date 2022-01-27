@@ -47,7 +47,8 @@ func main() {
 			SingleRun: false,
 			WebAccess: true,
 			NavItems: []*pb.NavItem{
-				{LinkType: pb.LinkType_User, Title: "User", Icon: "user", Path: "/"},
+				// {LinkType: pb.LinkType_User, Title: "User", Icon: "user", Path: "/"},
+				{LinkType: pb.LinkType_User, Title: "Change Password", Icon: "user", Path: "/password"},
 				{LinkType: pb.LinkType_Admin, Title: "Users", Icon: "users", Path: "/", SubLinks: []*pb.NavItem{
 					{LinkType: pb.LinkType_Admin, Title: "Groups", Icon: "user-shield", Path: "/groups"},
 					{LinkType: pb.LinkType_Admin, Title: "Permissions", Icon: "key", Path: "/permissions"},
@@ -69,10 +70,9 @@ func main() {
 			system.WebAddAdminWebSocket("/groups.ws", admin.AdminGroupsWebSocket)
 			system.WebAddAdminWebSocket("/edituser.ws", admin.AdminEditUserWebSocket)
 			system.WebAddAdminPath("/permissions", admin.AdminPermissionsPage)
-			system.WebAddPath("/", web.RootPage)
-			system.WebAddPath("/edit", web.EditPage)
-			system.WebAddPath("/view/{{number:userid}}", web.UserIDPage)
-			system.WebAddPath("/view/{{string:username}}", web.UserNamePage)
+			// system.WebAddPath("/", web.RootPage)
+			system.WebAddPath("/password", web.PasswordPage)
+			// system.WebAddPath("/edit", web.EditPage)
 		},
 		MainSetup: func() {
 			logging.Info("Setup Database")

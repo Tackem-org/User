@@ -91,4 +91,115 @@
 #admin-user-groups table input[type="text"]::placeholder, #admin-user-groups table input[type="button"]::placeholder {
   text-align: center;
 }
+
+#user-password {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background-color: #eeeeee;
+}
+
+#user-password > div {
+  background-color: #ffffff;
+  width: 40rem;
+  min-height: 23rem;
+  max-height: 30rem;
+  margin: 3rem auto;
+  text-align: center;
+  border: 1px solid #00000033;
+  border-radius: 4px;
+  -webkit-box-shadow: 0px 30px 50px 0px #00000033;
+          box-shadow: 0px 30px 50px 0px #00000033;
+}
+
+#user-password > div > form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+          flex-flow: column;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+  height: 100%;
+  padding: 0 1rem;
+}
+
+#user-password > div > form .error {
+  background-color: red;
+  line-height: 3rem;
+  font-size: 2rem;
+  text-transform: uppercase;
+}
+
+#user-password > div > form .success {
+  line-height: 3rem;
+  font-size: 2rem;
+  text-transform: uppercase;
+  background-color: limegreen;
+}
+
+#user-password > div > form input {
+  text-align: center;
+  display: block;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  width: 100%;
+  outline: none;
+  height: 3rem;
+  font-size: 1.5rem;
+  border-radius: 4px;
+}
+
+#user-password > div > form input::-webkit-input-placeholder {
+  opacity: 1;
+}
+
+#user-password > div > form input:-ms-input-placeholder {
+  opacity: 1;
+}
+
+#user-password > div > form input::-ms-input-placeholder {
+  opacity: 1;
+}
+
+#user-password > div > form input::placeholder {
+  opacity: 1;
+}
+
+#user-password > div > form input > input:not([type="submit"]) {
+  width: 100%;
+  padding: 0 0 0 10px;
+  margin: 0;
+  border: 1px solid #c2c0ca;
+  font-style: normal;
+  font-size: 16px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: relative;
+  display: inline-block;
+}
+
+#user-password > div > form input > input[type="submit"] {
+  border: none;
+  display: block;
+  font-weight: bold;
+  cursor: pointer;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  font-size: 18px;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  text-align: center;
+  margin-bottom: 1rem;
+}
 /*# sourceMappingURL=user.css.map */
