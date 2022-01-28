@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"net/http"
 	"strings"
 
 	"github.com/Tackem-org/Global/logging"
@@ -35,7 +36,8 @@ func AdminPermissionsPage(in *system.WebRequest) (*system.WebReturn, error) {
 	}
 
 	return &system.WebReturn{
-		FilePath: "admin/permissions",
+		StatusCode: http.StatusOK,
+		FilePath:   "admin/permissions",
 		PageData: map[string]interface{}{
 			"permissions": sp,
 		},

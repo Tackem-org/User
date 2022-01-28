@@ -64,6 +64,7 @@ func AdminUserIDPage(in *system.WebRequest) (*system.WebReturn, error) {
 	}
 
 	return &system.WebReturn{
+		StatusCode:     http.StatusOK,
 		FilePath:       "admin/user",
 		CustomPageName: "admin-user-edit",
 		PageData: map[string]interface{}{

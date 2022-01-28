@@ -1,6 +1,8 @@
 package admin
 
 import (
+	"net/http"
+
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/logging/debug"
 	"github.com/Tackem-org/Global/system"
@@ -35,7 +37,8 @@ func AdminRootPage(in *system.WebRequest) (*system.WebReturn, error) {
 		})
 	}
 	return &system.WebReturn{
-		FilePath: "admin/root",
+		StatusCode: http.StatusOK,
+		FilePath:   "admin/root",
 		PageData: map[string]interface{}{
 			"Users": lusers,
 		},

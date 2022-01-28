@@ -54,7 +54,8 @@ func AdminGroupsPage(in *system.WebRequest) (*system.WebReturn, error) {
 	}
 
 	return &system.WebReturn{
-		FilePath: "admin/groups",
+		StatusCode: http.StatusOK,
+		FilePath:   "admin/groups",
 		PageData: map[string]interface{}{
 			"Groups":       groupsList,
 			"Permissions":  allPermissionsList,

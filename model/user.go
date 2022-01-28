@@ -6,6 +6,7 @@ import (
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/logging/debug"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type User struct {
@@ -35,8 +36,10 @@ func (u *User) AllPermissionStrings() []string {
 	for _, p := range u.Permissions {
 		s = append(s, p.Name)
 	}
+	var group Group
 	for _, g := range u.Groups {
-		for _, p := range g.Permissions {
+		DB.Preload(clause.Associations).First(&group, g.ID)
+		for _, p := range group.Permissions {
 			s = append(s, p.Name)
 
 		}
