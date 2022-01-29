@@ -38,10 +38,8 @@ func PasswordPage(in *system.WebRequest) (*system.WebReturn, error) {
 		np2, ok3 := in.Post["np2"].(string)
 
 		if !ok1 || !ok2 || !ok3 {
-			logging.Infof("op:%t, np1:%t, np2:%t", ok1, ok2, ok3)
-		}
-		logging.Infof("op:%s, np1:%s, np2:%s", op, np1, np2)
-		if op == "" {
+			errorString = "error cannot get post data"
+		} else if op == "" {
 			errorString = "original password blank"
 		} else if np1 == "" || np2 == "" {
 			errorString = "new password cannot be blank"
@@ -55,9 +53,12 @@ func PasswordPage(in *system.WebRequest) (*system.WebReturn, error) {
 			if user.ID != in.User.ID {
 				errorString = "old password doesn't match"
 			} else {
-				user.Password = password.Hash(np1)
-				model.DB.Save(&user)
-				success = true
+				result := model.DB.Model(&user).Update("Password", password.Hash(np1))
+				if result.Error != nil {
+					success = false
+				} else {
+					success = true
+				}
 			}
 		}
 	}
