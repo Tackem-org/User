@@ -3,6 +3,7 @@ package web
 import (
 	"net/http"
 
+	"github.com/Tackem-org/Global/config"
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/logging/debug"
 	"github.com/Tackem-org/Global/system"
@@ -28,6 +29,7 @@ func PasswordPage(in *system.WebRequest) (*system.WebReturn, error) {
 			ErrorMessage: "user not authorised to view this page",
 		}, nil
 	}
+	minPassLength, _ := config.GetUint("user.password.minimum")
 	success := false
 	errorString := ""
 	if len(in.Post) > 0 {
@@ -43,7 +45,7 @@ func PasswordPage(in *system.WebRequest) (*system.WebReturn, error) {
 			errorString = "original password blank"
 		} else if np1 == "" || np2 == "" {
 			errorString = "new password cannot be blank"
-		} else if len(np1) <= 4 || len(np2) <= 4 {
+		} else if uint(len(np1)) <= minPassLength || uint(len(np2)) <= minPassLength {
 			errorString = "new password too short"
 		} else if np1 != np2 {
 			errorString = "new password don't match"

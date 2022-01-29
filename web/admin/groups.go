@@ -70,16 +70,14 @@ func AdminGroupsWebSocket(in *system.WebSocketRequest) (*system.WebSocketReturn,
 	d := in.Data
 	switch d["command"] {
 	case "setgroup":
-		var g model.Group
-		var p model.Permission
-		model.DB.First(&g, d["groupid"])
-		model.DB.First(&p, d["permissionid"])
+		var group model.Group
+		var permission model.Permission
+		model.DB.First(&group, d["groupid"])
+		model.DB.First(&permission, d["permissionid"])
 		if d["checked"] == true {
-			model.DB.Model(&g).Association("Permissions").Append(&p)
-			model.DB.Save(&g)
+			model.DB.Model(&group).Association("Permissions").Append(&permission)
 		} else {
-			model.DB.Model(&g).Association("Permissions").Delete(&p)
-			model.DB.Save(&g)
+			model.DB.Model(&group).Association("Permissions").Delete(&permission)
 		}
 	case "addgroup":
 		val, ok := d["name"].(string)
@@ -91,21 +89,21 @@ func AdminGroupsWebSocket(in *system.WebSocketRequest) (*system.WebSocketReturn,
 		}
 		val = strings.ReplaceAll(val, " ", "_")
 		val = strings.ToLower(val)
-		g := model.Group{
+		group := model.Group{
 			Name: val,
 		}
-		result := model.DB.Create(&g)
+		result := model.DB.Create(&group)
 		if result.Error != nil {
 			return &system.WebSocketReturn{
 				StatusCode:   http.StatusNotAcceptable,
 				ErrorMessage: "New Group Name Must Be Unique",
 			}, nil
 		}
-		d["groupid"] = g.ID
+		d["groupid"] = group.ID
 	case "deletegroup":
-		var g model.Group
-		model.DB.First(&g, d["groupid"])
-		model.DB.Delete(&g)
+		var group model.Group
+		model.DB.First(&group, d["groupid"])
+		model.DB.Delete(&group)
 	default:
 		return &system.WebSocketReturn{
 			StatusCode:   http.StatusOK,

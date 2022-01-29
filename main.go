@@ -11,6 +11,7 @@ import (
 	"github.com/Tackem-org/Global/structs"
 
 	"github.com/Tackem-org/Global/system"
+	pbc "github.com/Tackem-org/Proto/pb/config"
 	pb "github.com/Tackem-org/Proto/pb/registration"
 	pbuser "github.com/Tackem-org/Proto/pb/user"
 	"github.com/Tackem-org/User/model"
@@ -46,6 +47,22 @@ func main() {
 			Multi:     false,
 			SingleRun: false,
 			WebAccess: true,
+			ConfigItems: []*pb.ConfigItem{
+				{
+					Key:          "user.password.minimum",
+					DefaultValue: "8",
+					Type:         pbc.ValueType_Uint,
+					Label:        "Password Minimum Length",
+					HelpText:     "what is the minimum password length",
+					InputType:    pb.InputType_IRange,
+					InputAttributes: &pb.InputAttributes{
+						Other: []*pb.DictValue{
+							{Name: "min", Value: "1"},
+							{Name: "max", Value: "16"},
+						},
+					},
+				},
+			},
 			NavItems: []*pb.NavItem{
 				// {LinkType: pb.LinkType_User, Title: "User", Icon: "user", Path: "/"},
 				{LinkType: pb.LinkType_User, Title: "Change Password", Icon: "user", Path: "/password", Permission: "system_user_change_own_password"},

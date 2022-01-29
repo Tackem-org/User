@@ -12,6 +12,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/Tackem-org/Global/config"
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/logging/debug"
 	"github.com/Tackem-org/Global/system"
@@ -104,8 +105,9 @@ func AdminEditUserWebSocket(in *system.WebSocketRequest) (*system.WebSocketRetur
 				ErrorMessage: "username not valid",
 			}, nil
 		}
-		user.Username = val
-		result := model.DB.Save(&user)
+		// user.Username = val
+		// result := model.DB.Save(&user)
+		result := model.DB.Model(&user).Update("Username", val)
 		if result.Error != nil {
 			return &system.WebSocketReturn{
 				StatusCode:   http.StatusBadRequest,
@@ -120,14 +122,16 @@ func AdminEditUserWebSocket(in *system.WebSocketRequest) (*system.WebSocketRetur
 				ErrorMessage: "password not valid",
 			}, nil
 		}
-		if len(val) <= 4 {
+		minPassLength, _ := config.GetUint("user.password.minimum")
+		if uint(len(val)) <= minPassLength {
 			return &system.WebSocketReturn{
 				StatusCode:   http.StatusBadRequest,
 				ErrorMessage: "password too short",
 			}, nil
 		}
-		user.Password = password.Hash(val)
-		result := model.DB.Save(&user)
+		// user.Password = password.Hash(val)
+		// result := model.DB.Save(&user)
+		result := model.DB.Model(&user).Update("Password", password.Hash(val))
 		if result.Error != nil {
 			return &system.WebSocketReturn{
 				StatusCode:   http.StatusBadRequest,
@@ -142,8 +146,9 @@ func AdminEditUserWebSocket(in *system.WebSocketRequest) (*system.WebSocketRetur
 				ErrorMessage: "changing disabled failed",
 			}, nil
 		}
-		user.Disabled = val
-		result := model.DB.Save(&user)
+		// user.Disabled = val
+		// result := model.DB.Save(&user)
+		result := model.DB.Model(&user).Update("Disabled", val)
 		if result.Error != nil {
 			return &system.WebSocketReturn{
 				StatusCode:   http.StatusBadRequest,
@@ -158,8 +163,9 @@ func AdminEditUserWebSocket(in *system.WebSocketRequest) (*system.WebSocketRetur
 				ErrorMessage: "changing disabled failed",
 			}, nil
 		}
-		user.IsAdmin = val
-		result := model.DB.Save(&user)
+		// user.IsAdmin = val
+		// result := model.DB.Save(&user)
+		result := model.DB.Model(&user).Update("IsAdmin", val)
 		if result.Error != nil {
 			return &system.WebSocketReturn{
 				StatusCode:   http.StatusBadRequest,
@@ -194,8 +200,9 @@ func AdminEditUserWebSocket(in *system.WebSocketRequest) (*system.WebSocketRetur
 		}
 		imgBase64Str := fmt.Sprintf("data:image/png;base64,%s", base64.StdEncoding.EncodeToString(buf.Bytes()))
 		d["icon"] = imgBase64Str
-		user.Icon = imgBase64Str
-		result := model.DB.Save(&user)
+		// user.Icon = imgBase64Str
+		// result := model.DB.Save(&user)
+		result := model.DB.Model(&user).Update("Icon", imgBase64Str)
 		if result.Error != nil {
 			return &system.WebSocketReturn{
 				StatusCode:   http.StatusBadRequest,
@@ -203,8 +210,9 @@ func AdminEditUserWebSocket(in *system.WebSocketRequest) (*system.WebSocketRetur
 			}, nil
 		}
 	case "clearicon":
-		user.Icon = ""
-		result := model.DB.Save(&user)
+		// user.Icon = ""
+		// result := model.DB.Save(&user)
+		result := model.DB.Model(&user).Update("Icon", "")
 		if result.Error != nil {
 			return &system.WebSocketReturn{
 				StatusCode:   http.StatusBadRequest,
@@ -230,10 +238,8 @@ func AdminEditUserWebSocket(in *system.WebSocketRequest) (*system.WebSocketRetur
 		}
 		if d["checked"] == true {
 			model.DB.Model(&user).Association("Groups").Append(&group)
-			model.DB.Save(&user)
 		} else {
 			model.DB.Model(&user).Association("Groups").Delete(&group)
-			model.DB.Save(&user)
 		}
 	case "changepermission":
 		var permission model.Permission
@@ -246,10 +252,8 @@ func AdminEditUserWebSocket(in *system.WebSocketRequest) (*system.WebSocketRetur
 		}
 		if d["checked"] == true {
 			model.DB.Model(&user).Association("Permissions").Append(&permission)
-			model.DB.Save(&user)
 		} else {
 			model.DB.Model(&user).Association("Permissions").Delete(&permission)
-			model.DB.Save(&user)
 		}
 	default:
 		return &system.WebSocketReturn{

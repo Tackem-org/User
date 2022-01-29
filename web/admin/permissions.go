@@ -22,11 +22,11 @@ type sPermissions struct {
 
 func AdminPermissionsPage(in *system.WebRequest) (*system.WebReturn, error) {
 	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.AdminPermissionsPage(in *system.WebRequest) (*system.WebReturn, error)]")
-	var p []model.Permission
-	model.DB.Preload(clause.Associations).Find(&p)
-	var sp []sPermissions
-	for _, r := range p {
-		sp = append(sp, sPermissions{
+	var permissions []model.Permission
+	model.DB.Preload(clause.Associations).Find(&permissions)
+	var sortedPermissions []sPermissions
+	for _, r := range permissions {
+		sortedPermissions = append(sortedPermissions, sPermissions{
 			ID:          r.ID,
 			Name:        r.Name,
 			Title:       strings.ReplaceAll(r.Name, "_", " "),
@@ -39,13 +39,13 @@ func AdminPermissionsPage(in *system.WebRequest) (*system.WebReturn, error) {
 		StatusCode: http.StatusOK,
 		FilePath:   "admin/permissions",
 		PageData: map[string]interface{}{
-			"permissions": sp,
+			"permissions": sortedPermissions,
 		},
 	}, nil
 }
 
-func checkActivePermissions(findID uint64, gp []model.Permission) bool {
-	for _, enabledPermission := range gp {
+func checkActivePermissions(findID uint64, permissions []model.Permission) bool {
+	for _, enabledPermission := range permissions {
 		if findID == enabledPermission.ID {
 			return true
 		}
