@@ -24,6 +24,18 @@
                 <th>Username</th>
                 <td><input type="text" id="username" value="{{.Page.User.Username}}"></td>
             </tr>
+            {{if ne .Page.UsernameRequest ""}}
+            <tr id="usernamerequest">
+                <th>Username Request</th>
+                <td>
+                    <span>{{.Page.UsernameRequest}}</span>
+                    <span>
+                        <i id="acceptusernamerequest" class="fa fa-check-circle"></i>
+                        <i id="rejectusernamerequest" class="fa fa-times-circle"></i>
+                    </span>
+                </td>
+            </tr>
+            {{end}}
             <tr>
                 <th>Password</th>
                 <td><input type="password" id="password" value=""></td>

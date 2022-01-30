@@ -116,12 +116,15 @@ func RequestUsernamePage(in *system.WebRequest) (*system.WebReturn, error) {
 	if !in.User.HasPermission("system_user_request_change_of_username") {
 		return system.ForbiddenWebReturn()
 	}
+	var user model.User
+	var usernameRequest model.UsernameRequest
+
 	requestMade := false
 	success := false
 	errorString := ""
-	var userRequest model.UserRequest
-	model.DB.Where(&model.UserRequest{RequestUserID: in.User.ID}).Find(&userRequest)
-	if userRequest.RequestUserID == in.User.ID {
+
+	model.DB.Where(&model.UsernameRequest{RequestUserID: in.User.ID}).Find(&usernameRequest)
+	if usernameRequest.RequestUserID == in.User.ID {
 		requestMade = true
 	} else {
 		if len(in.Post) > 0 {
@@ -135,17 +138,16 @@ func RequestUsernamePage(in *system.WebRequest) (*system.WebReturn, error) {
 				errorString = "username same as previous"
 			} else if pword == "" {
 				errorString = "password cannot be blank"
+			} else if err := model.DB.Where(&model.User{Username: username}).First(&user).Error; err == nil {
+				errorString = "username already taken"
 			} else {
-				//TODO HERE NEED TO CHECK USERNAME DOESN@T ALREADY EXIST
-
-				var user model.User
 				model.DB.Where(&model.User{ID: in.User.ID, Password: password.Hash(pword)}).First(&user)
 				if user.ID != in.User.ID {
 					errorString = "old password doesn't match"
 				} else {
-					userRequest.Name = username
-					userRequest.RequestUserID = in.User.ID
-					result := model.DB.Create(&userRequest)
+					usernameRequest.Name = username
+					usernameRequest.RequestUserID = in.User.ID
+					result := model.DB.Create(&usernameRequest)
 					if result.Error != nil {
 						success = false
 					} else {

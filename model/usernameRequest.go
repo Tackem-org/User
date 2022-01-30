@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserRequest struct {
+type UsernameRequest struct {
 	ID            uint64 `gorm:"primaryKey"`
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
@@ -18,16 +18,16 @@ type UserRequest struct {
 	Name          string `gorm:"not null"`
 }
 
-func (u *UserRequest) Accept(tx *gorm.DB) (err error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[model.(u *UserRequest) Accept(tx *gorm.DB) (err error)]")
+func (u *UsernameRequest) Accept(tx *gorm.DB) (err error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[model.(u *UsernameRequest) Accept(tx *gorm.DB) (err error)]")
 	var user User
 	DB.Find(&user, u.RequestUserID)
 	DB.Model(&user).Update("Username", u.Name)
 	DB.Delete(&u)
 	return
 }
-func (u *UserRequest) Reject(tx *gorm.DB) (err error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[model.(u *UserRequest) Reject(tx *gorm.DB) (err error)]")
+func (u *UsernameRequest) Reject(tx *gorm.DB) (err error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[model.(u *UsernameRequest) Reject(tx *gorm.DB) (err error)]")
 	DB.Delete(&u)
 	return
 }

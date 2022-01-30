@@ -17,7 +17,7 @@
         {{end}}
         {{ if .Page.Success }}
         <div class="success">Success</div>
-        {{end}}
+        {{else}}
         <div>
             <input type="text" name="username" placeholder="{{.Page.Username}}" value="{{.Page.Username}}" required>
         </div>
@@ -27,6 +27,7 @@
         <div>
             <input type="submit" value="request change">
         </div>
+        {{end}}
     </form>
     {{end}}
 

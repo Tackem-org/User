@@ -30,6 +30,14 @@
             usernameTimeout = setTimeout(() => { socket.ChangeUsername($(this).val()) }, 1000 * timer);
         });
 
+        $('#acceptusernamerequest').on('click', function () {
+            socket.AcceptUsernameChange();
+        });
+
+        $('#rejectusernamerequest').on('click', function () {
+            socket.RejectUsernameChange();
+        });
+
         $('#password').on('input', function () {
             if ($(this).val() == "") {
                 return
@@ -132,6 +140,20 @@
             }));
         }
 
+        AcceptUsernameChange() {
+            this.#ws.send(JSON.stringify({
+                command: 'acceptusernamechange',
+                userid: this.parseUserID(),
+            }));
+        }
+
+        RejectUsernameChange() {
+            this.#ws.send(JSON.stringify({
+                command: 'rejectusernamechange',
+                userid: this.parseUserID(),
+            }));
+        }
+
         ChangePassword(password) {
             this.#ws.send(JSON.stringify({
                 command: 'changepassword',
@@ -203,6 +225,12 @@
             switch (data['command']) {
                 case 'changeusername':
                     break;
+                case 'acceptusernamechange':
+                    console.log(data);
+                    $('#username').val(data['name']);
+                case 'rejectusernamechange':
+                    $('#usernamerequest').remove();
+                    break;
                 case 'changepassword':
                     break;
                 case 'changedisabled':
@@ -210,7 +238,7 @@
                 case 'changeisadmin':
                     break;
                 case 'uploadiconbase64':
-                    $('#usericon').attr('src', data['icon']);
+                    $('#usericon').attr('src', data['name']);
                     break
                 case 'clearicon':
                     $('#usericon').attr('src', '');

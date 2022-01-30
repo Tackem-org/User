@@ -3,6 +3,7 @@ package admin
 import (
 	"bytes"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"image"
 	_ "image/gif"
@@ -19,18 +20,23 @@ import (
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/password"
 	"golang.org/x/image/draw"
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 func AdminUserIDPage(in *system.WebRequest) (*system.WebReturn, error) {
 	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.AdminUserIDPage(in *system.WebRequest) (*system.WebReturn, error)]")
+	userID := uint64(in.PathVariables["userid"].(int))
 
 	var user model.User
-	model.DB.Preload(clause.Associations).First(&user, in.PathVariables["userid"])
-
 	var allPermissions []model.Permission
-	model.DB.Find(&allPermissions)
 	var allPermissionsList []sPermissions
+	var allGroups []model.Group
+	var allGroupsList []sGroups
+	var usernameRequest model.UsernameRequest
+
+	model.DB.Preload(clause.Associations).First(&user, userID)
+	model.DB.Find(&allPermissions)
 	for _, permission := range allPermissions {
 		p := sPermissions{
 			ID:    permission.ID,
@@ -46,9 +52,7 @@ func AdminUserIDPage(in *system.WebRequest) (*system.WebReturn, error) {
 		allPermissionsList = append(allPermissionsList, p)
 	}
 
-	var allGroups []model.Group
 	model.DB.Find(&allGroups)
-	var allGroupsList []sGroups
 	for _, group := range allGroups {
 		g := sGroups{
 			ID:    group.ID,
@@ -64,14 +68,24 @@ func AdminUserIDPage(in *system.WebRequest) (*system.WebReturn, error) {
 		allGroupsList = append(allGroupsList, g)
 	}
 
+	result := model.DB.Where(&model.UsernameRequest{RequestUserID: userID}).First(&usernameRequest)
+	var ur string
+	var urid uint64
+	if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		ur = usernameRequest.Name
+		urid = usernameRequest.ID
+	}
+
 	return &system.WebReturn{
 		StatusCode:     http.StatusOK,
 		FilePath:       "admin/user",
 		CustomPageName: "admin-user-edit",
 		PageData: map[string]interface{}{
-			"User":        user,
-			"Permissions": allPermissionsList,
-			"Groups":      allGroupsList,
+			"User":              user,
+			"Permissions":       allPermissionsList,
+			"Groups":            allGroupsList,
+			"UsernameRequest":   ur,
+			"UsernameRequestID": urid,
 		},
 	}, nil
 }
@@ -96,6 +110,7 @@ func AdminEditUserWebSocket(in *system.WebSocketRequest) (*system.WebSocketRetur
 			ErrorMessage: "COMMAND NOT FOUND",
 		}, nil
 	}
+
 	switch command {
 	case "changeusername":
 		val, ok := d["username"].(string)
@@ -110,6 +125,82 @@ func AdminEditUserWebSocket(in *system.WebSocketRequest) (*system.WebSocketRetur
 			return &system.WebSocketReturn{
 				StatusCode:   http.StatusBadRequest,
 				ErrorMessage: "username already exists " + result.Error.Error(),
+			}, nil
+		}
+	case "acceptusernamechange":
+		val, ok := d["userid"].(float64)
+		if !ok {
+			return &system.WebSocketReturn{
+				StatusCode:   http.StatusBadRequest,
+				ErrorMessage: "userid not valid",
+			}, nil
+		}
+		userID := uint64(val)
+		var usernameRequest model.UsernameRequest
+		var user model.User
+		result1 := model.DB.Find(&user, userID)
+		result2 := model.DB.Where(&model.UsernameRequest{RequestUserID: uint64(userID)}).First(&usernameRequest)
+		if result1.Error != nil {
+			return &system.WebSocketReturn{
+				StatusCode:   http.StatusBadRequest,
+				ErrorMessage: "userid not found",
+			}, nil
+		}
+		if result2.Error != nil {
+			return &system.WebSocketReturn{
+				StatusCode:   http.StatusBadRequest,
+				ErrorMessage: "username request not found",
+			}, nil
+		}
+
+		result3 := model.DB.Model(&user).Update("Username", usernameRequest.Name)
+		if result3.Error != nil {
+			return &system.WebSocketReturn{
+				StatusCode:   http.StatusBadRequest,
+				ErrorMessage: "username rename failed possably already exists",
+			}, nil
+		}
+		d["name"] = usernameRequest.Name
+
+		result4 := model.DB.Delete(&usernameRequest)
+		if result4.Error != nil {
+			return &system.WebSocketReturn{
+				StatusCode:   http.StatusBadRequest,
+				ErrorMessage: "failed to delete the request",
+			}, nil
+		}
+
+	case "rejectusernamechange":
+		val, ok := d["userid"].(float64)
+		if !ok {
+			return &system.WebSocketReturn{
+				StatusCode:   http.StatusBadRequest,
+				ErrorMessage: "userid not valid",
+			}, nil
+		}
+		userID := uint64(val)
+		var usernameRequest model.UsernameRequest
+		var user model.User
+		result1 := model.DB.Find(&user, userID)
+		result2 := model.DB.Where(&model.UsernameRequest{RequestUserID: uint64(userID)}).First(&usernameRequest)
+		if result1.Error != nil {
+			return &system.WebSocketReturn{
+				StatusCode:   http.StatusBadRequest,
+				ErrorMessage: "userid not found",
+			}, nil
+		}
+		if result2.Error != nil {
+			return &system.WebSocketReturn{
+				StatusCode:   http.StatusBadRequest,
+				ErrorMessage: "username request not found",
+			}, nil
+		}
+
+		result4 := model.DB.Delete(&usernameRequest)
+		if result4.Error != nil {
+			return &system.WebSocketReturn{
+				StatusCode:   http.StatusBadRequest,
+				ErrorMessage: "failed to delete the request",
 			}, nil
 		}
 	case "changepassword":

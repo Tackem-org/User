@@ -36,7 +36,7 @@ func Setup(dbFile string) {
 		panic("failed to Open database")
 	}
 
-	if err := DB.AutoMigrate(&Permission{}, &Group{}, &User{}, &UserRequest{}); err != nil {
+	if err := DB.AutoMigrate(&Permission{}, &Group{}, &User{}, &UsernameRequest{}); err != nil {
 		logging.Fatal("unable autoMigrateDB - " + err.Error())
 	}
 

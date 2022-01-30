@@ -55,6 +55,24 @@
   width: 64px;
 }
 
+#admin-user-edit > div:not(:first-of-type) #usernamerequest td {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+#admin-user-edit > div:not(:first-of-type) #usernamerequest td i {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
 #admin-user-groups table th:last-of-type {
   background-color: inherit;
 }
