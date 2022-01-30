@@ -51,7 +51,7 @@
             &::placeholder
                 text-align: center
 
-#user-password
+#user-changepassword, #user-changeusername, #user-requestusername
     display: flex
     justify-content: center
     background-color: #eeeeee
@@ -59,9 +59,7 @@
 
         background-color: #ffffff
         width: 40rem
-        min-height: 23rem
-        max-height: 30rem
-        margin: 3rem auto
+        margin: 1rem auto auto auto
         text-align: center
         border: 1px solid #00000033
         border-radius: 4px
@@ -71,8 +69,9 @@
             flex-flow: column
             justify-content: space-around
             align-items: stretch
-            height: 100%
-            padding: 0 1rem
+            padding: 0
+            &>div
+                padding: 0.5rem
             .error
                 background-color: red
                 line-height: 3rem

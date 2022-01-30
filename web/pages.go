@@ -20,14 +20,11 @@ func RootPage(in *system.WebRequest) (*system.WebReturn, error) {
 	}, nil
 }
 
-func PasswordPage(in *system.WebRequest) (*system.WebReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.PasswordPage(in *system.WebRequest) (*system.WebReturn, error)]")
+func ChangePasswordPage(in *system.WebRequest) (*system.WebReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.ChangePasswordPage(in *system.WebRequest) (*system.WebReturn, error)]")
 
 	if !in.User.HasPermission("system_user_change_own_password") {
-		return &system.WebReturn{
-			StatusCode:   http.StatusForbidden,
-			ErrorMessage: "user not authorised to view this page",
-		}, nil
+		return system.ForbiddenWebReturn()
 	}
 	minPassLength, _ := config.GetUint("user.password.minimum")
 	success := false
@@ -64,10 +61,109 @@ func PasswordPage(in *system.WebRequest) (*system.WebReturn, error) {
 	}
 	return &system.WebReturn{
 		StatusCode: http.StatusOK,
-		FilePath:   "password",
+		FilePath:   "changepassword",
 		PageData: map[string]interface{}{
 			"Success": success,
 			"Error":   errorString,
+		},
+	}, nil
+}
+
+func ChangeUsernamePage(in *system.WebRequest) (*system.WebReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.ChangeUsernamePage(in *system.WebRequest) (*system.WebReturn, error)]")
+	if !in.User.HasPermission("system_user_change_own_username") {
+		return system.ForbiddenWebReturn()
+	}
+	success := false
+	errorString := ""
+	if len(in.Post) > 0 {
+		username, ok1 := in.Post["username"].(string)
+		pword, ok2 := in.Post["password"].(string)
+		if !ok1 || !ok2 {
+			errorString = "error cannot get post data"
+		} else if username == "" {
+			errorString = "new username cannot be blank"
+		} else if pword == "" {
+			errorString = "password cannot be blank"
+		} else {
+			var user model.User
+			model.DB.Where(&model.User{ID: in.User.ID, Password: password.Hash(pword)}).First(&user)
+			if user.ID != in.User.ID {
+				errorString = "old password doesn't match"
+			} else {
+				result := model.DB.Model(&user).Update("Username", username)
+				if result.Error != nil {
+					success = false
+				} else {
+					success = true
+				}
+			}
+		}
+	}
+	return &system.WebReturn{
+		StatusCode: http.StatusOK,
+		FilePath:   "changeusername",
+		PageData: map[string]interface{}{
+			"Success":  success,
+			"Error":    errorString,
+			"Username": in.User.Name,
+		},
+	}, nil
+}
+
+func RequestUsernamePage(in *system.WebRequest) (*system.WebReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.RequestUsernamePage(in *system.WebRequest) (*system.WebReturn, error)]")
+	if !in.User.HasPermission("system_user_request_change_of_username") {
+		return system.ForbiddenWebReturn()
+	}
+	requestMade := false
+	success := false
+	errorString := ""
+	var userRequest model.UserRequest
+	model.DB.Where(&model.UserRequest{RequestUserID: in.User.ID}).Find(&userRequest)
+	if userRequest.RequestUserID == in.User.ID {
+		requestMade = true
+	} else {
+		if len(in.Post) > 0 {
+			username, ok1 := in.Post["username"].(string)
+			pword, ok2 := in.Post["password"].(string)
+			if !ok1 || !ok2 {
+				errorString = "error cannot get post data"
+			} else if username == "" {
+				errorString = "new username cannot be blank"
+			} else if username == in.User.Name {
+				errorString = "username same as previous"
+			} else if pword == "" {
+				errorString = "password cannot be blank"
+			} else {
+				//TODO HERE NEED TO CHECK USERNAME DOESN@T ALREADY EXIST
+
+				var user model.User
+				model.DB.Where(&model.User{ID: in.User.ID, Password: password.Hash(pword)}).First(&user)
+				if user.ID != in.User.ID {
+					errorString = "old password doesn't match"
+				} else {
+					userRequest.Name = username
+					userRequest.RequestUserID = in.User.ID
+					result := model.DB.Create(&userRequest)
+					if result.Error != nil {
+						success = false
+					} else {
+						success = true
+					}
+				}
+			}
+		}
+	}
+
+	return &system.WebReturn{
+		StatusCode: http.StatusOK,
+		FilePath:   "requestusername",
+		PageData: map[string]interface{}{
+			"RequestMade": requestMade,
+			"Success":     success,
+			"Error":       errorString,
+			"Username":    in.User.Name,
 		},
 	}, nil
 }

@@ -92,7 +92,7 @@
   text-align: center;
 }
 
-#user-password {
+#user-changepassword, #user-changeusername, #user-requestusername {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -102,12 +102,10 @@
   background-color: #eeeeee;
 }
 
-#user-password > div {
+#user-changepassword > div, #user-changeusername > div, #user-requestusername > div {
   background-color: #ffffff;
   width: 40rem;
-  min-height: 23rem;
-  max-height: 30rem;
-  margin: 3rem auto;
+  margin: 1rem auto auto auto;
   text-align: center;
   border: 1px solid #00000033;
   border-radius: 4px;
@@ -115,7 +113,7 @@
           box-shadow: 0px 30px 50px 0px #00000033;
 }
 
-#user-password > div > form {
+#user-changepassword > div > form, #user-changeusername > div > form, #user-requestusername > div > form {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -128,25 +126,28 @@
   -webkit-box-align: stretch;
       -ms-flex-align: stretch;
           align-items: stretch;
-  height: 100%;
-  padding: 0 1rem;
+  padding: 0;
 }
 
-#user-password > div > form .error {
+#user-changepassword > div > form > div, #user-changeusername > div > form > div, #user-requestusername > div > form > div {
+  padding: 0.5rem;
+}
+
+#user-changepassword > div > form .error, #user-changeusername > div > form .error, #user-requestusername > div > form .error {
   background-color: red;
   line-height: 3rem;
   font-size: 2rem;
   text-transform: uppercase;
 }
 
-#user-password > div > form .success {
+#user-changepassword > div > form .success, #user-changeusername > div > form .success, #user-requestusername > div > form .success {
   line-height: 3rem;
   font-size: 2rem;
   text-transform: uppercase;
   background-color: limegreen;
 }
 
-#user-password > div > form input {
+#user-changepassword > div > form input, #user-changeusername > div > form input, #user-requestusername > div > form input {
   text-align: center;
   display: block;
   -webkit-box-sizing: border-box;
@@ -158,23 +159,23 @@
   border-radius: 4px;
 }
 
-#user-password > div > form input::-webkit-input-placeholder {
+#user-changepassword > div > form input::-webkit-input-placeholder, #user-changeusername > div > form input::-webkit-input-placeholder, #user-requestusername > div > form input::-webkit-input-placeholder {
   opacity: 1;
 }
 
-#user-password > div > form input:-ms-input-placeholder {
+#user-changepassword > div > form input:-ms-input-placeholder, #user-changeusername > div > form input:-ms-input-placeholder, #user-requestusername > div > form input:-ms-input-placeholder {
   opacity: 1;
 }
 
-#user-password > div > form input::-ms-input-placeholder {
+#user-changepassword > div > form input::-ms-input-placeholder, #user-changeusername > div > form input::-ms-input-placeholder, #user-requestusername > div > form input::-ms-input-placeholder {
   opacity: 1;
 }
 
-#user-password > div > form input::placeholder {
+#user-changepassword > div > form input::placeholder, #user-changeusername > div > form input::placeholder, #user-requestusername > div > form input::placeholder {
   opacity: 1;
 }
 
-#user-password > div > form input > input:not([type="submit"]) {
+#user-changepassword > div > form input > input:not([type="submit"]), #user-changeusername > div > form input > input:not([type="submit"]), #user-requestusername > div > form input > input:not([type="submit"]) {
   width: 100%;
   padding: 0 0 0 10px;
   margin: 0;
@@ -188,7 +189,7 @@
   display: inline-block;
 }
 
-#user-password > div > form input > input[type="submit"] {
+#user-changepassword > div > form input > input[type="submit"], #user-changeusername > div > form input > input[type="submit"], #user-requestusername > div > form input > input[type="submit"] {
   border: none;
   display: block;
   font-weight: bold;

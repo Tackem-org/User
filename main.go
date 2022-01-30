@@ -54,7 +54,7 @@ func main() {
 					Type:         pbc.ValueType_Uint,
 					Label:        "Password Minimum Length",
 					HelpText:     "what is the minimum password length",
-					InputType:    pb.InputType_IRange,
+					InputType:    pb.InputType_INumber,
 					InputAttributes: &pb.InputAttributes{
 						Other: []*pb.DictValue{
 							{Name: "min", Value: "1"},
@@ -65,7 +65,9 @@ func main() {
 			},
 			NavItems: []*pb.NavItem{
 				// {LinkType: pb.LinkType_User, Title: "User", Icon: "user", Path: "/"},
-				{LinkType: pb.LinkType_User, Title: "Change Password", Icon: "user", Path: "/password", Permission: "system_user_change_own_password"},
+				{LinkType: pb.LinkType_User, Title: "Change Password", Icon: "user", Path: "/changepassword", Permission: "system_user_change_own_password"},
+				{LinkType: pb.LinkType_User, Title: "Change Username", Icon: "user", Path: "/changeusername", Permission: "system_user_change_own_username"},
+				{LinkType: pb.LinkType_User, Title: "Request New Username", Icon: "user", Path: "/requestusername", Permission: "system_user_request_change_of_username"},
 				{LinkType: pb.LinkType_Admin, Title: "Users", Icon: "users", Path: "/", SubLinks: []*pb.NavItem{
 					{LinkType: pb.LinkType_Admin, Title: "Groups", Icon: "user-shield", Path: "/groups"},
 					{LinkType: pb.LinkType_Admin, Title: "Permissions", Icon: "key", Path: "/permissions"},
@@ -88,7 +90,9 @@ func main() {
 			system.WebAddAdminWebSocket("/edituser.ws", admin.AdminEditUserWebSocket)
 			system.WebAddAdminPath("/permissions", admin.AdminPermissionsPage)
 			// system.WebAddPath("/", web.RootPage)
-			system.WebAddPath("/password", web.PasswordPage)
+			system.WebAddPath("/changepassword", web.ChangePasswordPage)
+			system.WebAddPath("/changeusername", web.ChangeUsernamePage)
+			system.WebAddPath("/requestusername", web.RequestUsernamePage)
 			// system.WebAddPath("/edit", web.EditPage)
 		},
 		MainSetup: func() {

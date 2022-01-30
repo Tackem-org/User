@@ -1,0 +1,24 @@
+{{define "content"}}
+<div>
+    <form method="post">
+        <div>
+            <h2>Change Username</h2>
+        </div>
+        {{ if .Page.Error }}
+        <div class="error">{{ .Page.Error }}</div>
+        {{end}}
+        {{ if .Page.Success }}
+        <div class="success">Success</div>
+        {{end}}
+        <div>
+            <input type="text" name="username" placeholder="{{.Page.Username}}" value="{{.Page.Username}}" required>
+        </div>
+        <div>
+            <input type="password" name="password" placeholder="Password" required>
+        </div>
+        <div>
+            <input type="submit" value="change">
+        </div>
+    </form>
+</div>
+{{end}}

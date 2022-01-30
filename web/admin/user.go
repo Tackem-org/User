@@ -98,15 +98,13 @@ func AdminEditUserWebSocket(in *system.WebSocketRequest) (*system.WebSocketRetur
 	}
 	switch command {
 	case "changeusername":
-		val, ok := d["username"].(string) //TODO finish this down
+		val, ok := d["username"].(string)
 		if !ok || val == "" || len(val) <= 4 || !regexp.MustCompile(`^[a-zA-Z0-9_]*$`).MatchString(val) {
 			return &system.WebSocketReturn{
 				StatusCode:   http.StatusBadRequest,
 				ErrorMessage: "username not valid",
 			}, nil
 		}
-		// user.Username = val
-		// result := model.DB.Save(&user)
 		result := model.DB.Model(&user).Update("Username", val)
 		if result.Error != nil {
 			return &system.WebSocketReturn{
@@ -129,8 +127,6 @@ func AdminEditUserWebSocket(in *system.WebSocketRequest) (*system.WebSocketRetur
 				ErrorMessage: "password too short",
 			}, nil
 		}
-		// user.Password = password.Hash(val)
-		// result := model.DB.Save(&user)
 		result := model.DB.Model(&user).Update("Password", password.Hash(val))
 		if result.Error != nil {
 			return &system.WebSocketReturn{
@@ -146,8 +142,6 @@ func AdminEditUserWebSocket(in *system.WebSocketRequest) (*system.WebSocketRetur
 				ErrorMessage: "changing disabled failed",
 			}, nil
 		}
-		// user.Disabled = val
-		// result := model.DB.Save(&user)
 		result := model.DB.Model(&user).Update("Disabled", val)
 		if result.Error != nil {
 			return &system.WebSocketReturn{
@@ -163,8 +157,6 @@ func AdminEditUserWebSocket(in *system.WebSocketRequest) (*system.WebSocketRetur
 				ErrorMessage: "changing disabled failed",
 			}, nil
 		}
-		// user.IsAdmin = val
-		// result := model.DB.Save(&user)
 		result := model.DB.Model(&user).Update("IsAdmin", val)
 		if result.Error != nil {
 			return &system.WebSocketReturn{
@@ -200,8 +192,6 @@ func AdminEditUserWebSocket(in *system.WebSocketRequest) (*system.WebSocketRetur
 		}
 		imgBase64Str := fmt.Sprintf("data:image/png;base64,%s", base64.StdEncoding.EncodeToString(buf.Bytes()))
 		d["icon"] = imgBase64Str
-		// user.Icon = imgBase64Str
-		// result := model.DB.Save(&user)
 		result := model.DB.Model(&user).Update("Icon", imgBase64Str)
 		if result.Error != nil {
 			return &system.WebSocketReturn{
@@ -210,8 +200,6 @@ func AdminEditUserWebSocket(in *system.WebSocketRequest) (*system.WebSocketRetur
 			}, nil
 		}
 	case "clearicon":
-		// user.Icon = ""
-		// result := model.DB.Save(&user)
 		result := model.DB.Model(&user).Update("Icon", "")
 		if result.Error != nil {
 			return &system.WebSocketReturn{

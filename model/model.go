@@ -36,7 +36,7 @@ func Setup(dbFile string) {
 		panic("failed to Open database")
 	}
 
-	if err := DB.AutoMigrate(&Permission{}, &Group{}, &User{}); err != nil {
+	if err := DB.AutoMigrate(&Permission{}, &Group{}, &User{}, &UserRequest{}); err != nil {
 		logging.Fatal("unable autoMigrateDB - " + err.Error())
 	}
 
@@ -68,6 +68,8 @@ func Setup(dbFile string) {
 	if count == 0 {
 		p := []Permission{
 			{Name: "system_user_change_own_password"},
+			{Name: "system_user_change_own_username"},
+			{Name: "system_user_request_change_of_username"},
 		}
 		DB.Create(&p)
 	}
