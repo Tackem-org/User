@@ -7,8 +7,9 @@ User Service For Tackem System
 
 ## TODO
 - need to make an option to allow the user to request or change there username two options two permissions
-  - Need to add in a check to see if the username already exists
-  - Work left for the admin side to allow or reject user name change requests
+  - Work left for a permissioned user to allow or reject user name change requests.
+    - This will need a new system of panels that can go onto multiple pages
+    - an activities dropdown box that will be able to check the count. will need to find a way of communicating into this websocket from other systems to update the count number so it will dynamically update itself. going to need a root websocket to deal with this stuff
 
 - Normal user systems <- working on with above fix first
   - need to allow the user to pick an Icon and look at making the Icon folder a special folder

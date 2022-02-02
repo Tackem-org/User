@@ -46,7 +46,6 @@ func main() {
 			},
 			Multi:     false,
 			SingleRun: false,
-			WebAccess: true,
 			ConfigItems: []*pb.ConfigItem{
 				{
 					Key:          "user.password.minimum",
@@ -103,12 +102,12 @@ func main() {
 			}
 		},
 		Shutdown: func() {
-			saveData()
+			Save()
 		},
 	})
 }
 
-func saveData() {
+func Save() {
 
 	if len(server.Sessions) == 0 {
 		return
