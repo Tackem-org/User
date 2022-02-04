@@ -16,6 +16,7 @@ import (
 	"github.com/Tackem-org/Global/config"
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/logging/debug"
+	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/Global/system"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/password"
@@ -24,8 +25,8 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func AdminUserIDPage(in *system.WebRequest) (*system.WebReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.AdminUserIDPage(in *system.WebRequest) (*system.WebReturn, error)]")
+func AdminUserIDPage(in *structs.WebRequest) (*structs.WebReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.AdminUserIDPage(in *structs.WebRequest) (*structs.WebReturn, error)]")
 	userID := uint64(in.PathVariables["userid"].(int))
 
 	var user model.User
@@ -76,7 +77,7 @@ func AdminUserIDPage(in *system.WebRequest) (*system.WebReturn, error) {
 		urid = usernameRequest.ID
 	}
 
-	return &system.WebReturn{
+	return &structs.WebReturn{
 		StatusCode:     http.StatusOK,
 		FilePath:       "admin/user",
 		CustomPageName: "admin-user-edit",

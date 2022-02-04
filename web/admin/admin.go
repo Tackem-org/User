@@ -5,7 +5,7 @@ import (
 
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/logging/debug"
-	"github.com/Tackem-org/Global/system"
+	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
 	"gorm.io/gorm/clause"
 )
@@ -20,8 +20,8 @@ type AdminUserData struct {
 	PermissionsCount int
 }
 
-func AdminRootPage(in *system.WebRequest) (*system.WebReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.AdminRootPage(in *system.WebRequest) (*system.WebReturn, error)]")
+func AdminRootPage(in *structs.WebRequest) (*structs.WebReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.AdminRootPage(in *structs.WebRequest) (*structs.WebReturn, error)]")
 	var users []model.User
 	lusers := []AdminUserData{}
 	model.DB.Preload(clause.Associations).Find(&users)
@@ -36,7 +36,7 @@ func AdminRootPage(in *system.WebRequest) (*system.WebReturn, error) {
 			PermissionsCount: len(user.Permissions),
 		})
 	}
-	return &system.WebReturn{
+	return &structs.WebReturn{
 		StatusCode: http.StatusOK,
 		FilePath:   "admin/root",
 		PageData: map[string]interface{}{

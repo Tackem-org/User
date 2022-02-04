@@ -6,7 +6,7 @@ import (
 
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/logging/debug"
-	"github.com/Tackem-org/Global/system"
+	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
 	"gorm.io/gorm/clause"
 )
@@ -20,8 +20,8 @@ type sPermissions struct {
 	Active      bool
 }
 
-func AdminPermissionsPage(in *system.WebRequest) (*system.WebReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.AdminPermissionsPage(in *system.WebRequest) (*system.WebReturn, error)]")
+func AdminPermissionsPage(in *structs.WebRequest) (*structs.WebReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.AdminPermissionsPage(in *structs.WebRequest) (*structs.WebReturn, error)]")
 	var permissions []model.Permission
 	model.DB.Preload(clause.Associations).Find(&permissions)
 	var sortedPermissions []sPermissions
@@ -35,7 +35,7 @@ func AdminPermissionsPage(in *system.WebRequest) (*system.WebReturn, error) {
 		})
 	}
 
-	return &system.WebReturn{
+	return &structs.WebReturn{
 		StatusCode: http.StatusOK,
 		FilePath:   "admin/permissions",
 		PageData: map[string]interface{}{

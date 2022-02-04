@@ -6,22 +6,23 @@ import (
 	"github.com/Tackem-org/Global/config"
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/logging/debug"
+	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/Global/system"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/password"
 )
 
-func RootPage(in *system.WebRequest) (*system.WebReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.RootPage(in *system.WebRequest) (*system.WebReturn, error)]")
-	return &system.WebReturn{
+func RootPage(in *structs.WebRequest) (*structs.WebReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.RootPage(in *structs.WebRequest) (*structs.WebReturn, error)]")
+	return &structs.WebReturn{
 		StatusCode: http.StatusOK,
 		FilePath:   "root",
 		PageData:   map[string]interface{}{},
 	}, nil
 }
 
-func ChangePasswordPage(in *system.WebRequest) (*system.WebReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.ChangePasswordPage(in *system.WebRequest) (*system.WebReturn, error)]")
+func ChangePasswordPage(in *structs.WebRequest) (*structs.WebReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.ChangePasswordPage(in *structs.WebRequest) (*structs.WebReturn, error)]")
 
 	if !in.User.HasPermission("system_user_change_own_password") {
 		return system.ForbiddenWebReturn()
@@ -59,7 +60,7 @@ func ChangePasswordPage(in *system.WebRequest) (*system.WebReturn, error) {
 			}
 		}
 	}
-	return &system.WebReturn{
+	return &structs.WebReturn{
 		StatusCode: http.StatusOK,
 		FilePath:   "changepassword",
 		PageData: map[string]interface{}{
@@ -69,8 +70,8 @@ func ChangePasswordPage(in *system.WebRequest) (*system.WebReturn, error) {
 	}, nil
 }
 
-func ChangeUsernamePage(in *system.WebRequest) (*system.WebReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.ChangeUsernamePage(in *system.WebRequest) (*system.WebReturn, error)]")
+func ChangeUsernamePage(in *structs.WebRequest) (*structs.WebReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.ChangeUsernamePage(in *structs.WebRequest) (*structs.WebReturn, error)]")
 	if !in.User.HasPermission("system_user_change_own_username") {
 		return system.ForbiddenWebReturn()
 	}
@@ -100,7 +101,7 @@ func ChangeUsernamePage(in *system.WebRequest) (*system.WebReturn, error) {
 			}
 		}
 	}
-	return &system.WebReturn{
+	return &structs.WebReturn{
 		StatusCode: http.StatusOK,
 		FilePath:   "changeusername",
 		PageData: map[string]interface{}{
@@ -111,8 +112,8 @@ func ChangeUsernamePage(in *system.WebRequest) (*system.WebReturn, error) {
 	}, nil
 }
 
-func RequestUsernamePage(in *system.WebRequest) (*system.WebReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.RequestUsernamePage(in *system.WebRequest) (*system.WebReturn, error)]")
+func RequestUsernamePage(in *structs.WebRequest) (*structs.WebReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.RequestUsernamePage(in *structs.WebRequest) (*structs.WebReturn, error)]")
 	if !in.User.HasPermission("system_user_request_change_of_username") {
 		return system.ForbiddenWebReturn()
 	}
@@ -158,7 +159,7 @@ func RequestUsernamePage(in *system.WebRequest) (*system.WebReturn, error) {
 		}
 	}
 
-	return &system.WebReturn{
+	return &structs.WebReturn{
 		StatusCode: http.StatusOK,
 		FilePath:   "requestusername",
 		PageData: map[string]interface{}{
@@ -170,9 +171,9 @@ func RequestUsernamePage(in *system.WebRequest) (*system.WebReturn, error) {
 	}, nil
 }
 
-func EditPage(in *system.WebRequest) (*system.WebReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.EditPage(in *system.WebRequest) (*system.WebReturn, error)]")
-	return &system.WebReturn{
+func EditPage(in *structs.WebRequest) (*structs.WebReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.EditPage(in *structs.WebRequest) (*structs.WebReturn, error)]")
+	return &structs.WebReturn{
 		StatusCode: http.StatusOK,
 		FilePath:   "edit",
 		PageData:   map[string]interface{}{},
