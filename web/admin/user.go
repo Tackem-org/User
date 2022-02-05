@@ -27,7 +27,6 @@ import (
 
 func AdminUserIDPage(in *structs.WebRequest) (*structs.WebReturn, error) {
 	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.AdminUserIDPage(in *structs.WebRequest) (*structs.WebReturn, error)]")
-	logging.Infof("%+v", in.PathVariables)
 	var userID uint64
 	useridvar, found := in.PathVariables["userid"]
 	if !found {
