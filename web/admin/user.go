@@ -27,8 +27,16 @@ import (
 
 func AdminUserIDPage(in *structs.WebRequest) (*structs.WebReturn, error) {
 	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.AdminUserIDPage(in *structs.WebRequest) (*structs.WebReturn, error)]")
-	userID := uint64(in.PathVariables["userid"].(int))
-
+	logging.Infof("%+v", in.PathVariables)
+	var userID uint64
+	useridvar, found := in.PathVariables["userid"]
+	if !found {
+		return &structs.WebReturn{
+			StatusCode:   http.StatusInternalServerError,
+			ErrorMessage: "USERID NOT FOUND FROM PATH",
+		}, nil
+	}
+	userID = uint64(useridvar.(float64))
 	var user model.User
 	var allPermissions []model.Permission
 	var allPermissionsList []sPermissions

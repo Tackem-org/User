@@ -82,16 +82,52 @@ func main() {
 		},
 		WebSystems: func() {
 			system.WebSetup(&static.FS)
-			system.WebAddAdminPath("/", admin.AdminRootPage)
-			system.WebAddAdminPath("/edit/{{number:userid}}", admin.AdminUserIDPage)
-			system.WebAddAdminPath("/groups", admin.AdminGroupsPage)
-			system.WebAddAdminWebSocket("/groups.ws", admin.AdminGroupsWebSocket)
-			system.WebAddAdminWebSocket("/edituser.ws", admin.AdminEditUserWebSocket)
-			system.WebAddAdminPath("/permissions", admin.AdminPermissionsPage)
-			// system.WebAddPath("/", web.RootPage)
-			system.WebAddPath("/changepassword", web.ChangePasswordPage)
-			system.WebAddPath("/changeusername", web.ChangeUsernamePage)
-			system.WebAddPath("/requestusername", web.RequestUsernamePage)
+			system.WebAddAdminPath(&pb.AdminWebLinkItem{
+				Path:        "/",
+				PostAllowed: false,
+				GetDisabled: false,
+			}, admin.AdminRootPage)
+			system.WebAddAdminPath(&pb.AdminWebLinkItem{
+				Path:        "/edit/{{number:userid}}",
+				PostAllowed: false,
+				GetDisabled: false,
+			}, admin.AdminUserIDPage)
+			system.WebAddAdminPath(&pb.AdminWebLinkItem{
+				Path:        "/groups",
+				PostAllowed: false,
+				GetDisabled: false,
+			}, admin.AdminGroupsPage)
+			// system.WebAddAdminWebSocket("/groups.ws", admin.AdminGroupsWebSocket)
+			// system.WebAddAdminWebSocket("/edituser.ws", admin.AdminEditUserWebSocket)
+			system.WebAddAdminPath(&pb.AdminWebLinkItem{
+				Path:        "/permissions",
+				PostAllowed: false,
+				GetDisabled: false,
+			}, admin.AdminPermissionsPage)
+			system.WebAddPath(&pb.WebLinkItem{
+				Path:        "/",
+				Permission:  "",
+				PostAllowed: false,
+				GetDisabled: false,
+			}, web.RootPage)
+			system.WebAddPath(&pb.WebLinkItem{
+				Path:        "/changepassword",
+				Permission:  "system_user_change_own_password",
+				PostAllowed: false,
+				GetDisabled: false,
+			}, web.ChangePasswordPage)
+			system.WebAddPath(&pb.WebLinkItem{
+				Path:        "/changeusername",
+				Permission:  "system_user_change_own_username",
+				PostAllowed: false,
+				GetDisabled: false,
+			}, web.ChangeUsernamePage)
+			system.WebAddPath(&pb.WebLinkItem{
+				Path:        "/requestusername",
+				Permission:  "system_user_request_change_of_username",
+				PostAllowed: false,
+				GetDisabled: false,
+			}, web.RequestUsernamePage)
 			// system.WebAddPath("/edit", web.EditPage)
 		},
 		MainSetup: func() {
