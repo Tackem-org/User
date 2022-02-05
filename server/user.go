@@ -48,39 +48,8 @@ func (u *UserServer) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.Logo
 	}, nil
 }
 
-func (u *UserServer) Check(ctx context.Context, in *pb.CheckRequest) (*pb.CheckResponse, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[server.(u *UserServer) Check(ctx context.Context, in *pb.CheckRequest) (*pb.CheckResponse, error)]")
-	for _, s := range Sessions {
-		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
-			return &pb.CheckResponse{
-				Success: true,
-			}, nil
-		}
-	}
-	return &pb.CheckResponse{
-		Success:      false,
-		ErrorMessage: "Session Not Found",
-	}, nil
-}
-
-func (u *UserServer) GetUserID(ctx context.Context, in *pb.GetUserIDRequest) (*pb.GetUserIDResponse, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[server.(u *UserServer) GetUserID(ctx context.Context, in *pb.GetUserIDRequest) (*pb.GetUserIDResponse, error)]")
-	for _, s := range Sessions {
-		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
-			return &pb.GetUserIDResponse{
-				Success: true,
-				UserId:  s.UserID,
-			}, nil
-		}
-	}
-	return &pb.GetUserIDResponse{
-		Success:      false,
-		ErrorMessage: "Session Not Found",
-	}, nil
-}
-
-func (u *UserServer) GetWebBaseData(ctx context.Context, in *pb.GetWebBaseDataRequest) (*pb.GetBaseDataResponse, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[server.(u *UserServer) GetWebBaseData(context.Context, *GetWebBaseDataRequest) (*GetBaseDataResponse, error)]")
+func (u *UserServer) GetUserData(ctx context.Context, in *pb.GetUserDataRequest) (*pb.UserDataResponse, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[server.(u *UserServer) GetUserData(context.Context, *GetUserDataRequest) (*GetBaseDataResponse, error)]")
 	for _, s := range Sessions {
 		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
 			var user model.User
@@ -93,7 +62,7 @@ func (u *UserServer) GetWebBaseData(ctx context.Context, in *pb.GetWebBaseDataRe
 			} else {
 				icon = ""
 			}
-			return &pb.GetBaseDataResponse{
+			return &pb.UserDataResponse{
 				Success:      true,
 				ErrorMessage: "",
 				UserId:       user.ID,
@@ -105,52 +74,9 @@ func (u *UserServer) GetWebBaseData(ctx context.Context, in *pb.GetWebBaseDataRe
 			}, nil
 		}
 	}
-	return &pb.GetBaseDataResponse{
+	return &pb.UserDataResponse{
 		Success:      false,
 		ErrorMessage: "Session Not Found",
 	}, nil
 
-}
-
-func (u *UserServer) GetBaseData(ctx context.Context, in *pb.GetBaseDataRequest) (*pb.GetBaseDataResponse, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[server.(u *UserServer) GetBaseData(context.Context, *GetBaseDataRequest) (*GetBaseDataResponse, error)]")
-
-	var user model.User
-	model.DB.Preload(clause.Associations).First(&user, in.UserId)
-	var icon string
-	if strings.HasPrefix(user.Icon, "data:") || strings.HasPrefix(user.Icon, "http") {
-		icon = user.Icon
-	} else if user.Icon != "" {
-		icon = fmt.Sprintf("user/static/img/icons/%s", user.Icon)
-	} else {
-		icon = ""
-	}
-	return &pb.GetBaseDataResponse{
-		Success:      true,
-		ErrorMessage: "",
-		UserId:       user.ID,
-		Name:         user.Username,
-		Initial:      strings.ToUpper(string(user.Username[0])),
-		Icon:         icon,
-		IsAdmin:      user.IsAdmin,
-		Permissions:  user.AllPermissionStrings(),
-	}, nil
-}
-
-func (u *UserServer) IsAdmin(ctx context.Context, in *pb.IsAdminRequest) (*pb.IsAdminResponse, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[server.(u *UserServer) IsAdmin(ctx context.Context, in *pb.IsAdminRequest) (*pb.IsAdminResponse, error)]")
-	for _, s := range Sessions {
-		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
-			var user model.User
-			model.DB.First(&user, s.UserID)
-			return &pb.IsAdminResponse{
-				Success: true,
-				IsAdmin: user.IsAdmin,
-			}, nil
-		}
-	}
-	return &pb.IsAdminResponse{
-		Success:      false,
-		ErrorMessage: "Session Not Found",
-	}, nil
 }
