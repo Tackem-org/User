@@ -16,6 +16,7 @@ import (
 	pbuser "github.com/Tackem-org/Proto/pb/user"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/server"
+	"github.com/Tackem-org/User/socket"
 	"github.com/Tackem-org/User/static"
 	"github.com/Tackem-org/User/web"
 	"github.com/Tackem-org/User/web/admin"
@@ -97,8 +98,6 @@ func main() {
 				PostAllowed: false,
 				GetDisabled: false,
 			}, admin.AdminGroupsPage)
-			// system.WebAddAdminWebSocket("/groups.ws", admin.AdminGroupsWebSocket)
-			// system.WebAddAdminWebSocket("/edituser.ws", admin.AdminEditUserWebSocket)
 			system.WebAddAdminPath(&pb.AdminWebLinkItem{
 				Path:        "/permissions",
 				PostAllowed: false,
@@ -129,6 +128,24 @@ func main() {
 				GetDisabled: false,
 			}, web.RequestUsernamePage)
 			// system.WebAddPath("/edit", web.EditPage)
+
+			system.WebAddWebSocket(&pb.WebSocketItem{
+				Command:           "admin.group.add",
+				AdminOnly:         true,
+				RequiredVariables: []string{"name"},
+			}, socket.GroupAdd)
+			system.WebAddWebSocket(&pb.WebSocketItem{
+				Command:           "admin.group.delete",
+				AdminOnly:         true,
+				RequiredVariables: []string{"groupid"},
+			}, socket.GroupDelete)
+			system.WebAddWebSocket(&pb.WebSocketItem{
+				Command:           "admin.group.set",
+				AdminOnly:         true,
+				RequiredVariables: []string{"groupid", "permissionid", "checked"},
+			}, socket.GroupSet)
+
+			// system.WebAddAdminWebSocket("/edituser.ws", admin.AdminEditUserWebSocket)
 		},
 		MainSetup: func() {
 			logging.Info("Setup Database")
