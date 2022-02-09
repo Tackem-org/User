@@ -1,4 +1,4 @@
-package socket
+package group
 
 import (
 	"errors"
@@ -11,8 +11,8 @@ import (
 	"gorm.io/gorm"
 )
 
-func GroupDelete(in *system.WebSocketRequest) (*system.WebSocketReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.GroupDelete(in *system.WebSocketRequest) (*system.WebSocketReturn, error)]")
+func Delete(in *system.WebSocketRequest) (*system.WebSocketReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[socket.admin.group.GroupDelete(in *system.WebSocketRequest) (*system.WebSocketReturn, error)]")
 	var group model.Group
 	if err := model.DB.First(&group, in.Data["groupid"]).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

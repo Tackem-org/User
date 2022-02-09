@@ -1,4 +1,4 @@
-package socket
+package group
 
 import (
 	"errors"
@@ -11,8 +11,8 @@ import (
 	"gorm.io/gorm"
 )
 
-func GroupSet(in *system.WebSocketRequest) (*system.WebSocketReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.GroupSet(in *system.WebSocketRequest) (*system.WebSocketReturn, error)]")
+func Set(in *system.WebSocketRequest) (*system.WebSocketReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[socket.admin.group.GroupSet(in *system.WebSocketRequest) (*system.WebSocketReturn, error)]")
 	var group model.Group
 	var permission model.Permission
 	fgroupid, okgid := in.Data["groupid"].(float64)

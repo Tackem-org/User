@@ -70,6 +70,7 @@ func Setup(dbFile string) {
 			{Name: "system_user_change_own_password"},
 			{Name: "system_user_change_own_username"},
 			{Name: "system_user_request_change_of_username"},
+			{Name: "system_user_action_change_of_username"},
 		}
 		DB.Create(&p)
 	}

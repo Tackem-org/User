@@ -1,4 +1,4 @@
-package socket
+package group
 
 import (
 	"net/http"
@@ -10,8 +10,8 @@ import (
 	"github.com/Tackem-org/User/model"
 )
 
-func GroupAdd(in *system.WebSocketRequest) (*system.WebSocketReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.GroupAdd(in *system.WebSocketRequest) (*system.WebSocketReturn, error)]")
+func Add(in *system.WebSocketRequest) (*system.WebSocketReturn, error) {
+	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[socket.admin.group.GroupAdd(in *system.WebSocketRequest) (*system.WebSocketReturn, error)]")
 	name := in.Data["name"].(string)
 	if name == "" {
 		return &system.WebSocketReturn{

@@ -13,10 +13,12 @@ import (
 	"github.com/Tackem-org/Global/system"
 	pbc "github.com/Tackem-org/Proto/pb/config"
 	pb "github.com/Tackem-org/Proto/pb/registration"
-	pbuser "github.com/Tackem-org/Proto/pb/user"
+	pbu "github.com/Tackem-org/Proto/pb/user"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/server"
 	"github.com/Tackem-org/User/socket"
+	"github.com/Tackem-org/User/socket/admin/editUser"
+	"github.com/Tackem-org/User/socket/admin/group"
 	"github.com/Tackem-org/User/static"
 	"github.com/Tackem-org/User/web"
 	"github.com/Tackem-org/User/web/admin"
@@ -79,7 +81,7 @@ func main() {
 		VerboseLog: *verbose,
 		DebugLevel: debug.NONE,
 		GPRCSystems: func(grpcs *grpc.Server) {
-			pbuser.RegisterUserServer(grpcs, &server.UserServer{})
+			pbu.RegisterUserServer(grpcs, &server.UserServer{})
 		},
 		WebSystems: func() {
 			system.WebSetup(&static.FS)
@@ -133,48 +135,87 @@ func main() {
 				Command:           "admin.group.add",
 				AdminOnly:         true,
 				RequiredVariables: []string{"name"},
-			}, socket.GroupAdd)
+			}, group.Add)
 			system.WebAddWebSocket(&pb.WebSocketItem{
 				Command:           "admin.group.delete",
 				AdminOnly:         true,
 				RequiredVariables: []string{"groupid"},
-			}, socket.GroupDelete)
+			}, group.Delete)
 			system.WebAddWebSocket(&pb.WebSocketItem{
 				Command:           "admin.group.set",
 				AdminOnly:         true,
 				RequiredVariables: []string{"groupid", "permissionid", "checked"},
-			}, socket.GroupSet)
-
-			// system.WebAddAdminWebSocket("/edituser.ws", admin.AdminEditUserWebSocket)
+			}, group.Set)
+			system.WebAddWebSocket(&pb.WebSocketItem{
+				Command:           "admin.edituser.changeusername",
+				AdminOnly:         true,
+				RequiredVariables: []string{"userid", "username"},
+			}, editUser.ChangeUsername)
+			system.WebAddWebSocket(&pb.WebSocketItem{
+				Command:           "admin.edituser.changepassword",
+				AdminOnly:         true,
+				RequiredVariables: []string{"userid", "password"},
+			}, editUser.ChangePassword)
+			system.WebAddWebSocket(&pb.WebSocketItem{
+				Command:           "admin.edituser.changedisabled",
+				AdminOnly:         true,
+				RequiredVariables: []string{"userid", "checked"},
+			}, editUser.ChangeDisabled)
+			system.WebAddWebSocket(&pb.WebSocketItem{
+				Command:           "admin.edituser.changeisadmin",
+				AdminOnly:         true,
+				RequiredVariables: []string{"userid", "checked"},
+			}, editUser.ChangeIsAdmin)
+			system.WebAddWebSocket(&pb.WebSocketItem{
+				Command:           "admin.edituser.uploadiconbase64",
+				AdminOnly:         true,
+				RequiredVariables: []string{"userid", "icon"},
+			}, editUser.UploadIconBase64)
+			system.WebAddWebSocket(&pb.WebSocketItem{
+				Command:           "admin.edituser.clearicon",
+				AdminOnly:         true,
+				RequiredVariables: []string{"userid"},
+			}, editUser.ClearIcon)
+			system.WebAddWebSocket(&pb.WebSocketItem{
+				Command:           "admin.edituser.changegroup",
+				AdminOnly:         true,
+				RequiredVariables: []string{"userid", "group", "checked"},
+			}, editUser.ChangeGroup)
+			system.WebAddWebSocket(&pb.WebSocketItem{
+				Command:           "admin.edituser.changepermission",
+				AdminOnly:         true,
+				RequiredVariables: []string{"userid", "permission", "checked"},
+			}, editUser.ChangePermission)
+			system.WebAddWebSocket(&pb.WebSocketItem{
+				Command:           "acceptusernamechange",
+				Permission:        "system_user_action_change_of_username",
+				RequiredVariables: []string{"userid"},
+			}, socket.AcceptUsernameChange)
+			system.WebAddWebSocket(&pb.WebSocketItem{
+				Command:           "rejectusernamechange",
+				Permission:        "system_user_action_change_of_username",
+				RequiredVariables: []string{"userid"},
+			}, socket.RejectUsernameChange)
 		},
 		MainSetup: func() {
 			logging.Info("Setup Database")
 			model.Setup(*databaseFile)
 			if _, err := os.Stat(tempSavePath); !os.IsNotExist(err) {
-				loadData()
+				file, _ := os.Open(tempSavePath)
+				defer file.Close()
+				json.NewDecoder(file).Decode(&server.Sessions)
+				os.Remove(tempSavePath)
 			}
 		},
 		Shutdown: func() {
-			Save()
+			if len(server.Sessions) == 0 {
+				return
+			}
+			b, _ := json.Marshal(server.Sessions)
+			reader := bytes.NewReader(b)
+			file, _ := os.Create(tempSavePath)
+			defer file.Close()
+			io.Copy(file, reader)
 		},
 	})
-}
-
-func Save() {
-
-	if len(server.Sessions) == 0 {
-		return
-	}
-	b, _ := json.Marshal(server.Sessions)
-	reader := bytes.NewReader(b)
-	file, _ := os.Create(tempSavePath)
-	defer file.Close()
-	io.Copy(file, reader)
-}
-
-func loadData() {
-	file, _ := os.Open(tempSavePath)
-	defer file.Close()
-	json.NewDecoder(file).Decode(&server.Sessions)
-	os.Remove(tempSavePath)
 }

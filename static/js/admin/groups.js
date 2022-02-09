@@ -1,9 +1,5 @@
 (function () {
     $(() => {
-        console.log("SETTING UP SOCKETS");
-        if (socket == null) {
-            console.log("SOCKET NULL");
-        }
         socket.AddReturnAction("user.admin.group.add", GroupAddReturn);
         socket.AddReturnAction("user.admin.group.delete", GroupDeleteReturn);
         SetupEvents();
