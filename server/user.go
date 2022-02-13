@@ -67,7 +67,6 @@ func (u *UserServer) GetUserData(ctx context.Context, in *pb.GetUserDataRequest)
 				ErrorMessage: "",
 				UserId:       user.ID,
 				Name:         user.Username,
-				Initial:      strings.ToUpper(string(user.Username[0])),
 				Icon:         icon,
 				IsAdmin:      user.IsAdmin,
 				Permissions:  user.AllPermissionStrings(),

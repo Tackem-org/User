@@ -40,7 +40,7 @@
             return;
         }
         $('input[type="text"').val("");
-        let $template = $($('template').html());
+        let $template = $($('template.group').html());
         $template.prop('id', `group${data['data']['groupid']}`)
         $template.find('td:first-of-type').html(data['data']['groupid'])
         $template.find('td:nth-of-type(2)').html(data['data']['name']);

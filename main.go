@@ -58,9 +58,9 @@ func main() {
 					HelpText:     "what is the minimum password length",
 					InputType:    pb.InputType_INumber,
 					InputAttributes: &pb.InputAttributes{
-						Other: []*pb.DictValue{
-							{Name: "min", Value: "1"},
-							{Name: "max", Value: "16"},
+						Other: map[string]string{
+							"min": "1",
+							"max": "16",
 						},
 					},
 				},
