@@ -151,7 +151,8 @@
     }
 
     function UpdateTimestamp(data) {
-        if ('updatedat' in data['data']) {
+        console.log(data);
+        if ('data' in data && 'updatedat' in data['data']) {
             let $uat = $('#updatedat').html(data['data']['updatedat']);
         }
     }

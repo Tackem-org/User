@@ -64,23 +64,19 @@ func Setup(dbFile string) {
 		})
 
 	}
-	DB.Model(&Permission{}).Count(&count)
-	if count == 0 {
-		p := []Permission{
-			{Name: "system_user_change_own_password"},
-			{Name: "system_user_change_own_username"},
-			{Name: "system_user_request_change_of_username"},
-			{Name: "system_user_action_change_of_username"},
-		}
-		DB.Create(&p)
-	}
-	DB.Model(&Group{}).Count(&count)
-	if count == 0 {
-		p := []Group{
-			{Name: "user"},
-			{Name: "super_user"},
-			{Name: "power_user"},
-		}
-		DB.Create(&p)
-	}
+
+	//Master Permissions
+	AddPermission("do_tasks")
+
+	//User Permissions
+	AddPermission("system_user_change_own_password")
+	AddPermission("system_user_change_own_username")
+	AddPermission("system_user_request_change_of_username")
+	AddPermission("system_user_action_change_of_username")
+
+	//User Groups
+	AddGroup("user")
+	AddGroup("super_user")
+	AddGroup("power_user")
+
 }
