@@ -134,7 +134,6 @@
     }
 
     function AcceptUsernameChange(data) {
-        console.log(data);
         $('#username').val(data['name']);
         $('#usernamerequest').remove();
     }
@@ -151,7 +150,6 @@
     }
 
     function UpdateTimestamp(data) {
-        console.log(data);
         if ('data' in data && 'updatedat' in data['data']) {
             let $uat = $('#updatedat').html(data['data']['updatedat']);
         }

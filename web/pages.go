@@ -10,6 +10,7 @@ import (
 	"github.com/Tackem-org/Global/system"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/password"
+	"github.com/Tackem-org/User/tasks"
 )
 
 func RootPage(in *structs.WebRequest) (*structs.WebReturn, error) {
@@ -153,6 +154,8 @@ func RequestUsernamePage(in *structs.WebRequest) (*structs.WebReturn, error) {
 						success = false
 					} else {
 						success = true
+						usernameRequest.RequestUser = user
+						system.AddTask(tasks.UserNameChangeRequest(&usernameRequest))
 					}
 				}
 			}

@@ -13,7 +13,7 @@ User Service For Tackem System
 
 - Normal user systems <- working on with above fix first
   - need to allow the user to pick an Icon and look at making the Icon folder a special folder
-
+- View Other users option with permission
 ## Future
 - look at rules for allowed password too.
 - possably need to add in an email field for comunications to a user through email. this will then need some form of list of allowed emails to recieve

@@ -8,6 +8,7 @@ import (
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/logging/debug"
 	"github.com/Tackem-org/Global/system"
+	pb "github.com/Tackem-org/Proto/pb/web"
 	"github.com/Tackem-org/User/model"
 )
 
@@ -37,7 +38,7 @@ func RejectUsernameChange(in *system.WebSocketRequest) (*system.WebSocketReturn,
 			ErrorMessage: "username request not found",
 		}, nil
 	}
-
+	taskID := usernameRequest.ID
 	result4 := model.DB.Delete(&usernameRequest)
 	if result4.Error != nil {
 		return &system.WebSocketReturn{
@@ -45,7 +46,11 @@ func RejectUsernameChange(in *system.WebSocketRequest) (*system.WebSocketReturn,
 			ErrorMessage: "failed to delete the request",
 		}, nil
 	}
-
+	system.RemoveTask(&pb.RemoveTaskRequest{
+		Task:   "usernamechangerequest",
+		BaseId: system.RegData().GetBaseID(),
+		TaskId: taskID,
+	})
 	in.Data["updatedat"] = user.UpdatedAt
 	return &system.WebSocketReturn{
 		StatusCode: http.StatusOK,

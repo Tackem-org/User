@@ -9,17 +9,20 @@ import (
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/logging/debug"
 	"github.com/Tackem-org/Global/structs"
+	"gorm.io/gorm/clause"
 
 	"github.com/Tackem-org/Global/system"
 	pbc "github.com/Tackem-org/Proto/pb/config"
 	pb "github.com/Tackem-org/Proto/pb/registration"
 	pbu "github.com/Tackem-org/Proto/pb/user"
+	pbw "github.com/Tackem-org/Proto/pb/web"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/server"
 	"github.com/Tackem-org/User/socket"
 	"github.com/Tackem-org/User/socket/admin/editUser"
 	"github.com/Tackem-org/User/socket/admin/group"
 	"github.com/Tackem-org/User/static"
+	"github.com/Tackem-org/User/tasks"
 	"github.com/Tackem-org/User/web"
 	"github.com/Tackem-org/User/web/admin"
 	"github.com/spf13/pflag"
@@ -66,7 +69,6 @@ func main() {
 				},
 			},
 			NavItems: []*pb.NavItem{
-				// {LinkType: pb.LinkType_User, Title: "User", Icon: "user", Path: "/"},
 				{LinkType: pb.LinkType_User, Title: "Change Password", Icon: "user", Path: "/changepassword", Permission: "system_user_change_own_password"},
 				{LinkType: pb.LinkType_User, Title: "Change Username", Icon: "user", Path: "/changeusername", Permission: "system_user_change_own_username"},
 				{LinkType: pb.LinkType_User, Title: "Request New Username", Icon: "user", Path: "/requestusername", Permission: "system_user_request_change_of_username"},
@@ -129,8 +131,8 @@ func main() {
 				PostAllowed: false,
 				GetDisabled: false,
 			}, web.RequestUsernamePage)
-			// system.WebAddPath("/edit", web.EditPage)
-
+		},
+		WebSockets: func() {
 			system.WebAddWebSocket(&pb.WebSocketItem{
 				Command:           "admin.group.add",
 				AdminOnly:         true,
@@ -197,6 +199,7 @@ func main() {
 				RequiredVariables: []string{"userid"},
 			}, socket.RejectUsernameChange)
 		},
+		TaskGrabber: taskGrabber,
 		MainSetup: func() {
 			logging.Info("Setup Database")
 			model.Setup(*databaseFile)
@@ -218,4 +221,15 @@ func main() {
 			io.Copy(file, reader)
 		},
 	})
+}
+
+func taskGrabber() []*pbw.SendTaskRequest {
+	var rTasks []*pbw.SendTaskRequest
+
+	var uChanges []model.UsernameRequest
+	model.DB.Preload(clause.Associations).Find(&uChanges)
+	for _, u := range uChanges {
+		rTasks = append(rTasks, tasks.UserNameChangeRequest(&u))
+	}
+	return rTasks
 }
