@@ -22,8 +22,8 @@ func UserNameChangeRequest(u *model.UsernameRequest) *pbw.SendTaskRequest {
 		CreatedAt: u.CreatedAt.Format("2006-01-02T15:04:05"),
 		Icon:      "user/static/img/userchange.png",
 		Color:     "",
-		Title:     fmt.Sprintf("Username Change Request %s -> %s ", u.RequestUser.Username, u.Name),
-		Message:   fmt.Sprintf("User %s is requesting a change of there username to %s ", u.RequestUser.Username, u.Name),
+		Title:     fmt.Sprintf("Username Change Request '%s' -> '%s' ", u.RequestUser.Username, u.Name),
+		Message:   fmt.Sprintf("User '%s' is requesting a change of there username to '%s'", u.RequestUser.Username, u.Name),
 		Url:       "",
 		Actions: []*pbw.TaskAction{
 			{

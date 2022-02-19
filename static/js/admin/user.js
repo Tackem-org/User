@@ -134,19 +134,19 @@
     }
 
     function AcceptUsernameChange(data) {
-        $('#username').val(data['name']);
+        $('#username').val(data['data']['name']);
         $('#usernamerequest').remove();
     }
     function RejectUsernameChange(data) {
         $('#usernamerequest').remove();
     }
     function UploadIconBase64(data) {
-        $('#usericon').attr('src', data['name']);
+        console.log(data);
+        $('#usericon').attr('src', data['data']['icon']);
     }
     function ClearIcon(data) {
         $('#usericon').attr('src', '');
         $('[name="icon"]').val(null);
-        $('#updatedat').html(data['updatedat']);
     }
 
     function UpdateTimestamp(data) {
