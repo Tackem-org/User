@@ -13,9 +13,9 @@ type UsernameRequestCommand struct {
 	RequestID uint64 `json:"requestid"`
 }
 
-func UserNameChangeRequest(u *model.UsernameRequest) *pbw.SendTaskRequest {
+func UserNameChangeRequest(u *model.UsernameRequest) *pbw.TaskMessage {
 
-	return &pbw.SendTaskRequest{
+	return &pbw.TaskMessage{
 		Task:      "usernamechangerequest",
 		BaseId:    system.GetBaseID(),
 		TaskId:    u.ID,
@@ -35,7 +35,7 @@ func UserNameChangeRequest(u *model.UsernameRequest) *pbw.SendTaskRequest {
 				Command: map[string]string{"command": "user.rejectusernamechange", "userid": fmt.Sprintf("%d", u.RequestUserID)},
 			},
 		},
-		Who: &pbw.SendTaskRequest_Permission{
+		Who: &pbw.TaskMessage_Permission{
 			Permission: "do_tasks",
 		},
 	}

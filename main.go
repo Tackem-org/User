@@ -82,7 +82,7 @@ func main() {
 		LogFile:    *logFile,
 		VerboseLog: *verbose,
 		DebugLevel: debug.NONE,
-		GPRCSystems: func(grpcs *grpc.Server) {
+		GRPCSystems: func(grpcs *grpc.Server) {
 			pbu.RegisterUserServer(grpcs, &server.UserServer{})
 		},
 		WebSystems: func() {
@@ -223,8 +223,8 @@ func main() {
 	})
 }
 
-func taskGrabber() []*pbw.SendTaskRequest {
-	var rTasks []*pbw.SendTaskRequest
+func taskGrabber() []*pbw.TaskMessage {
+	var rTasks []*pbw.TaskMessage
 
 	var uChanges []model.UsernameRequest
 	model.DB.Preload(clause.Associations).Find(&uChanges)
