@@ -9,6 +9,7 @@ import (
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/logging/debug"
 	"github.com/Tackem-org/Global/structs"
+	"github.com/Tackem-org/Global/system/setupData"
 	"gorm.io/gorm/clause"
 
 	"github.com/Tackem-org/Global/system"
@@ -41,42 +42,41 @@ const (
 
 func main() {
 	pflag.Parse()
-	system.Run(system.SetupData{
-		BaseData: system.BaseData{
-			ServiceName: "user",
-			ServiceType: "system",
-			Version: structs.Version{
-				Major:  0,
-				Minor:  0,
-				Hotfix: 0,
-			},
-			Multi:     false,
-			SingleRun: false,
-			ConfigItems: []*pb.ConfigItem{
-				{
-					Key:          "user.password.minimum",
-					DefaultValue: "8",
-					Type:         pbc.ValueType_Uint,
-					Label:        "Password Minimum Length",
-					HelpText:     "what is the minimum password length",
-					InputType:    pb.InputType_INumber,
-					InputAttributes: &pb.InputAttributes{
-						Other: map[string]string{
-							"min": "1",
-							"max": "16",
-						},
+	system.Run(&setupData.SetupData{
+
+		ServiceName: "user",
+		ServiceType: "system",
+		Version: structs.Version{
+			Major:  0,
+			Minor:  0,
+			Hotfix: 0,
+		},
+		Multi:     false,
+		SingleRun: false,
+		ConfigItems: []*pb.ConfigItem{
+			{
+				Key:          "user.password.minimum",
+				DefaultValue: "8",
+				Type:         pbc.ValueType_Uint,
+				Label:        "Password Minimum Length",
+				HelpText:     "what is the minimum password length",
+				InputType:    pb.InputType_INumber,
+				InputAttributes: &pb.InputAttributes{
+					Other: map[string]string{
+						"min": "1",
+						"max": "16",
 					},
 				},
 			},
-			NavItems: []*pb.NavItem{
-				{LinkType: pb.LinkType_User, Title: "Change Password", Icon: "user", Path: "/changepassword", Permission: "system_user_change_own_password"},
-				{LinkType: pb.LinkType_User, Title: "Change Username", Icon: "user", Path: "/changeusername", Permission: "system_user_change_own_username"},
-				{LinkType: pb.LinkType_User, Title: "Request New Username", Icon: "user", Path: "/requestusername", Permission: "system_user_request_change_of_username"},
-				{LinkType: pb.LinkType_Admin, Title: "Users", Icon: "users", Path: "/", SubLinks: []*pb.NavItem{
-					{LinkType: pb.LinkType_Admin, Title: "Groups", Icon: "user-shield", Path: "/groups"},
-					{LinkType: pb.LinkType_Admin, Title: "Permissions", Icon: "key", Path: "/permissions"},
-				},
-				},
+		},
+		NavItems: []*pb.NavItem{
+			{LinkType: pb.LinkType_User, Title: "Change Password", Icon: "user", Path: "/changepassword", Permission: "system_user_change_own_password"},
+			{LinkType: pb.LinkType_User, Title: "Change Username", Icon: "user", Path: "/changeusername", Permission: "system_user_change_own_username"},
+			{LinkType: pb.LinkType_User, Title: "Request New Username", Icon: "user", Path: "/requestusername", Permission: "system_user_request_change_of_username"},
+			{LinkType: pb.LinkType_Admin, Title: "Users", Icon: "users", Path: "/", SubLinks: []*pb.NavItem{
+				{LinkType: pb.LinkType_Admin, Title: "Groups", Icon: "user-shield", Path: "/groups"},
+				{LinkType: pb.LinkType_Admin, Title: "Permissions", Icon: "key", Path: "/permissions"},
+			},
 			},
 		},
 		LogFile:    *logFile,
@@ -85,122 +85,140 @@ func main() {
 		GRPCSystems: func(grpcs *grpc.Server) {
 			pbu.RegisterUserServer(grpcs, &server.UserServer{})
 		},
-		WebSystems: func() {
-			system.WebSetup(&static.FS)
-			system.WebAddAdminPath(&pb.AdminWebLinkItem{
-				Path:        "/",
-				PostAllowed: false,
-				GetDisabled: false,
-			}, admin.AdminRootPage)
-			system.WebAddAdminPath(&pb.AdminWebLinkItem{
-				Path:        "/edit/{{number:userid}}",
-				PostAllowed: false,
-				GetDisabled: false,
-			}, admin.AdminUserIDPage)
-			system.WebAddAdminPath(&pb.AdminWebLinkItem{
-				Path:        "/groups",
-				PostAllowed: false,
-				GetDisabled: false,
-			}, admin.AdminGroupsPage)
-			system.WebAddAdminPath(&pb.AdminWebLinkItem{
-				Path:        "/permissions",
-				PostAllowed: false,
-				GetDisabled: false,
-			}, admin.AdminPermissionsPage)
-			system.WebAddPath(&pb.WebLinkItem{
-				Path:        "/",
-				Permission:  "",
-				PostAllowed: false,
-				GetDisabled: false,
-			}, web.RootPage)
-			system.WebAddPath(&pb.WebLinkItem{
-				Path:        "/changepassword",
-				Permission:  "system_user_change_own_password",
-				PostAllowed: false,
-				GetDisabled: false,
-			}, web.ChangePasswordPage)
-			system.WebAddPath(&pb.WebLinkItem{
-				Path:        "/changeusername",
-				Permission:  "system_user_change_own_username",
-				PostAllowed: false,
-				GetDisabled: false,
-			}, web.ChangeUsernamePage)
-			system.WebAddPath(&pb.WebLinkItem{
-				Path:        "/requestusername",
-				Permission:  "system_user_request_change_of_username",
-				PostAllowed: false,
-				GetDisabled: false,
-			}, web.RequestUsernamePage)
+
+		StaticFS: &static.FS,
+		AdminPaths: []*setupData.AdminPathItem{
+			{
+				Path: "/",
+				Call: admin.AdminRootPage,
+			},
+			{
+				Path: "/edit/{{number:userid}}",
+				Call: admin.AdminUserIDPage,
+			},
+			{
+				Path: "/groups",
+				Call: admin.AdminGroupsPage,
+			},
+			{
+				Path: "/permissions",
+				Call: admin.AdminPermissionsPage,
+			},
 		},
-		WebSockets: func() {
-			system.WebAddWebSocket(&pb.WebSocketItem{
+		Paths: []*setupData.PathItem{
+			{
+				Path:       "/",
+				Permission: "",
+				Call:       web.RootPage,
+			},
+			{
+				Path:       "/changepassword",
+				Permission: "system_user_change_own_password",
+				Call:       web.ChangePasswordPage,
+			},
+			{
+				Path:       "/changeusername",
+				Permission: "system_user_change_own_username",
+				Call:       web.ChangeUsernamePage,
+			},
+			{
+				Path:       "/requestusername",
+				Permission: "system_user_request_change_of_username",
+				Call:       web.RequestUsernamePage,
+			},
+		},
+		Sockets: []*setupData.SocketItem{
+			{
 				Command:           "admin.group.add",
 				AdminOnly:         true,
 				RequiredVariables: []string{"name"},
-			}, group.Add)
-			system.WebAddWebSocket(&pb.WebSocketItem{
+				Call:              group.Add,
+			},
+			{
 				Command:           "admin.group.delete",
 				AdminOnly:         true,
 				RequiredVariables: []string{"groupid"},
-			}, group.Delete)
-			system.WebAddWebSocket(&pb.WebSocketItem{
+				Call:              group.Delete,
+			},
+			{
 				Command:           "admin.group.set",
 				AdminOnly:         true,
 				RequiredVariables: []string{"groupid", "permissionid", "checked"},
-			}, group.Set)
-			system.WebAddWebSocket(&pb.WebSocketItem{
+				Call:              group.Set,
+			},
+			{
 				Command:           "admin.edituser.changeusername",
 				AdminOnly:         true,
 				RequiredVariables: []string{"userid", "username"},
-			}, editUser.ChangeUsername)
-			system.WebAddWebSocket(&pb.WebSocketItem{
+				Call:              editUser.ChangeUsername,
+			},
+			{
 				Command:           "admin.edituser.changepassword",
 				AdminOnly:         true,
 				RequiredVariables: []string{"userid", "password"},
-			}, editUser.ChangePassword)
-			system.WebAddWebSocket(&pb.WebSocketItem{
+				Call:              editUser.ChangePassword,
+			},
+			{
 				Command:           "admin.edituser.changedisabled",
 				AdminOnly:         true,
 				RequiredVariables: []string{"userid", "checked"},
-			}, editUser.ChangeDisabled)
-			system.WebAddWebSocket(&pb.WebSocketItem{
+				Call:              editUser.ChangeDisabled,
+			},
+			{
 				Command:           "admin.edituser.changeisadmin",
 				AdminOnly:         true,
 				RequiredVariables: []string{"userid", "checked"},
-			}, editUser.ChangeIsAdmin)
-			system.WebAddWebSocket(&pb.WebSocketItem{
+				Call:              editUser.ChangeIsAdmin,
+			},
+			{
 				Command:           "admin.edituser.uploadiconbase64",
 				AdminOnly:         true,
 				RequiredVariables: []string{"userid", "icon"},
-			}, editUser.UploadIconBase64)
-			system.WebAddWebSocket(&pb.WebSocketItem{
+				Call:              editUser.UploadIconBase64,
+			},
+			{
 				Command:           "admin.edituser.clearicon",
 				AdminOnly:         true,
 				RequiredVariables: []string{"userid"},
-			}, editUser.ClearIcon)
-			system.WebAddWebSocket(&pb.WebSocketItem{
+				Call:              editUser.ClearIcon,
+			},
+			{
 				Command:           "admin.edituser.changegroup",
 				AdminOnly:         true,
 				RequiredVariables: []string{"userid", "group", "checked"},
-			}, editUser.ChangeGroup)
-			system.WebAddWebSocket(&pb.WebSocketItem{
+				Call:              editUser.ChangeGroup,
+			},
+			{
 				Command:           "admin.edituser.changepermission",
 				AdminOnly:         true,
 				RequiredVariables: []string{"userid", "permission", "checked"},
-			}, editUser.ChangePermission)
-			system.WebAddWebSocket(&pb.WebSocketItem{
+				Call:              editUser.ChangePermission,
+			},
+			{
 				Command:           "acceptusernamechange",
 				Permission:        "system_user_action_change_of_username",
 				RequiredVariables: []string{"userid"},
-			}, socket.AcceptUsernameChange)
-			system.WebAddWebSocket(&pb.WebSocketItem{
+				Call:              socket.AcceptUsernameChange,
+			},
+			{
 				Command:           "rejectusernamechange",
 				Permission:        "system_user_action_change_of_username",
 				RequiredVariables: []string{"userid"},
-			}, socket.RejectUsernameChange)
+				Call:              socket.RejectUsernameChange,
+			},
 		},
-		TaskGrabber: taskGrabber,
+		TaskGrabber: func() []*pbw.TaskMessage {
+			//TODO ADD IN LOGGING DEBUG HERE
+			var rTasks []*pbw.TaskMessage
+			var uChanges []model.UsernameRequest
+			model.DB.Preload(clause.Associations).Find(&uChanges)
+			for _, u := range uChanges {
+				rTasks = append(rTasks, tasks.UserNameChangeRequest(&u))
+			}
+			return rTasks
+		},
 		MainSetup: func() {
+			//TODO ADD IN LOGGING DEBUG HERE
 			logging.Info("Setup Database")
 			model.Setup(*databaseFile)
 			if _, err := os.Stat(tempSavePath); !os.IsNotExist(err) {
@@ -210,7 +228,8 @@ func main() {
 				os.Remove(tempSavePath)
 			}
 		},
-		Shutdown: func() {
+		MainShutdown: func() {
+			//TODO ADD IN LOGGING DEBUG HERE
 			if len(server.Sessions) == 0 {
 				return
 			}
@@ -221,15 +240,4 @@ func main() {
 			io.Copy(file, reader)
 		},
 	})
-}
-
-func taskGrabber() []*pbw.TaskMessage {
-	var rTasks []*pbw.TaskMessage
-
-	var uChanges []model.UsernameRequest
-	model.DB.Preload(clause.Associations).Find(&uChanges)
-	for _, u := range uChanges {
-		rTasks = append(rTasks, tasks.UserNameChangeRequest(&u))
-	}
-	return rTasks
 }

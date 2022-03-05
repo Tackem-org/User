@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"github.com/Tackem-org/Global/logging"
-	"github.com/Tackem-org/Global/logging/debug"
 
 	"golang.org/x/crypto/pbkdf2"
 )
@@ -23,7 +22,6 @@ const (
 )
 
 func SetupSalt() {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[password.SetupSalt()]")
 	salt = make([]byte, saltLength)
 	f, err := os.Open(saltFile)
 	if err == nil {
@@ -39,7 +37,6 @@ func SetupSalt() {
 }
 
 func createSaltFile() {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[password.createSaltFile()]")
 	f, err := os.Create(saltFile)
 	if err != nil {
 		logging.Errorf("Error In Creating Salt File: %s", err.Error())
@@ -59,6 +56,5 @@ func createSaltFile() {
 }
 
 func Hash(password string) string {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[password.Hash(password string) string] {password=XXXXXXX}")
 	return fmt.Sprintf("%x", pbkdf2.Key([]byte(password), []byte(salt), 4096, len(salt)*8, sha512.New))
 }

@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Tackem-org/Global/logging"
-	"github.com/Tackem-org/Global/logging/debug"
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
 	"gorm.io/gorm"
@@ -16,7 +14,6 @@ import (
 )
 
 func AdminUserIDPage(in *structs.WebRequest) (*structs.WebReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.AdminUserIDPage(in *structs.WebRequest) (*structs.WebReturn, error)]")
 	var userID uint64
 	useridvar, found := in.PathVariables["userid"]
 	if !found {

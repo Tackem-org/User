@@ -11,21 +11,18 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Tackem-org/Global/logging"
-	"github.com/Tackem-org/Global/logging/debug"
-	"github.com/Tackem-org/Global/system"
+	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
 	"golang.org/x/image/draw"
 	"gorm.io/gorm/clause"
 )
 
-func UploadIconBase64(in *system.WebSocketRequest) (*system.WebSocketReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[socket.admin.editUser.UploadIconBase64(in *system.WebSocketRequest) (*system.WebSocketReturn, error)]")
+func UploadIconBase64(in *structs.SocketRequest) (*structs.SocketReturn, error) {
 	userID := in.Data["userid"]
 	var user model.User
 	result := model.DB.Preload(clause.Associations).Find(&user, userID)
 	if result.Error != nil {
-		return &system.WebSocketReturn{
+		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotFound,
 			ErrorMessage: "user not found",
 		}, nil
@@ -33,7 +30,7 @@ func UploadIconBase64(in *system.WebSocketRequest) (*system.WebSocketReturn, err
 
 	val, ok := in.Data["icon"].(string)
 	if !ok || val == "" {
-		return &system.WebSocketReturn{
+		return &structs.SocketReturn{
 			StatusCode:   http.StatusBadRequest,
 			ErrorMessage: "uploading icon failed",
 		}, nil
@@ -42,7 +39,7 @@ func UploadIconBase64(in *system.WebSocketRequest) (*system.WebSocketReturn, err
 	reader := base64.NewDecoder(base64.StdEncoding, strings.NewReader(b64data))
 	src, _, err := image.Decode(reader)
 	if err != nil {
-		return &system.WebSocketReturn{
+		return &structs.SocketReturn{
 			StatusCode:   http.StatusBadRequest,
 			ErrorMessage: "uploading icon failed cannot decode error",
 		}, nil
@@ -51,7 +48,7 @@ func UploadIconBase64(in *system.WebSocketRequest) (*system.WebSocketReturn, err
 	draw.NearestNeighbor.Scale(dst, dst.Rect, src, src.Bounds(), draw.Over, nil)
 	buf := new(bytes.Buffer)
 	if err := png.Encode(buf, dst); err != nil {
-		return &system.WebSocketReturn{
+		return &structs.SocketReturn{
 			StatusCode:   http.StatusBadRequest,
 			ErrorMessage: "uploading icon failed cannot encode to png",
 		}, nil
@@ -60,14 +57,14 @@ func UploadIconBase64(in *system.WebSocketRequest) (*system.WebSocketReturn, err
 	in.Data["icon"] = imgBase64Str
 	result2 := model.DB.Model(&user).Update("Icon", imgBase64Str)
 	if result2.Error != nil {
-		return &system.WebSocketReturn{
+		return &structs.SocketReturn{
 			StatusCode:   http.StatusBadRequest,
 			ErrorMessage: "uploading icon error " + result2.Error.Error(),
 		}, nil
 	}
 
 	in.Data["updatedat"] = user.UpdatedAt
-	return &system.WebSocketReturn{
+	return &structs.SocketReturn{
 		StatusCode: http.StatusOK,
 		Data:       in.Data,
 	}, nil

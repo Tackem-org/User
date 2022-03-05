@@ -4,17 +4,15 @@ import (
 	"net/http"
 
 	"github.com/Tackem-org/Global/config"
-	"github.com/Tackem-org/Global/logging"
-	"github.com/Tackem-org/Global/logging/debug"
 	"github.com/Tackem-org/Global/structs"
-	"github.com/Tackem-org/Global/system"
+	"github.com/Tackem-org/Global/system/grpcSystem/clients/web"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/password"
 	"github.com/Tackem-org/User/tasks"
 )
 
+//TODO SPLIT INTO FILES
 func RootPage(in *structs.WebRequest) (*structs.WebReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.RootPage(in *structs.WebRequest) (*structs.WebReturn, error)]")
 	return &structs.WebReturn{
 		StatusCode: http.StatusOK,
 		FilePath:   "root",
@@ -23,10 +21,8 @@ func RootPage(in *structs.WebRequest) (*structs.WebReturn, error) {
 }
 
 func ChangePasswordPage(in *structs.WebRequest) (*structs.WebReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.ChangePasswordPage(in *structs.WebRequest) (*structs.WebReturn, error)]")
-
 	if !in.User.HasPermission("system_user_change_own_password") {
-		return system.ForbiddenWebReturn()
+		return structs.ForbiddenWebReturn()
 	}
 	minPassLength, _ := config.GetUint("user.password.minimum")
 	success := false
@@ -72,9 +68,8 @@ func ChangePasswordPage(in *structs.WebRequest) (*structs.WebReturn, error) {
 }
 
 func ChangeUsernamePage(in *structs.WebRequest) (*structs.WebReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.ChangeUsernamePage(in *structs.WebRequest) (*structs.WebReturn, error)]")
 	if !in.User.HasPermission("system_user_change_own_username") {
-		return system.ForbiddenWebReturn()
+		return structs.ForbiddenWebReturn()
 	}
 	success := false
 	errorString := ""
@@ -114,9 +109,8 @@ func ChangeUsernamePage(in *structs.WebRequest) (*structs.WebReturn, error) {
 }
 
 func RequestUsernamePage(in *structs.WebRequest) (*structs.WebReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.RequestUsernamePage(in *structs.WebRequest) (*structs.WebReturn, error)]")
 	if !in.User.HasPermission("system_user_request_change_of_username") {
-		return system.ForbiddenWebReturn()
+		return structs.ForbiddenWebReturn()
 	}
 	var user model.User
 	var usernameRequest model.UsernameRequest
@@ -155,7 +149,7 @@ func RequestUsernamePage(in *structs.WebRequest) (*structs.WebReturn, error) {
 					} else {
 						success = true
 						usernameRequest.RequestUser = user
-						system.AddTask(tasks.UserNameChangeRequest(&usernameRequest))
+						web.AddTask(tasks.UserNameChangeRequest(&usernameRequest))
 					}
 				}
 			}
@@ -175,7 +169,6 @@ func RequestUsernamePage(in *structs.WebRequest) (*structs.WebReturn, error) {
 }
 
 func EditPage(in *structs.WebRequest) (*structs.WebReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.EditPage(in *structs.WebRequest) (*structs.WebReturn, error)]")
 	return &structs.WebReturn{
 		StatusCode: http.StatusOK,
 		FilePath:   "edit",

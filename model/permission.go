@@ -4,8 +4,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/Tackem-org/Global/logging"
-	"github.com/Tackem-org/Global/logging/debug"
 	"gorm.io/gorm"
 )
 
@@ -20,7 +18,6 @@ type Permission struct {
 }
 
 func AddPermission(name string) {
-	logging.Debugf(debug.FUNCTIONCALLS, "CALLED:[model.AddPermission(name string)] {name=%s}", name)
 	p := Permission{Name: name}
 	if err := DB.Where(&p).Find(&p).Error; err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {

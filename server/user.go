@@ -6,8 +6,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Tackem-org/Global/logging"
-	"github.com/Tackem-org/Global/logging/debug"
 	pb "github.com/Tackem-org/Proto/pb/user"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/password"
@@ -15,7 +13,6 @@ import (
 )
 
 func (u *UserServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResponse, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[server.(u *UserServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResponse, error)]")
 	var user model.User
 	result := model.DB.Where(&model.User{Username: in.Username, Password: password.Hash(in.Password)}).Find(&user)
 	if result.RowsAffected == 1 {
@@ -33,7 +30,6 @@ func (u *UserServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginR
 }
 
 func (u *UserServer) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.LogoutResponse, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[server.(u *UserServer) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.LogoutResponse, error) {]")
 	for index, s := range Sessions {
 		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
 			Sessions = append(Sessions[:index], Sessions[index+1:]...)
@@ -49,7 +45,6 @@ func (u *UserServer) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.Logo
 }
 
 func (u *UserServer) GetUserData(ctx context.Context, in *pb.GetUserDataRequest) (*pb.UserDataResponse, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[server.(u *UserServer) GetUserData(context.Context, *GetUserDataRequest) (*GetBaseDataResponse, error)]")
 	for _, s := range Sessions {
 		if s.SessionToken == in.SessionToken && s.IPAddress == in.IpAddress {
 			var user model.User

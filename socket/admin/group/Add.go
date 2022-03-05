@@ -4,17 +4,14 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Tackem-org/Global/logging"
-	"github.com/Tackem-org/Global/logging/debug"
-	"github.com/Tackem-org/Global/system"
+	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
 )
 
-func Add(in *system.WebSocketRequest) (*system.WebSocketReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[socket.admin.group.GroupAdd(in *system.WebSocketRequest) (*system.WebSocketReturn, error)]")
+func Add(in *structs.SocketRequest) (*structs.SocketReturn, error) {
 	name := in.Data["name"].(string)
 	if name == "" {
-		return &system.WebSocketReturn{
+		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotAcceptable,
 			ErrorMessage: "New Group Name Cannot Be Blank",
 		}, nil
@@ -26,13 +23,13 @@ func Add(in *system.WebSocketRequest) (*system.WebSocketReturn, error) {
 	}
 	result := model.DB.Create(&group)
 	if result.Error != nil {
-		return &system.WebSocketReturn{
+		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotAcceptable,
 			ErrorMessage: "New Group Name Must Be Unique",
 		}, nil
 	}
 	in.Data["groupid"] = group.ID
-	return &system.WebSocketReturn{
+	return &structs.SocketReturn{
 		StatusCode: http.StatusOK,
 		Data:       in.Data,
 	}, nil

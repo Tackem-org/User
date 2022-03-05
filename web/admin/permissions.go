@@ -4,8 +4,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Tackem-org/Global/logging"
-	"github.com/Tackem-org/Global/logging/debug"
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
 	"gorm.io/gorm/clause"
@@ -21,7 +19,6 @@ type sPermissions struct {
 }
 
 func AdminPermissionsPage(in *structs.WebRequest) (*structs.WebReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.AdminPermissionsPage(in *structs.WebRequest) (*structs.WebReturn, error)]")
 	var permissions []model.Permission
 	model.DB.Preload(clause.Associations).Find(&permissions)
 	var sortedPermissions []sPermissions

@@ -5,18 +5,17 @@ import (
 	_ "image/jpeg"
 	"net/http"
 
-	"github.com/Tackem-org/Global/logging"
-	"github.com/Tackem-org/Global/logging/debug"
-	"github.com/Tackem-org/Global/system"
+	"github.com/Tackem-org/Global/structs"
+	"github.com/Tackem-org/Global/system/grpcSystem/clients/web"
+	"github.com/Tackem-org/Global/system/setupData"
 	pb "github.com/Tackem-org/Proto/pb/web"
 	"github.com/Tackem-org/User/model"
 )
 
-func RejectUsernameChange(in *system.WebSocketRequest) (*system.WebSocketReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[socket.RejectUsernameChange(in *system.WebSocketRequest) (*system.WebSocketReturn, error)]")
+func RejectUsernameChange(in *structs.SocketRequest) (*structs.SocketReturn, error) {
 	val, ok := in.Data["userid"].(float64)
 	if !ok {
-		return &system.WebSocketReturn{
+		return &structs.SocketReturn{
 			StatusCode:   http.StatusBadRequest,
 			ErrorMessage: "userid not valid",
 		}, nil
@@ -27,13 +26,13 @@ func RejectUsernameChange(in *system.WebSocketRequest) (*system.WebSocketReturn,
 	result1 := model.DB.Find(&user, userID)
 	result2 := model.DB.Where(&model.UsernameRequest{RequestUserID: uint64(userID)}).First(&usernameRequest)
 	if result1.Error != nil {
-		return &system.WebSocketReturn{
+		return &structs.SocketReturn{
 			StatusCode:   http.StatusBadRequest,
 			ErrorMessage: "userid not found",
 		}, nil
 	}
 	if result2.Error != nil {
-		return &system.WebSocketReturn{
+		return &structs.SocketReturn{
 			StatusCode:   http.StatusBadRequest,
 			ErrorMessage: "username request not found",
 		}, nil
@@ -41,18 +40,18 @@ func RejectUsernameChange(in *system.WebSocketRequest) (*system.WebSocketReturn,
 	taskID := usernameRequest.ID
 	result4 := model.DB.Delete(&usernameRequest)
 	if result4.Error != nil {
-		return &system.WebSocketReturn{
+		return &structs.SocketReturn{
 			StatusCode:   http.StatusBadRequest,
 			ErrorMessage: "failed to delete the request",
 		}, nil
 	}
-	system.RemoveTask(&pb.RemoveTaskRequest{
+	web.RemoveTask(&pb.RemoveTaskRequest{
 		Task:   "usernamechangerequest",
-		BaseId: system.RegData().GetBaseID(),
+		BaseId: setupData.BaseID,
 		TaskId: taskID,
 	})
 	in.Data["updatedat"] = user.UpdatedAt
-	return &system.WebSocketReturn{
+	return &structs.SocketReturn{
 		StatusCode: http.StatusOK,
 		Data:       in.Data,
 	}, nil

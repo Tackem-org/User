@@ -4,35 +4,32 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/Tackem-org/Global/logging"
-	"github.com/Tackem-org/Global/logging/debug"
-	"github.com/Tackem-org/Global/system"
+	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
 	"gorm.io/gorm"
 )
 
-func Delete(in *system.WebSocketRequest) (*system.WebSocketReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[socket.admin.group.GroupDelete(in *system.WebSocketRequest) (*system.WebSocketReturn, error)]")
+func Delete(in *structs.SocketRequest) (*structs.SocketReturn, error) {
 	var group model.Group
 	if err := model.DB.First(&group, in.Data["groupid"]).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return &system.WebSocketReturn{
+			return &structs.SocketReturn{
 				StatusCode:   http.StatusNotFound,
 				ErrorMessage: "Group Not Found",
 			}, nil
 		}
-		return &system.WebSocketReturn{
+		return &structs.SocketReturn{
 			StatusCode:   http.StatusInternalServerError,
 			ErrorMessage: "DB Group ERROR: " + err.Error(),
 		}, nil
 	}
 	if err := model.DB.Delete(&group).Error; err != nil {
-		return &system.WebSocketReturn{
+		return &structs.SocketReturn{
 			StatusCode:   http.StatusInternalServerError,
 			ErrorMessage: "DB Group Delete ERROR: " + err.Error(),
 		}, nil
 	}
-	return &system.WebSocketReturn{
+	return &structs.SocketReturn{
 		StatusCode: http.StatusOK,
 		Data:       in.Data,
 	}, nil

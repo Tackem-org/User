@@ -3,7 +3,7 @@ package tasks
 import (
 	"fmt"
 
-	"github.com/Tackem-org/Global/system"
+	"github.com/Tackem-org/Global/system/setupData"
 	pbw "github.com/Tackem-org/Proto/pb/web"
 	"github.com/Tackem-org/User/model"
 )
@@ -14,10 +14,9 @@ type UsernameRequestCommand struct {
 }
 
 func UserNameChangeRequest(u *model.UsernameRequest) *pbw.TaskMessage {
-
 	return &pbw.TaskMessage{
 		Task:      "usernamechangerequest",
-		BaseId:    system.GetBaseID(),
+		BaseId:    setupData.BaseID,
 		TaskId:    u.ID,
 		CreatedAt: u.CreatedAt.Format("2006-01-02T15:04:05"),
 		Icon:      "user/static/img/userchange.png",

@@ -3,8 +3,6 @@ package admin
 import (
 	"net/http"
 
-	"github.com/Tackem-org/Global/logging"
-	"github.com/Tackem-org/Global/logging/debug"
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
 	"gorm.io/gorm/clause"
@@ -21,7 +19,6 @@ type AdminUserData struct {
 }
 
 func AdminRootPage(in *structs.WebRequest) (*structs.WebReturn, error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[web.AdminRootPage(in *structs.WebRequest) (*structs.WebReturn, error)]")
 	var users []model.User
 	lusers := []AdminUserData{}
 	model.DB.Preload(clause.Associations).Find(&users)

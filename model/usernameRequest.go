@@ -3,8 +3,6 @@ package model
 import (
 	"time"
 
-	"github.com/Tackem-org/Global/logging"
-	"github.com/Tackem-org/Global/logging/debug"
 	"gorm.io/gorm"
 )
 
@@ -19,7 +17,6 @@ type UsernameRequest struct {
 }
 
 func (u *UsernameRequest) Accept(tx *gorm.DB) (err error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[model.(u *UsernameRequest) Accept(tx *gorm.DB) (err error)]")
 	var user User
 	DB.Find(&user, u.RequestUserID)
 	DB.Model(&user).Update("Username", u.Name)
@@ -27,7 +24,6 @@ func (u *UsernameRequest) Accept(tx *gorm.DB) (err error) {
 	return
 }
 func (u *UsernameRequest) Reject(tx *gorm.DB) (err error) {
-	logging.Debug(debug.FUNCTIONCALLS, "CALLED:[model.(u *UsernameRequest) Reject(tx *gorm.DB) (err error)]")
 	DB.Delete(&u)
 	return
 }
