@@ -51,8 +51,9 @@ func main() {
 			Minor:  0,
 			Hotfix: 0,
 		},
-		Multi:     false,
-		SingleRun: false,
+		Multi:       false,
+		SingleRun:   false,
+		StartActive: true,
 		ConfigItems: []*pb.ConfigItem{
 			{
 				Key:          "user.password.minimum",
@@ -79,6 +80,7 @@ func main() {
 			},
 			},
 		},
+		MasterConf: "/config/user.json",
 		LogFile:    *logFile,
 		VerboseLog: *verbose,
 		DebugLevel: debug.NONE,
