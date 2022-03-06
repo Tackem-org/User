@@ -208,7 +208,7 @@ func main() {
 			},
 		},
 		TaskGrabber: func() []*pbw.TaskMessage {
-			//TODO ADD IN LOGGING DEBUG HERE
+			logging.Debug(debug.FUNCTIONCALLS, "[FUNCTIONCALL] User.main.TaskGrabber")
 			var rTasks []*pbw.TaskMessage
 			var uChanges []model.UsernameRequest
 			model.DB.Preload(clause.Associations).Find(&uChanges)
@@ -218,7 +218,7 @@ func main() {
 			return rTasks
 		},
 		MainSetup: func() {
-			//TODO ADD IN LOGGING DEBUG HERE
+			logging.Debug(debug.FUNCTIONCALLS, "[FUNCTIONCALL] User.main.MainSetup")
 			logging.Info("Setup Database")
 			model.Setup(*databaseFile)
 			if _, err := os.Stat(tempSavePath); !os.IsNotExist(err) {
@@ -229,7 +229,7 @@ func main() {
 			}
 		},
 		MainShutdown: func() {
-			//TODO ADD IN LOGGING DEBUG HERE
+			logging.Debug(debug.FUNCTIONCALLS, "[FUNCTIONCALL] User.main.MainShutdown")
 			if len(server.Sessions) == 0 {
 				return
 			}
