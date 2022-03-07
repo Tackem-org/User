@@ -7,14 +7,16 @@ require (
 	github.com/Tackem-org/Proto v0.0.0-00010101000000-000000000000
 	github.com/spf13/pflag v1.0.5
 	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce
+	golang.org/x/image v0.0.0-20211028202545-6944b10bf410
 	google.golang.org/grpc v1.43.0
 	gorm.io/driver/sqlite v1.2.6
 	gorm.io/gorm v1.22.5
 )
 
 require (
+	github.com/viney-shih/go-lock v1.1.1 // indirect
 	github.com/xhit/go-str2duration/v2 v2.0.0 // indirect
-	golang.org/x/image v0.0.0-20211028202545-6944b10bf410 // indirect
+	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a // indirect
 )
 
 require (
