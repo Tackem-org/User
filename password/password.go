@@ -39,19 +39,19 @@ func SetupSalt() {
 func createSaltFile() {
 	f, err := os.Create(saltFile)
 	if err != nil {
-		logging.Errorf("Error In Creating Salt File: %s", err.Error())
+		logging.Error("Error In Creating Salt File: %s", err.Error())
 	}
 	_, err = rand.Read(salt)
 	if err != nil {
-		logging.Errorf("Error In Generating Salt Bytes: %s", err.Error())
+		logging.Error("Error In Generating Salt Bytes: %s", err.Error())
 	}
 	_, err = f.Write(salt)
 	if err != nil {
-		logging.Errorf("Error In Writing Salt File: %s", err.Error())
+		logging.Error("Error In Writing Salt File: %s", err.Error())
 	}
 	err = f.Close()
 	if err != nil {
-		logging.Errorf("Error In Closing Salt File: %s", err.Error())
+		logging.Error("Error In Closing Salt File: %s", err.Error())
 	}
 }
 
