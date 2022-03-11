@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"github.com/Tackem-org/Global/logging"
-	"github.com/Tackem-org/Global/logging/debug"
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/Global/system/setupData"
 	"gorm.io/gorm/clause"
@@ -83,7 +82,6 @@ func main() {
 		MasterConf: "/config/user.json",
 		LogFile:    *logFile,
 		VerboseLog: *verbose,
-		DebugLevel: debug.NONE,
 		GRPCSystems: func(grpcs *grpc.Server) {
 			pbu.RegisterUserServer(grpcs, &server.UserServer{})
 		},
@@ -210,7 +208,6 @@ func main() {
 			},
 		},
 		TaskGrabber: func() []*pbw.TaskMessage {
-			logging.Debug(debug.FUNCTIONCALLS, "[FUNCTIONCALL] User.main.TaskGrabber")
 			var rTasks []*pbw.TaskMessage
 			var uChanges []model.UsernameRequest
 			model.DB.Preload(clause.Associations).Find(&uChanges)
@@ -220,7 +217,6 @@ func main() {
 			return rTasks
 		},
 		MainSetup: func() {
-			logging.Debug(debug.FUNCTIONCALLS, "[FUNCTIONCALL] User.main.MainSetup")
 			logging.Info("Setup Database")
 			model.Setup(*databaseFile)
 			if _, err := os.Stat(tempSavePath); !os.IsNotExist(err) {
@@ -231,7 +227,6 @@ func main() {
 			}
 		},
 		MainShutdown: func() {
-			logging.Debug(debug.FUNCTIONCALLS, "[FUNCTIONCALL] User.main.MainShutdown")
 			if len(server.Sessions) == 0 {
 				return
 			}
