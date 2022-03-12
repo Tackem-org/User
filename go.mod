@@ -16,7 +16,7 @@ require (
 require (
 	github.com/viney-shih/go-lock v1.1.1 // indirect
 	github.com/xhit/go-str2duration/v2 v2.0.0 // indirect
-	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a // indirect
+	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 )
 
 require (
