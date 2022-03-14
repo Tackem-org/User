@@ -11,7 +11,10 @@ import (
 
 func ChangePasswordPage(in *structs.WebRequest) (*structs.WebReturn, error) {
 	if !in.User.HasPermission("system_user_change_own_password") {
-		return structs.ForbiddenWebReturn()
+		return &structs.WebReturn{
+			StatusCode:   http.StatusForbidden,
+			ErrorMessage: "user not authorised to view this page",
+		}, nil
 	}
 	minPassLength, _ := config.GetUint("user.password.minimum")
 	success := false

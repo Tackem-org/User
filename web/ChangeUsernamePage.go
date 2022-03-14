@@ -10,7 +10,10 @@ import (
 
 func ChangeUsernamePage(in *structs.WebRequest) (*structs.WebReturn, error) {
 	if !in.User.HasPermission("system_user_change_own_username") {
-		return structs.ForbiddenWebReturn()
+		return &structs.WebReturn{
+			StatusCode:   http.StatusForbidden,
+			ErrorMessage: "user not authorised to view this page",
+		}, nil
 	}
 	success := false
 	errorString := ""
