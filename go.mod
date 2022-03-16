@@ -1,6 +1,6 @@
 module github.com/Tackem-org/User
 
-go 1.17
+go 1.18
 
 require (
 	github.com/Tackem-org/Global v0.0.0-00010101000000-000000000000
@@ -8,7 +8,7 @@ require (
 	github.com/spf13/pflag v1.0.5
 	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410
-	google.golang.org/grpc v1.43.0
+	google.golang.org/grpc v1.45.0
 	gorm.io/driver/sqlite v1.2.6
 	gorm.io/gorm v1.22.5
 )
