@@ -8,14 +8,8 @@ import (
 
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/structs"
-	"github.com/Tackem-org/Global/system/setupData"
-	"gorm.io/gorm/clause"
-
 	"github.com/Tackem-org/Global/system"
-	pbc "github.com/Tackem-org/Proto/pb/config"
-	pb "github.com/Tackem-org/Proto/pb/registration"
-	pbu "github.com/Tackem-org/Proto/pb/user"
-	pbw "github.com/Tackem-org/Proto/pb/web"
+	"github.com/Tackem-org/Global/system/setupData"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/server"
 	"github.com/Tackem-org/User/socket"
@@ -27,6 +21,12 @@ import (
 	"github.com/Tackem-org/User/web/admin"
 	"github.com/spf13/pflag"
 	"google.golang.org/grpc"
+	"gorm.io/gorm/clause"
+
+	pbc "github.com/Tackem-org/Proto/pb/config"
+	pbr "github.com/Tackem-org/Proto/pb/registration"
+	pbu "github.com/Tackem-org/Proto/pb/user"
+	pbw "github.com/Tackem-org/Proto/pb/web"
 )
 
 var (
@@ -53,15 +53,15 @@ func main() {
 		Multi:       false,
 		SingleRun:   false,
 		StartActive: true,
-		ConfigItems: []*pb.ConfigItem{
+		ConfigItems: []*pbr.ConfigItem{
 			{
 				Key:          "user.password.minimum",
 				DefaultValue: "8",
 				Type:         pbc.ValueType_Uint,
 				Label:        "Password Minimum Length",
 				HelpText:     "what is the minimum password length",
-				InputType:    pb.InputType_INumber,
-				InputAttributes: &pb.InputAttributes{
+				InputType:    pbr.InputType_INumber,
+				InputAttributes: &pbr.InputAttributes{
 					Other: map[string]string{
 						"min": "1",
 						"max": "16",
@@ -69,13 +69,13 @@ func main() {
 				},
 			},
 		},
-		NavItems: []*pb.NavItem{
-			{LinkType: pb.LinkType_User, Title: "Change Password", Icon: "user", Path: "/changepassword", Permission: "system_user_change_own_password"},
-			{LinkType: pb.LinkType_User, Title: "Change Username", Icon: "user", Path: "/changeusername", Permission: "system_user_change_own_username"},
-			{LinkType: pb.LinkType_User, Title: "Request New Username", Icon: "user", Path: "/requestusername", Permission: "system_user_request_change_of_username"},
-			{LinkType: pb.LinkType_Admin, Title: "Users", Icon: "users", Path: "/", SubLinks: []*pb.NavItem{
-				{LinkType: pb.LinkType_Admin, Title: "Groups", Icon: "user-shield", Path: "/groups"},
-				{LinkType: pb.LinkType_Admin, Title: "Permissions", Icon: "key", Path: "/permissions"},
+		NavItems: []*pbr.NavItem{
+			{LinkType: pbr.LinkType_User, Title: "Change Password", Icon: "user", Path: "/changepassword", Permission: "system_user_change_own_password"},
+			{LinkType: pbr.LinkType_User, Title: "Change Username", Icon: "user", Path: "/changeusername", Permission: "system_user_change_own_username"},
+			{LinkType: pbr.LinkType_User, Title: "Request New Username", Icon: "user", Path: "/requestusername", Permission: "system_user_request_change_of_username"},
+			{LinkType: pbr.LinkType_Admin, Title: "Users", Icon: "users", Path: "/", SubLinks: []*pbr.NavItem{
+				{LinkType: pbr.LinkType_Admin, Title: "Groups", Icon: "user-shield", Path: "/groups"},
+				{LinkType: pbr.LinkType_Admin, Title: "Permissions", Icon: "key", Path: "/permissions"},
 			},
 			},
 		},
