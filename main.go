@@ -41,6 +41,7 @@ const (
 
 func main() {
 	pflag.Parse()
+
 	system.Run(&setupData.SetupData{
 
 		ServiceName: "user",

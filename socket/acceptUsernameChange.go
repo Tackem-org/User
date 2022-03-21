@@ -8,7 +8,6 @@ import (
 	pb "github.com/Tackem-org/Global/pb/web"
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/Global/system/grpcSystem/clients/web"
-	"github.com/Tackem-org/Global/system/setupData"
 	"github.com/Tackem-org/User/model"
 )
 
@@ -56,7 +55,6 @@ func AcceptUsernameChange(in *structs.SocketRequest) (*structs.SocketReturn, err
 	}
 	web.RemoveTask(&pb.RemoveTaskRequest{
 		Task:   "usernamechangerequest",
-		BaseId: setupData.BaseID,
 		TaskId: taskID,
 	})
 	in.Data["updatedat"] = user.UpdatedAt
