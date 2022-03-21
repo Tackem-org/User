@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 
-	pb "github.com/Tackem-org/Proto/pb/user"
+	pb "github.com/Tackem-org/Global/pb/user"
 )
 
 func (u *UserServer) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.LogoutResponse, error) {

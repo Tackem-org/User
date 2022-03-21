@@ -3,7 +3,7 @@ package server
 import (
 	"time"
 
-	pb "github.com/Tackem-org/Proto/pb/user"
+	pb "github.com/Tackem-org/Global/pb/user"
 )
 
 var (

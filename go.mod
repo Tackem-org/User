@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/Tackem-org/Global v0.0.0-00010101000000-000000000000
-	github.com/Tackem-org/Proto v0.0.0-00010101000000-000000000000
+	github.com/Tackem-org/Global v0.0.0-00010101000000-000000000000
 	github.com/spf13/pflag v1.0.5
 	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410
@@ -34,5 +34,5 @@ require (
 
 replace (
 	github.com/Tackem-org/Global => ../Global
-	github.com/Tackem-org/Proto => ../Proto
+	github.com/Tackem-org/Global => ../Proto
 )

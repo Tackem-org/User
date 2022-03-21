@@ -23,10 +23,10 @@ import (
 	"google.golang.org/grpc"
 	"gorm.io/gorm/clause"
 
-	pbc "github.com/Tackem-org/Proto/pb/config"
-	pbr "github.com/Tackem-org/Proto/pb/registration"
-	pbu "github.com/Tackem-org/Proto/pb/user"
-	pbw "github.com/Tackem-org/Proto/pb/web"
+	pbc "github.com/Tackem-org/Global/pb/config"
+	pbr "github.com/Tackem-org/Global/pb/registration"
+	pbu "github.com/Tackem-org/Global/pb/user"
+	pbw "github.com/Tackem-org/Global/pb/web"
 )
 
 var (

@@ -3,8 +3,8 @@ package tasks
 import (
 	"fmt"
 
+	pbw "github.com/Tackem-org/Global/pb/web"
 	"github.com/Tackem-org/Global/system/setupData"
-	pbw "github.com/Tackem-org/Proto/pb/web"
 	"github.com/Tackem-org/User/model"
 )
 

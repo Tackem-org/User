@@ -5,10 +5,10 @@ import (
 	_ "image/jpeg"
 	"net/http"
 
+	pb "github.com/Tackem-org/Global/pb/web"
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/Global/system/grpcSystem/clients/web"
 	"github.com/Tackem-org/Global/system/setupData"
-	pb "github.com/Tackem-org/Proto/pb/web"
 	"github.com/Tackem-org/User/model"
 )
 
