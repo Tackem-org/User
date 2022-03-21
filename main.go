@@ -8,7 +8,7 @@ import (
 
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/structs"
-	"github.com/Tackem-org/Global/system"
+	"github.com/Tackem-org/Global/system/run"
 	"github.com/Tackem-org/Global/system/setupData"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/server"
@@ -42,7 +42,7 @@ const (
 func main() {
 	pflag.Parse()
 
-	system.Run(&setupData.SetupData{
+	run.Run(&setupData.SetupData{
 
 		ServiceName: "user",
 		ServiceType: "system",
