@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/Tackem-org/Global/flags"
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/Global/system"
@@ -29,14 +30,11 @@ import (
 	pbw "github.com/Tackem-org/Global/pb/web"
 )
 
-var (
-	databaseFile = pflag.StringP("database", "d", "/config/User.db", "Database Location")
-	logFile      = pflag.StringP("log", "l", "/logs/User.log", "Log Location")
-	verbose      = pflag.BoolP("verbose", "v", false, "Outputs the log to the screen")
-)
-
 const (
-	tempSavePath = "/config/tackemusersessionsdata.tmp"
+	tempSaveFile     = "tackemusersessionsdata.tmp"
+	masterConfigFile = "user.json"
+	logFile          = "user.log"
+	databaseFile     = "User.db"
 )
 
 func main() {
@@ -80,9 +78,9 @@ func main() {
 			},
 			},
 		},
-		MasterConf: "/config/user.json",
-		LogFile:    *logFile,
-		VerboseLog: *verbose,
+		MasterConf: flags.ConfigFolder() + masterConfigFile,
+		LogFile:    flags.LogFolder() + logFile,
+		VerboseLog: flags.Verbose(),
 		GRPCSystems: func(grpcs *grpc.Server) {
 			pbu.RegisterUserServer(grpcs, &server.UserServer{})
 		},
@@ -219,12 +217,12 @@ func main() {
 		},
 		MainSetup: func() {
 			logging.Info("Setup Database")
-			model.Setup(*databaseFile)
-			if _, err := os.Stat(tempSavePath); !os.IsNotExist(err) {
-				file, _ := os.Open(tempSavePath)
+			model.Setup(flags.ConfigFolder() + databaseFile)
+			if _, err := os.Stat(flags.ConfigFolder() + tempSaveFile); !os.IsNotExist(err) {
+				file, _ := os.Open(flags.ConfigFolder() + tempSaveFile)
 				defer file.Close()
 				json.NewDecoder(file).Decode(&server.Sessions)
-				os.Remove(tempSavePath)
+				os.Remove(flags.ConfigFolder() + tempSaveFile)
 			}
 		},
 		MainShutdown: func() {
@@ -233,7 +231,7 @@ func main() {
 			}
 			b, _ := json.Marshal(server.Sessions)
 			reader := bytes.NewReader(b)
-			file, _ := os.Create(tempSavePath)
+			file, _ := os.Create(flags.ConfigFolder() + tempSaveFile)
 			defer file.Close()
 			io.Copy(file, reader)
 		},
