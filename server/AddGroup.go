@@ -8,9 +8,8 @@ import (
 )
 
 func (u *UserServer) AddGroups(ctx context.Context, in *pb.AddGroupsRequest) (*pb.AddGroupsResponse, error) {
-	for _, group := range in.Groups {
-		model.AddGroup(group)
-	}
+	model.AddGroups(in.Groups...)
+
 	return &pb.AddGroupsResponse{
 		Success: true,
 	}, nil

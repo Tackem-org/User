@@ -206,34 +206,40 @@ func main() {
 				Call:              socket.RejectUsernameChange,
 			},
 		},
-		TaskGrabber: func() []*pbw.TaskMessage {
-			var rTasks []*pbw.TaskMessage
-			var uChanges []model.UsernameRequest
-			model.DB.Preload(clause.Associations).Find(&uChanges)
-			for _, u := range uChanges {
-				rTasks = append(rTasks, tasks.UserNameChangeRequest(&u))
-			}
-			return rTasks
-		},
-		MainSetup: func() {
-			logging.Info("Setup Database")
-			model.Setup(flags.ConfigFolder() + databaseFile)
-			if _, err := os.Stat(flags.ConfigFolder() + tempSaveFile); !os.IsNotExist(err) {
-				file, _ := os.Open(flags.ConfigFolder() + tempSaveFile)
-				defer file.Close()
-				json.NewDecoder(file).Decode(&server.Sessions)
-				os.Remove(flags.ConfigFolder() + tempSaveFile)
-			}
-		},
-		MainShutdown: func() {
-			if len(server.Sessions) == 0 {
-				return
-			}
-			b, _ := json.Marshal(server.Sessions)
-			reader := bytes.NewReader(b)
-			file, _ := os.Create(flags.ConfigFolder() + tempSaveFile)
-			defer file.Close()
-			io.Copy(file, reader)
-		},
+		TaskGrabber:  TaskGrabber,
+		MainSetup:    MainSetup,
+		MainShutdown: MainShutdown,
 	})
+}
+
+func TaskGrabber() []*pbw.TaskMessage {
+	var rTasks []*pbw.TaskMessage
+	var uChanges []model.UsernameRequest
+	model.DB.Preload(clause.Associations).Find(&uChanges)
+	for _, u := range uChanges {
+		rTasks = append(rTasks, tasks.UserNameChangeRequest(&u))
+	}
+	return rTasks
+}
+
+func MainSetup() {
+	logging.Info("Setup Database")
+	model.Setup(flags.ConfigFolder() + databaseFile)
+	if _, err := os.Stat(flags.ConfigFolder() + tempSaveFile); !os.IsNotExist(err) {
+		file, _ := os.Open(flags.ConfigFolder() + tempSaveFile)
+		defer file.Close()
+		json.NewDecoder(file).Decode(&server.Sessions)
+		os.Remove(flags.ConfigFolder() + tempSaveFile)
+	}
+}
+
+func MainShutdown() {
+	if len(server.Sessions) == 0 {
+		return
+	}
+	b, _ := json.Marshal(server.Sessions)
+	reader := bytes.NewReader(b)
+	file, _ := os.Create(flags.ConfigFolder() + tempSaveFile)
+	defer file.Close()
+	io.Copy(file, reader)
 }

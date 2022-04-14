@@ -1,34 +1,37 @@
 package group
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
-	"gorm.io/gorm"
 )
 
 func Delete(in *structs.SocketRequest) (*structs.SocketReturn, error) {
+	tmpGroupID, foundGroupID := in.Data["groupid"]
+	if !foundGroupID {
+		return &structs.SocketReturn{
+			StatusCode:   http.StatusNotAcceptable,
+			ErrorMessage: "GroupID Missing",
+		}, nil
+	}
+
+	groupID := tmpGroupID.(int)
+	if groupID == 0 {
+		return &structs.SocketReturn{
+			StatusCode:   http.StatusNotAcceptable,
+			ErrorMessage: "GroupID Cannot Be Zero",
+		}, nil
+	}
 	var group model.Group
-	if err := model.DB.First(&group, in.Data["groupid"]).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return &structs.SocketReturn{
-				StatusCode:   http.StatusNotFound,
-				ErrorMessage: "Group Not Found",
-			}, nil
-		}
+	model.DB.Where(model.Group{ID: uint64(groupID)}).First(&group)
+	if group.ID == 0 {
 		return &structs.SocketReturn{
-			StatusCode:   http.StatusInternalServerError,
-			ErrorMessage: "DB Group ERROR: " + err.Error(),
+			StatusCode:   http.StatusNotFound,
+			ErrorMessage: "Group Not Found",
 		}, nil
 	}
-	if err := model.DB.Delete(&group).Error; err != nil {
-		return &structs.SocketReturn{
-			StatusCode:   http.StatusInternalServerError,
-			ErrorMessage: "DB Group Delete ERROR: " + err.Error(),
-		}, nil
-	}
+	model.DB.Delete(&group)
 	return &structs.SocketReturn{
 		StatusCode: http.StatusOK,
 		Data:       in.Data,

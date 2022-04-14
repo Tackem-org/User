@@ -1,67 +1,60 @@
 package group
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
-	"gorm.io/gorm"
 )
 
 func Set(in *structs.SocketRequest) (*structs.SocketReturn, error) {
-	var group model.Group
-	var permission model.Permission
-	fgroupid, okgid := in.Data["groupid"].(float64)
-	fpermissionid, okpid := in.Data["permissionid"].(float64)
-	if !okgid || !okpid {
+	tmpGroupid, foundgid := in.Data["groupid"]
+	if !foundgid {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotAcceptable,
-			ErrorMessage: "ids Not Numbers",
+			ErrorMessage: "GroupID Missing",
 		}, nil
 	}
-	groupid := uint64(fgroupid)
-	permissionid := uint64(fpermissionid)
-	if err := model.DB.First(&group, groupid).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return &structs.SocketReturn{
-				StatusCode:   http.StatusNotFound,
-				ErrorMessage: "Group Not Found",
-			}, nil
-		}
+	tmpPermissionid, foundpid := in.Data["permissionid"]
+	if !foundpid {
 		return &structs.SocketReturn{
-			StatusCode:   http.StatusInternalServerError,
-			ErrorMessage: "DB Group ERROR: " + err.Error(),
+			StatusCode:   http.StatusNotAcceptable,
+			ErrorMessage: "PermissionID Missing",
 		}, nil
 	}
-	if err := model.DB.First(&permission, permissionid).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return &structs.SocketReturn{
-				StatusCode:   http.StatusNotFound,
-				ErrorMessage: "Permission Not Found",
-			}, nil
-		}
+	tmpChecked, foundchecked := in.Data["checked"]
+	if !foundchecked {
 		return &structs.SocketReturn{
-			StatusCode:   http.StatusInternalServerError,
-			ErrorMessage: "DB Group ERROR: " + err.Error(),
+			StatusCode:   http.StatusNotAcceptable,
+			ErrorMessage: "checked Missing",
+		}, nil
+	}
+	groupid := uint64(tmpGroupid.(int))
+	permissionid := uint64(tmpPermissionid.(int))
+	checked := tmpChecked.(bool)
+
+	var group model.Group
+	var permission model.Permission
+	model.DB.Where(&model.Group{ID: groupid}).First(&group)
+	if group.ID == 0 {
+		return &structs.SocketReturn{
+			StatusCode:   http.StatusNotFound,
+			ErrorMessage: "Group Not Found",
 		}, nil
 	}
 
-	if in.Data["checked"] == true {
-		if err := model.DB.Model(&group).Association("Permissions").Append(&permission); err != nil {
-			return &structs.SocketReturn{
-				StatusCode:   http.StatusInternalServerError,
-				ErrorMessage: "DB Permission Append ERROR: " + err.Error(),
-			}, nil
-		}
+	model.DB.Where(&model.Permission{ID: permissionid}).First(&permission, permissionid)
+	if permission.ID == 0 {
+		return &structs.SocketReturn{
+			StatusCode:   http.StatusNotFound,
+			ErrorMessage: "Permission Not Found",
+		}, nil
+	}
 
+	if checked {
+		model.DB.Model(&group).Association("Permissions").Append(&permission)
 	} else {
-		if err := model.DB.Model(&group).Association("Permissions").Delete(&permission); err != nil {
-			return &structs.SocketReturn{
-				StatusCode:   http.StatusInternalServerError,
-				ErrorMessage: "DB Permission Delete ERROR: " + err.Error(),
-			}, nil
-		}
+		model.DB.Model(&group).Association("Permissions").Delete(&permission)
 	}
 
 	return &structs.SocketReturn{

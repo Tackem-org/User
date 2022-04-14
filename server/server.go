@@ -7,14 +7,14 @@ import (
 )
 
 var (
-	Sessions []session
+	Sessions []Session
 )
 
 type UserServer struct {
 	pb.UnimplementedUserServer
 }
 
-type session struct {
+type Session struct {
 	UserID       uint64
 	SessionToken string
 	IPAddress    string

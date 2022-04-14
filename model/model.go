@@ -18,8 +18,8 @@ var (
 
 func Setup(dbFile string) {
 	password.SetupSalt()
-	var err error
-	DB, err = gorm.Open(sqlite.Open(dbFile), &gorm.Config{
+
+	DB, _ = gorm.Open(sqlite.Open(dbFile), &gorm.Config{
 		Logger: logger.New(
 			logging.CustomLogger("GORM"),
 			logger.Config{
@@ -30,13 +30,8 @@ func Setup(dbFile string) {
 			},
 		),
 	})
-	if err != nil {
-		panic("failed to Open database")
-	}
 
-	if err := DB.AutoMigrate(&Permission{}, &Group{}, &User{}, &UsernameRequest{}); err != nil {
-		logging.Fatal("unable autoMigrateDB - " + err.Error())
-	}
+	DB.AutoMigrate(&Permission{}, &Group{}, &User{}, &UsernameRequest{})
 
 	var count int64
 	DB.Model(&User{}).Count(&count)
@@ -63,18 +58,14 @@ func Setup(dbFile string) {
 
 	}
 
-	//Master Permissions
-	AddPermission("do_tasks")
+	AddPermissions(
+		"do_tasks",
+		"system_user_change_own_password",
+		"system_user_change_own_username",
+		"system_user_request_change_of_username",
+		"system_user_action_change_of_username",
+	)
 
-	//User Permissions
-	AddPermission("system_user_change_own_password")
-	AddPermission("system_user_change_own_username")
-	AddPermission("system_user_request_change_of_username")
-	AddPermission("system_user_action_change_of_username")
-
-	//User Groups
-	AddGroup("user")
-	AddGroup("super_user")
-	AddGroup("power_user")
+	AddGroups("user", "super_user", "power_user")
 
 }

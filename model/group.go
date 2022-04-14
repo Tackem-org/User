@@ -1,7 +1,6 @@
 package model
 
 import (
-	"errors"
 	"time"
 
 	"gorm.io/gorm"
@@ -17,13 +16,16 @@ type Group struct {
 	Permissions []Permission   `gorm:"many2many:group_permissions;"`
 }
 
+func AddGroups(names ...string) {
+	for _, name := range names {
+		AddGroup(name)
+	}
+}
+
 func AddGroup(name string) {
 	g := Group{Name: name}
-	if err := DB.Where(&g).Find(&g).Error; err != nil {
-		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			DB.Create(&g)
-		}
-	} else if g.ID == 0 {
+	DB.Where(&g).Find(&g)
+	if g.ID == 0 {
 		DB.Create(&g)
 	}
 }

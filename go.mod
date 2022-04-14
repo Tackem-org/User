@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/Tackem-org/Global v0.0.0-00010101000000-000000000000
 	github.com/spf13/pflag v1.0.5
+	github.com/stretchr/testify v1.7.0
 	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410
 	google.golang.org/grpc v1.45.0
@@ -13,9 +14,12 @@ require (
 )
 
 require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/viney-shih/go-lock v1.1.1 // indirect
 	github.com/xhit/go-str2duration/v2 v2.0.0 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
+	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect
 )
 
 require (

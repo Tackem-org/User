@@ -8,9 +8,7 @@ import (
 )
 
 func (u *UserServer) AddPermissions(ctx context.Context, in *pb.AddPermissionsRequest) (*pb.AddPermissionsResponse, error) {
-	for _, Permission := range in.Permissions {
-		model.AddGroup(Permission)
-	}
+	model.AddPermissions(in.Permissions...)
 	return &pb.AddPermissionsResponse{
 		Success: true,
 	}, nil

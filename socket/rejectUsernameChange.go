@@ -1,8 +1,6 @@
 package socket
 
 import (
-	_ "image/gif"
-	_ "image/jpeg"
 	"net/http"
 
 	pb "github.com/Tackem-org/Global/pb/web"
@@ -12,7 +10,7 @@ import (
 )
 
 func RejectUsernameChange(in *structs.SocketRequest) (*structs.SocketReturn, error) {
-	val, ok := in.Data["userid"].(float64)
+	val, ok := in.Data["userid"].(int)
 	if !ok {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusBadRequest,
@@ -22,14 +20,14 @@ func RejectUsernameChange(in *structs.SocketRequest) (*structs.SocketReturn, err
 	userID := uint64(val)
 	var usernameRequest model.UsernameRequest
 	var user model.User
-	result1 := model.DB.Find(&user, userID)
-	result2 := model.DB.Where(&model.UsernameRequest{RequestUserID: uint64(userID)}).First(&usernameRequest)
+	result1 := model.DB.Where(&model.UsernameRequest{ID: userID}).First(&user)
 	if result1.Error != nil {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusBadRequest,
 			ErrorMessage: "userid not found",
 		}, nil
 	}
+	result2 := model.DB.Where(&model.UsernameRequest{RequestUserID: userID}).First(&usernameRequest)
 	if result2.Error != nil {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusBadRequest,
@@ -37,13 +35,7 @@ func RejectUsernameChange(in *structs.SocketRequest) (*structs.SocketReturn, err
 		}, nil
 	}
 	taskID := usernameRequest.ID
-	result4 := model.DB.Delete(&usernameRequest)
-	if result4.Error != nil {
-		return &structs.SocketReturn{
-			StatusCode:   http.StatusBadRequest,
-			ErrorMessage: "failed to delete the request",
-		}, nil
-	}
+	model.DB.Delete(&usernameRequest)
 	web.RemoveTask(&pb.RemoveTaskRequest{
 		Task:   "usernamechangerequest",
 		TaskId: taskID,
