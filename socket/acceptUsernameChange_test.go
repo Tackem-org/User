@@ -30,6 +30,7 @@ func (wc *MockWebClient) WebSocketSend(request *pbw.SendWebSocketRequest) bool {
 func TestAcceptUsernameChange(t *testing.T) {
 	web.I = &MockWebClient{}
 	assert.NotPanics(t, func() { model.Setup("testAcceptUsernameChange.db") })
+	defer os.Remove("testAcceptUsernameChange.db")
 	model.DB.Create(&model.User{Username: "test", Password: "test"})
 	model.DB.Create(&model.UsernameRequest{RequestUserID: 2, Name: "bob"})
 	model.DB.Create(&model.UsernameRequest{RequestUserID: 3, Name: "admin"})
@@ -91,5 +92,4 @@ func TestAcceptUsernameChange(t *testing.T) {
 	assert.Nil(t, err5)
 	assert.Equal(t, http.StatusOK, int(sr5.StatusCode))
 	assert.Empty(t, sr5.ErrorMessage)
-	os.Remove("testAcceptUsernameChange.db")
 }

@@ -13,7 +13,7 @@ func Add(in *structs.SocketRequest) (*structs.SocketReturn, error) {
 	if !foundName {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotAcceptable,
-			ErrorMessage: "Name Missing",
+			ErrorMessage: "name missing",
 		}, nil
 	}
 
@@ -21,7 +21,7 @@ func Add(in *structs.SocketRequest) (*structs.SocketReturn, error) {
 	if name == "" {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotAcceptable,
-			ErrorMessage: "New Group Name Cannot Be Blank",
+			ErrorMessage: "new group name cannot be blank",
 		}, nil
 	}
 
@@ -35,7 +35,7 @@ func Add(in *structs.SocketRequest) (*structs.SocketReturn, error) {
 	if found.ID > 0 {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotAcceptable,
-			ErrorMessage: "New Group Name Must Be Unique",
+			ErrorMessage: "new group name must be unique",
 		}, nil
 	}
 	model.DB.Create(&group)

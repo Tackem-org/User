@@ -1,8 +1,6 @@
 package editUser
 
 import (
-	_ "image/gif"
-	_ "image/jpeg"
 	"net/http"
 
 	"github.com/Tackem-org/Global/config"
@@ -13,23 +11,44 @@ import (
 )
 
 func ChangePassword(in *structs.SocketRequest) (*structs.SocketReturn, error) {
-	userID := in.Data["userid"]
+	tmpUserID, foundUserID := in.Data["userid"]
+	if !foundUserID {
+		return &structs.SocketReturn{
+			StatusCode:   http.StatusNotAcceptable,
+			ErrorMessage: "userid missing",
+		}, nil
+	}
+	userID, okUserID := tmpUserID.(int)
+	if !okUserID {
+		return &structs.SocketReturn{
+			StatusCode:   http.StatusNotAcceptable,
+			ErrorMessage: "userid not an int",
+		}, nil
+	}
 	var user model.User
-	result := model.DB.Preload(clause.Associations).Find(&user, userID)
-	if result.Error != nil {
+	model.DB.Preload(clause.Associations).Where(&model.User{ID: uint64(userID)}).Find(&user)
+	if user.ID == 0 {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotFound,
 			ErrorMessage: "user not found",
 		}, nil
 	}
 
-	val, ok := in.Data["password"].(string)
+	tmpPassword, foundPassword := in.Data["password"]
+	if !foundPassword {
+		return &structs.SocketReturn{
+			StatusCode:   http.StatusNotAcceptable,
+			ErrorMessage: "password missing",
+		}, nil
+	}
+	val, ok := tmpPassword.(string)
 	if !ok {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusBadRequest,
-			ErrorMessage: "password not valid",
+			ErrorMessage: "password not a string",
 		}, nil
 	}
+
 	minPassLength, _ := config.GetUint("user.password.minimum")
 	if uint(len(val)) <= minPassLength {
 		return &structs.SocketReturn{
@@ -37,14 +56,7 @@ func ChangePassword(in *structs.SocketRequest) (*structs.SocketReturn, error) {
 			ErrorMessage: "password too short",
 		}, nil
 	}
-	result2 := model.DB.Model(&user).Update("Password", password.Hash(val))
-	if result2.Error != nil {
-		return &structs.SocketReturn{
-			StatusCode:   http.StatusBadRequest,
-			ErrorMessage: "password Error " + result2.Error.Error(),
-		}, nil
-	}
-
+	model.DB.Model(&user).Update("Password", password.Hash(val))
 	in.Data["updatedat"] = user.UpdatedAt
 	return &structs.SocketReturn{
 		StatusCode: http.StatusOK,

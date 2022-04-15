@@ -10,16 +10,17 @@ import (
 
 func TestUserAfterFind(t *testing.T) {
 	assert.NotPanics(t, func() { model.Setup("testAfterFind.db") })
+	defer os.Remove("testAfterFind.db")
 	user := model.User{}
 	model.DB.First(&user, "1")
 	assert.Empty(t, user.Password)
 	model.DB.First(&user, "2")
 	assert.Empty(t, user.Password)
-	os.Remove("testAfterFind.db")
 }
 
 func TestUserAllPermissionStrings(t *testing.T) {
 	assert.NotPanics(t, func() { model.Setup("testAllPermissionStrings.db") })
+	defer os.Remove("testAllPermissionStrings.db")
 	user := model.User{}
 	model.DB.First(&user, "2")
 	group := model.Group{}
@@ -35,5 +36,4 @@ func TestUserAllPermissionStrings(t *testing.T) {
 
 	returnedPermissions := user.AllPermissionStrings()
 	assert.Len(t, returnedPermissions, 2)
-	os.Remove("testAllPermissionStrings.db")
 }

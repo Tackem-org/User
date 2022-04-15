@@ -16,6 +16,7 @@ func TestUserServerLogin(t *testing.T) {
 	u := server.UserServer{}
 	server.Sessions = []server.Session{}
 	assert.NotPanics(t, func() { model.Setup("testServerLogin.db") })
+	defer os.Remove("testServerLogin.db")
 
 	response1, err1 := u.Login(context.Background(), &pb.LoginRequest{
 		Username:   "user",
@@ -35,7 +36,6 @@ func TestUserServerLogin(t *testing.T) {
 	assert.IsType(t, &pb.LoginResponse{}, response2)
 	assert.True(t, response2.Success)
 	assert.Nil(t, err2)
-	os.Remove("testServerLogin.db")
 }
 
 func TestNewSession(t *testing.T) {

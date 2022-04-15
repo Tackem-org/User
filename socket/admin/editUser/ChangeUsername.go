@@ -1,8 +1,6 @@
 package editUser
 
 import (
-	_ "image/gif"
-	_ "image/jpeg"
 	"net/http"
 	"regexp"
 
@@ -12,37 +10,61 @@ import (
 )
 
 func ChangeUsername(in *structs.SocketRequest) (*structs.SocketReturn, error) {
-	uidf, ok := in.Data["userid"].(float64)
-	if !ok {
+	tmpUserID, foundUserID := in.Data["userid"]
+	if !foundUserID {
 		return &structs.SocketReturn{
-			StatusCode:   http.StatusBadRequest,
-			ErrorMessage: "userid not valid",
+			StatusCode:   http.StatusNotAcceptable,
+			ErrorMessage: "userid missing",
 		}, nil
 	}
-	userID := uint64(uidf)
+	userID, okUserID := tmpUserID.(int)
+	if !okUserID {
+		return &structs.SocketReturn{
+			StatusCode:   http.StatusNotAcceptable,
+			ErrorMessage: "userid not an int",
+		}, nil
+	}
 	var user model.User
-	result := model.DB.Preload(clause.Associations).Find(&user, userID)
-	if result.Error != nil {
+	model.DB.Preload(clause.Associations).Where(&model.User{ID: uint64(userID)}).Find(&user)
+	if user.ID == 0 {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotFound,
 			ErrorMessage: "user not found",
 		}, nil
 	}
-	val, ok := in.Data["username"].(string)
+
+	tmpUsername, foundUsername := in.Data["username"]
+	if !foundUsername {
+		return &structs.SocketReturn{
+			StatusCode:   http.StatusNotAcceptable,
+			ErrorMessage: "username missing",
+		}, nil
+	}
+	val, ok := tmpUsername.(string)
+	if !ok {
+		return &structs.SocketReturn{
+			StatusCode:   http.StatusBadRequest,
+			ErrorMessage: "username not a string",
+		}, nil
+	}
+
 	if !ok || val == "" || len(val) <= 4 || !regexp.MustCompile(`^[a-zA-Z0-9_]*$`).MatchString(val) {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusBadRequest,
 			ErrorMessage: "username not valid",
 		}, nil
 	}
-	result2 := model.DB.Model(&user).Update("Username", val)
-	if result2.Error != nil {
+
+	var count int64
+	model.DB.Model(&model.User{}).Where(&model.User{Username: val}).Count(&count)
+	if count > 0 {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusBadRequest,
-			ErrorMessage: "username already exists " + result2.Error.Error(),
+			ErrorMessage: "username already exists",
 		}, nil
 	}
 
+	model.DB.Model(&user).Update("Username", val)
 	in.Data["updatedat"] = user.UpdatedAt
 	return &structs.SocketReturn{
 		StatusCode: http.StatusOK,

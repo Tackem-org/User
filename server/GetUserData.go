@@ -36,7 +36,7 @@ func (u *UserServer) GetUserData(ctx context.Context, in *pb.GetUserDataRequest)
 	}
 	return &pb.UserDataResponse{
 		Success:      false,
-		ErrorMessage: "Session Not Found",
+		ErrorMessage: "session not found",
 	}, nil
 
 }

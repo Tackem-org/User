@@ -1,8 +1,6 @@
 package editUser
 
 import (
-	_ "image/gif"
-	_ "image/jpeg"
 	"net/http"
 
 	"github.com/Tackem-org/Global/structs"
@@ -11,25 +9,69 @@ import (
 )
 
 func ChangePermission(in *structs.SocketRequest) (*structs.SocketReturn, error) {
-	userID := in.Data["userid"]
+	tmpUserID, foundUserID := in.Data["userid"]
+	if !foundUserID {
+		return &structs.SocketReturn{
+			StatusCode:   http.StatusNotAcceptable,
+			ErrorMessage: "userid missing",
+		}, nil
+	}
+	userID, okUserID := tmpUserID.(int)
+	if !okUserID {
+		return &structs.SocketReturn{
+			StatusCode:   http.StatusNotAcceptable,
+			ErrorMessage: "userid not an int",
+		}, nil
+	}
 	var user model.User
-	result := model.DB.Preload(clause.Associations).Find(&user, userID)
-	if result.Error != nil {
+	model.DB.Preload(clause.Associations).Where(&model.User{ID: uint64(userID)}).Find(&user)
+	if user.ID == 0 {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotFound,
 			ErrorMessage: "user not found",
 		}, nil
 	}
 
+	tmpPermission, foundPermission := in.Data["permission"]
+	if !foundPermission {
+		return &structs.SocketReturn{
+			StatusCode:   http.StatusNotAcceptable,
+			ErrorMessage: "permission missing",
+		}, nil
+	}
+	valPermission, okPermission := tmpPermission.(int)
+	if !okPermission {
+		return &structs.SocketReturn{
+			StatusCode:   http.StatusBadRequest,
+			ErrorMessage: "permission not a int",
+		}, nil
+	}
+
 	var permission model.Permission
-	result2 := model.DB.First(&permission, in.Data["permission"])
-	if result2.Error != nil {
+	model.DB.Where(&model.Permission{ID: uint64(valPermission)}).First(&permission)
+	if permission.ID == 0 {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotFound,
 			ErrorMessage: "permission not found",
 		}, nil
 	}
-	if in.Data["checked"] == true {
+
+	tmpChecked, foundChecked := in.Data["checked"]
+	if !foundChecked {
+		return &structs.SocketReturn{
+			StatusCode:   http.StatusNotAcceptable,
+			ErrorMessage: "checked missing",
+		}, nil
+	}
+	valChecked, okChecked := tmpChecked.(bool)
+	if !okChecked {
+		return &structs.SocketReturn{
+			StatusCode:   http.StatusBadRequest,
+			ErrorMessage: "checked not a bool",
+		}, nil
+	}
+
+	if valChecked == true {
 		model.DB.Model(&user).Association("Permissions").Append(&permission)
 	} else {
 		model.DB.Model(&user).Association("Permissions").Delete(&permission)

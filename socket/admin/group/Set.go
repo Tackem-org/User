@@ -12,21 +12,21 @@ func Set(in *structs.SocketRequest) (*structs.SocketReturn, error) {
 	if !foundgid {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotAcceptable,
-			ErrorMessage: "GroupID Missing",
+			ErrorMessage: "groupid missing",
 		}, nil
 	}
 	tmpPermissionid, foundpid := in.Data["permissionid"]
 	if !foundpid {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotAcceptable,
-			ErrorMessage: "PermissionID Missing",
+			ErrorMessage: "permissionid missing",
 		}, nil
 	}
 	tmpChecked, foundchecked := in.Data["checked"]
 	if !foundchecked {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotAcceptable,
-			ErrorMessage: "checked Missing",
+			ErrorMessage: "checked missing",
 		}, nil
 	}
 	groupid := uint64(tmpGroupid.(int))
@@ -39,7 +39,7 @@ func Set(in *structs.SocketRequest) (*structs.SocketReturn, error) {
 	if group.ID == 0 {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotFound,
-			ErrorMessage: "Group Not Found",
+			ErrorMessage: "group not found",
 		}, nil
 	}
 
@@ -47,7 +47,7 @@ func Set(in *structs.SocketRequest) (*structs.SocketReturn, error) {
 	if permission.ID == 0 {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotFound,
-			ErrorMessage: "Permission Not Found",
+			ErrorMessage: "permission not found",
 		}, nil
 	}
 

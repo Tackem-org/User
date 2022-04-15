@@ -1,8 +1,6 @@
 package editUser
 
 import (
-	_ "image/gif"
-	_ "image/jpeg"
 	"net/http"
 
 	"github.com/Tackem-org/Global/structs"
@@ -11,24 +9,30 @@ import (
 )
 
 func DeleteUser(in *structs.SocketRequest) (*structs.SocketReturn, error) {
-	userID := in.Data["userid"]
+	tmpUserID, foundUserID := in.Data["userid"]
+	if !foundUserID {
+		return &structs.SocketReturn{
+			StatusCode:   http.StatusNotAcceptable,
+			ErrorMessage: "userid missing",
+		}, nil
+	}
+	userID, okUserID := tmpUserID.(int)
+	if !okUserID {
+		return &structs.SocketReturn{
+			StatusCode:   http.StatusNotAcceptable,
+			ErrorMessage: "userid not an int",
+		}, nil
+	}
 	var user model.User
-	result := model.DB.Preload(clause.Associations).Find(&user, userID)
-	if result.Error != nil {
+	model.DB.Preload(clause.Associations).Where(&model.User{ID: uint64(userID)}).Find(&user)
+	if user.ID == 0 {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotFound,
 			ErrorMessage: "user not found",
 		}, nil
 	}
 
-	result2 := model.DB.Delete(&user)
-	if result2.Error != nil {
-		return &structs.SocketReturn{
-			StatusCode:   http.StatusBadRequest,
-			ErrorMessage: "delete error " + result2.Error.Error(),
-		}, nil
-	}
-
+	model.DB.Delete(&user)
 	in.Data["updatedat"] = user.UpdatedAt
 	return &structs.SocketReturn{
 		StatusCode: http.StatusOK,

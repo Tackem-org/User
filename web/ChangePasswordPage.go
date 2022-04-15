@@ -10,12 +10,6 @@ import (
 )
 
 func ChangePasswordPage(in *structs.WebRequest) (*structs.WebReturn, error) {
-	if !in.User.HasPermission("system_user_change_own_password") {
-		return &structs.WebReturn{
-			StatusCode:   http.StatusForbidden,
-			ErrorMessage: "user not authorised to view this page",
-		}, nil
-	}
 	minPassLength, _ := config.GetUint("user.password.minimum")
 	success := false
 	errorString := ""
@@ -37,16 +31,8 @@ func ChangePasswordPage(in *structs.WebRequest) (*structs.WebReturn, error) {
 		} else {
 			var user model.User
 			model.DB.Where(&model.User{ID: in.User.ID, Password: password.Hash(op)}).First(&user)
-			if user.ID != in.User.ID {
-				errorString = "old password doesn't match"
-			} else {
-				result := model.DB.Model(&user).Update("Password", password.Hash(np1))
-				if result.Error != nil {
-					success = false
-				} else {
-					success = true
-				}
-			}
+			model.DB.Model(&user).Update("Password", password.Hash(np1))
+			success = true
 		}
 	}
 	return &structs.WebReturn{

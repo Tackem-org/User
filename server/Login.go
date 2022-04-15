@@ -23,7 +23,7 @@ func (u *UserServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginR
 
 	return &pb.LoginResponse{
 		Success:      false,
-		ErrorMessage: "User Not Found or incorrect Password",
+		ErrorMessage: "user not found or incorrect password",
 	}, nil
 }
 

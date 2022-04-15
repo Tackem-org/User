@@ -13,6 +13,7 @@ import (
 
 func TestRejectUsernameChange(t *testing.T) {
 	assert.NotPanics(t, func() { model.Setup("testRejectUsernameChange.db") })
+	defer os.Remove("testRejectUsernameChange.db")
 	model.DB.Create(&model.UsernameRequest{RequestUserID: 2, Name: "bob"})
 
 	sr1, err1 := socket.RejectUsernameChange(&structs.SocketRequest{
@@ -60,5 +61,4 @@ func TestRejectUsernameChange(t *testing.T) {
 	assert.Nil(t, err4)
 	assert.Equal(t, http.StatusOK, int(sr4.StatusCode))
 	assert.Empty(t, sr4.ErrorMessage)
-	os.Remove("testRejectUsernameChange.db")
 }

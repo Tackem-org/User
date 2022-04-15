@@ -9,12 +9,6 @@ import (
 )
 
 func ChangeUsernamePage(in *structs.WebRequest) (*structs.WebReturn, error) {
-	if !in.User.HasPermission("system_user_change_own_username") {
-		return &structs.WebReturn{
-			StatusCode:   http.StatusForbidden,
-			ErrorMessage: "user not authorised to view this page",
-		}, nil
-	}
 	success := false
 	errorString := ""
 	if len(in.Post) > 0 {
@@ -27,18 +21,21 @@ func ChangeUsernamePage(in *structs.WebRequest) (*structs.WebReturn, error) {
 		} else if pword == "" {
 			errorString = "password cannot be blank"
 		} else {
-			var user model.User
-			model.DB.Where(&model.User{ID: in.User.ID, Password: password.Hash(pword)}).First(&user)
-			if user.ID != in.User.ID {
-				errorString = "old password doesn't match"
+			var existing model.User
+			model.DB.Where(&model.User{Username: username}).First(&existing)
+			if existing.ID > 0 {
+				errorString = "user already exists"
 			} else {
-				result := model.DB.Model(&user).Update("Username", username)
-				if result.Error != nil {
-					success = false
+				var user model.User
+				model.DB.Where(&model.User{ID: in.User.ID, Password: password.Hash(pword)}).First(&user)
+				if user.ID != in.User.ID {
+					errorString = "password doesn't match"
 				} else {
+					model.DB.Model(&user).Update("Username", username)
 					success = true
 				}
 			}
+
 		}
 	}
 	return &structs.WebReturn{

@@ -12,7 +12,7 @@ func Delete(in *structs.SocketRequest) (*structs.SocketReturn, error) {
 	if !foundGroupID {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotAcceptable,
-			ErrorMessage: "GroupID Missing",
+			ErrorMessage: "groupid missing",
 		}, nil
 	}
 
@@ -20,7 +20,7 @@ func Delete(in *structs.SocketRequest) (*structs.SocketReturn, error) {
 	if groupID == 0 {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotAcceptable,
-			ErrorMessage: "GroupID Cannot Be Zero",
+			ErrorMessage: "groupid cannot be zero",
 		}, nil
 	}
 	var group model.Group
@@ -28,7 +28,7 @@ func Delete(in *structs.SocketRequest) (*structs.SocketReturn, error) {
 	if group.ID == 0 {
 		return &structs.SocketReturn{
 			StatusCode:   http.StatusNotFound,
-			ErrorMessage: "Group Not Found",
+			ErrorMessage: "group not found",
 		}, nil
 	}
 	model.DB.Delete(&group)

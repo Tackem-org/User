@@ -20,7 +20,7 @@ func TestSet(t *testing.T) {
 	assert.IsType(t, &structs.SocketReturn{}, r1)
 	assert.Nil(t, err1)
 	assert.Equal(t, http.StatusNotAcceptable, int(r1.StatusCode))
-	assert.Equal(t, "GroupID Missing", r1.ErrorMessage)
+	assert.Equal(t, "groupid missing", r1.ErrorMessage)
 
 	r2, err2 := group.Set(&structs.SocketRequest{
 		Data: map[string]interface{}{
@@ -30,7 +30,7 @@ func TestSet(t *testing.T) {
 	assert.IsType(t, &structs.SocketReturn{}, r2)
 	assert.Nil(t, err2)
 	assert.Equal(t, http.StatusNotAcceptable, int(r2.StatusCode))
-	assert.Equal(t, "PermissionID Missing", r2.ErrorMessage)
+	assert.Equal(t, "permissionid missing", r2.ErrorMessage)
 
 	r3, err3 := group.Set(&structs.SocketRequest{
 		Data: map[string]interface{}{
@@ -41,7 +41,7 @@ func TestSet(t *testing.T) {
 	assert.IsType(t, &structs.SocketReturn{}, r3)
 	assert.Nil(t, err3)
 	assert.Equal(t, http.StatusNotAcceptable, int(r3.StatusCode))
-	assert.Equal(t, "checked Missing", r3.ErrorMessage)
+	assert.Equal(t, "checked missing", r3.ErrorMessage)
 
 	r4, err4 := group.Set(&structs.SocketRequest{
 		Data: map[string]interface{}{
@@ -53,7 +53,7 @@ func TestSet(t *testing.T) {
 	assert.IsType(t, &structs.SocketReturn{}, r4)
 	assert.Nil(t, err4)
 	assert.Equal(t, http.StatusNotFound, int(r4.StatusCode))
-	assert.Equal(t, "Group Not Found", r4.ErrorMessage)
+	assert.Equal(t, "group not found", r4.ErrorMessage)
 
 	r5, err5 := group.Set(&structs.SocketRequest{
 		Data: map[string]interface{}{
@@ -65,7 +65,7 @@ func TestSet(t *testing.T) {
 	assert.IsType(t, &structs.SocketReturn{}, r5)
 	assert.Nil(t, err5)
 	assert.Equal(t, http.StatusNotFound, int(r5.StatusCode))
-	assert.Equal(t, "Permission Not Found", r5.ErrorMessage)
+	assert.Equal(t, "permission not found", r5.ErrorMessage)
 
 	r6, err6 := group.Set(&structs.SocketRequest{
 		Data: map[string]interface{}{

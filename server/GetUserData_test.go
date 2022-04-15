@@ -36,6 +36,7 @@ func TestUserServerGetUserData(t *testing.T) {
 		},
 	}
 	assert.NotPanics(t, func() { model.Setup("testUserServerGetUserData.db") })
+	defer os.Remove("testUserServerGetUserData.db")
 	user1 := model.User{
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
@@ -95,5 +96,4 @@ func TestUserServerGetUserData(t *testing.T) {
 	assert.Nil(t, err4)
 	assert.Empty(t, response4.Icon)
 
-	os.Remove("testUserServerGetUserData.db")
 }

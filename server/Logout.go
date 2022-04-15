@@ -17,6 +17,6 @@ func (u *UserServer) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.Logo
 	}
 	return &pb.LogoutResponse{
 		Success:      false,
-		ErrorMessage: "Session Not Found",
+		ErrorMessage: "session not found",
 	}, nil
 }

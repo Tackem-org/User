@@ -2,8 +2,6 @@ package admin
 
 import (
 	"errors"
-	_ "image/gif"
-	_ "image/jpeg"
 	"net/http"
 	"strings"
 
@@ -19,7 +17,7 @@ func AdminUserIDPage(in *structs.WebRequest) (*structs.WebReturn, error) {
 	if !found {
 		return &structs.WebReturn{
 			StatusCode:   http.StatusInternalServerError,
-			ErrorMessage: "USERID NOT FOUND FROM PATH",
+			ErrorMessage: "userid not found from path",
 		}, nil
 	}
 	userID = uint64(useridvar.(float64))
