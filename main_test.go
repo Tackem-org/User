@@ -31,8 +31,7 @@ func (l *MockLogging) Fatal(message string, values ...interface{}) error {
 	return fmt.Errorf(message, values...)
 }
 
-//TODO FINISH THIS FUNC AS FAILS
-func Test_main(t *testing.T) {
+func TestMain(t *testing.T) {
 	sd = &setupData.SetupData{}
 	assert.Panics(t, func() {
 		main()
