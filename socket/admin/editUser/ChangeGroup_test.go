@@ -12,7 +12,7 @@ import (
 )
 
 func TestChangeGroup(t *testing.T) {
-	assert.NotPanics(t, func() { model.Setup("testChangeGroup.db") })
+	model.Setup("testChangeGroup.db")
 	defer os.Remove("testChangeGroup.db")
 
 	r1, err1 := editUser.ChangeGroup(&structs.SocketRequest{

@@ -42,7 +42,7 @@ func (mc *MockConfig) Set(request *pb.SetConfigRequest) (*pb.SetConfigResponse, 
 
 func TestChangePassword(t *testing.T) {
 	config.I = &MockConfig{}
-	assert.NotPanics(t, func() { model.Setup("testChangePassword.db") })
+	model.Setup("testChangePassword.db")
 	defer os.Remove("testChangePassword.db")
 
 	r1, err1 := editUser.ChangePassword(&structs.SocketRequest{

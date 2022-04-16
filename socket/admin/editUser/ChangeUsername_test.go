@@ -12,7 +12,7 @@ import (
 )
 
 func TestChangeUsername(t *testing.T) {
-	assert.NotPanics(t, func() { model.Setup("testChangeUsername.db") })
+	model.Setup("testChangeUsername.db")
 	defer os.Remove("testChangeUsername.db")
 
 	r1, err1 := editUser.ChangeUsername(&structs.SocketRequest{

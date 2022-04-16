@@ -35,7 +35,7 @@ func TestUserServerGetUserData(t *testing.T) {
 			ExpireTime:   time.Now().Add(time.Second),
 		},
 	}
-	assert.NotPanics(t, func() { model.Setup("testUserServerGetUserData.db") })
+	model.Setup("testUserServerGetUserData.db")
 	defer os.Remove("testUserServerGetUserData.db")
 	user1 := model.User{
 		CreatedAt: time.Now(),

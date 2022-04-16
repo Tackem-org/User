@@ -41,7 +41,7 @@ func (mc *MockConfig) Set(request *pb.SetConfigRequest) (*pb.SetConfigResponse, 
 
 func TestChangePasswordPage(t *testing.T) {
 	config.I = &MockConfig{}
-	assert.NotPanics(t, func() { model.Setup("testChangePasswordPage.db") })
+	model.Setup("testChangePasswordPage.db")
 	defer os.Remove("testChangePasswordPage.db")
 
 	r1, err1 := web.ChangePasswordPage(&structs.WebRequest{

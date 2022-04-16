@@ -11,7 +11,7 @@ import (
 )
 
 func TestChangeUsernamePage(t *testing.T) {
-	assert.NotPanics(t, func() { model.Setup("testChangeUsernamePage.db") })
+	model.Setup("testChangeUsernamePage.db")
 	defer os.Remove("testChangeUsernamePage.db")
 
 	r1, err1 := web.ChangeUsernamePage(&structs.WebRequest{

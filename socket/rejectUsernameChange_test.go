@@ -12,7 +12,7 @@ import (
 )
 
 func TestRejectUsernameChange(t *testing.T) {
-	assert.NotPanics(t, func() { model.Setup("testRejectUsernameChange.db") })
+	model.Setup("testRejectUsernameChange.db")
 	defer os.Remove("testRejectUsernameChange.db")
 	model.DB.Create(&model.UsernameRequest{RequestUserID: 2, Name: "bob"})
 

@@ -12,7 +12,7 @@ import (
 )
 
 func TestChangePermission(t *testing.T) {
-	assert.NotPanics(t, func() { model.Setup("testChangePermission.db") })
+	model.Setup("testChangePermission.db")
 	defer os.Remove("testChangePermission.db")
 
 	r1, err1 := editUser.ChangePermission(&structs.SocketRequest{

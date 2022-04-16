@@ -12,7 +12,7 @@ import (
 )
 
 func TestClearIcon(t *testing.T) {
-	assert.NotPanics(t, func() { model.Setup("testClearIcon.db") })
+	model.Setup("testClearIcon.db")
 	defer os.Remove("testClearIcon.db")
 
 	r1, err1 := editUser.ClearIcon(&structs.SocketRequest{

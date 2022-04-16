@@ -37,7 +37,7 @@ func AdminGroupsPage(in *structs.WebRequest) (*structs.WebReturn, error) {
 		var groupPermissions []sPermissions
 
 		for _, permission := range allPermissionsList {
-			permission.Active = checkActivePermissions(permission.ID, group.Permissions)
+			permission.Active = CheckActivePermissions(permission.ID, group.Permissions)
 			groupPermissions = append(groupPermissions, permission)
 		}
 		groupsList = append(groupsList, sGroups{

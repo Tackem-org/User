@@ -12,7 +12,7 @@ import (
 )
 
 func TestChangeIsAdmin(t *testing.T) {
-	assert.NotPanics(t, func() { model.Setup("testChangeIsAdmin.db") })
+	model.Setup("testChangeIsAdmin.db")
 	defer os.Remove("testChangeIsAdmin.db")
 
 	r1, err1 := editUser.ChangeIsAdmin(&structs.SocketRequest{

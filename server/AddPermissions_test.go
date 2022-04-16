@@ -13,7 +13,7 @@ import (
 
 func TestUserServerAddPermissions(t *testing.T) {
 	u := server.UserServer{}
-	assert.NotPanics(t, func() { model.Setup("testServerAddPermissions.db") })
+	model.Setup("testServerAddPermissions.db")
 	defer os.Remove("testServerAddPermissions.db")
 	response, err := u.AddPermissions(context.Background(), &pb.AddPermissionsRequest{Permissions: []string{}})
 	assert.True(t, response.Success)

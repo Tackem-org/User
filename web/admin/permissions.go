@@ -41,7 +41,7 @@ func AdminPermissionsPage(in *structs.WebRequest) (*structs.WebReturn, error) {
 	}, nil
 }
 
-func checkActivePermissions(findID uint64, permissions []model.Permission) bool {
+func CheckActivePermissions(findID uint64, permissions []model.Permission) bool {
 	for _, enabledPermission := range permissions {
 		if findID == enabledPermission.ID {
 			return true

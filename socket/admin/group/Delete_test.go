@@ -12,7 +12,7 @@ import (
 )
 
 func TestDelete(t *testing.T) {
-	assert.NotPanics(t, func() { model.Setup("testDelete.db") })
+	model.Setup("testDelete.db")
 	defer os.Remove("testDelete.db")
 	gt := &model.Group{Name: "test1"}
 	model.DB.Create(gt)

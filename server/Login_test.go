@@ -15,7 +15,7 @@ import (
 func TestUserServerLogin(t *testing.T) {
 	u := server.UserServer{}
 	server.Sessions = []server.Session{}
-	assert.NotPanics(t, func() { model.Setup("testServerLogin.db") })
+	model.Setup("testServerLogin.db")
 	defer os.Remove("testServerLogin.db")
 
 	response1, err1 := u.Login(context.Background(), &pb.LoginRequest{

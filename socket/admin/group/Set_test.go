@@ -12,7 +12,7 @@ import (
 )
 
 func TestSet(t *testing.T) {
-	assert.NotPanics(t, func() { model.Setup("testSet.db") })
+	model.Setup("testSet.db")
 
 	r1, err1 := group.Set(&structs.SocketRequest{
 		Data: map[string]interface{}{},

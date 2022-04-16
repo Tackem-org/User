@@ -12,7 +12,7 @@ import (
 )
 
 func TestChangeDisabled(t *testing.T) {
-	assert.NotPanics(t, func() { model.Setup("testChangeDisabled.db") })
+	model.Setup("testChangeDisabled.db")
 	defer os.Remove("testChangeDisabled.db")
 
 	r1, err1 := editUser.ChangeDisabled(&structs.SocketRequest{

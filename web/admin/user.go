@@ -1,34 +1,44 @@
 package admin
 
 import (
-	"errors"
 	"net/http"
 	"strings"
 
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 func AdminUserIDPage(in *structs.WebRequest) (*structs.WebReturn, error) {
-	var userID uint64
-	useridvar, found := in.PathVariables["userid"]
-	if !found {
+	tmpUserID, foundUserID := in.PathVariables["userid"]
+	if !foundUserID {
 		return &structs.WebReturn{
-			StatusCode:   http.StatusInternalServerError,
-			ErrorMessage: "userid not found from path",
+			StatusCode:   http.StatusNotAcceptable,
+			ErrorMessage: "userid missing",
 		}, nil
 	}
-	userID = uint64(useridvar.(float64))
+	userID, okUserID := tmpUserID.(int)
+	if !okUserID {
+		return &structs.WebReturn{
+			StatusCode:   http.StatusNotAcceptable,
+			ErrorMessage: "userid not an int",
+		}, nil
+	}
 	var user model.User
+	model.DB.Preload(clause.Associations).Where(&model.User{ID: uint64(userID)}).Find(&user)
+	if user.ID == 0 {
+		return &structs.WebReturn{
+			StatusCode:   http.StatusNotFound,
+			ErrorMessage: "user not found",
+		}, nil
+	}
+
 	var allPermissions []model.Permission
 	var allPermissionsList []sPermissions
 	var allGroups []model.Group
 	var allGroupsList []sGroups
 	var usernameRequest model.UsernameRequest
 
-	model.DB.Preload(clause.Associations).First(&user, userID)
 	model.DB.Find(&allPermissions)
 	for _, permission := range allPermissions {
 		p := sPermissions{
@@ -61,10 +71,10 @@ func AdminUserIDPage(in *structs.WebRequest) (*structs.WebReturn, error) {
 		allGroupsList = append(allGroupsList, g)
 	}
 
-	result := model.DB.Where(&model.UsernameRequest{RequestUserID: userID}).First(&usernameRequest)
+	model.DB.Where(&model.UsernameRequest{RequestUserID: user.ID}).First(&usernameRequest)
 	var ur string
 	var urid uint64
-	if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+	if usernameRequest.ID == 0 {
 		ur = usernameRequest.Name
 		urid = usernameRequest.ID
 	}

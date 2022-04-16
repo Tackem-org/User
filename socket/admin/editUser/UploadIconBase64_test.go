@@ -16,7 +16,7 @@ var tjpg = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD//gATQ3JlYXRlZCB3a
 var tpng = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAABhWlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV8/pCJVhxYUEclQnSyIijhqFYpQIdQKrTqYXPohNGlIUlwcBdeCgx+LVQcXZ10dXAVB8APE0clJ0UVK/F9SaBHjwXE/3t173L0D/PUyU83gGKBqlpFOJoRsbkUIvSKIHvRhCBGJmfqsKKbgOb7u4ePrXZxneZ/7c3QreZMBPoF4humGRbxOPLVp6Zz3iaOsJCnE58SjBl2Q+JHrsstvnIsO+3lm1Mik54ijxEKxjeU2ZiVDJZ4kjimqRvn+rMsK5y3OarnKmvfkLwznteUlrtMcRBILWIQIATKq2EAZFuK0aqSYSNN+wsM/4PhFcsnk2gAjxzwqUCE5fvA/+N2tWZgYd5PCCaDjxbY/hoHQLtCo2fb3sW03ToDAM3CltfyVOjD9SXqtpcWOgN5t4OK6pcl7wOUO0P+kS4bkSAGa/kIBeD+jb8oBkVuga9XtrbmP0wcgQ12lboCDQ2CkSNlrHu/ubO/t3zPN/n4AUCtymWrqe9cAAAAJcEhZcwAALiMAAC4jAXilP3YAAAAHdElNRQfmBA4XIBZhr6fKAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAExJREFUaN7tz0ENAAAIBKDT/p01gm83aEBNfusICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwWUoUBf8cBNPQAAAAASUVORK5CYII="
 
 func TestUploadIconBase64(t *testing.T) {
-	assert.NotPanics(t, func() { model.Setup("testUploadIconBase64.db") })
+	model.Setup("testUploadIconBase64.db")
 	defer os.Remove("testUploadIconBase64.db")
 
 	r1, err1 := editUser.UploadIconBase64(&structs.SocketRequest{

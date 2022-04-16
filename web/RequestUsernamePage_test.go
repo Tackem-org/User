@@ -20,7 +20,7 @@ func (mwc *MockWebClient) WebSocketSend(request *pbw.SendWebSocketRequest) bool 
 
 func TestRequestUsernamePage(t *testing.T) {
 	webClient.I = &MockWebClient{}
-	assert.NotPanics(t, func() { model.Setup("testRequestUsernamePage.db") })
+	model.Setup("testRequestUsernamePage.db")
 	defer os.Remove("testRequestUsernamePage.db")
 
 	var count int64

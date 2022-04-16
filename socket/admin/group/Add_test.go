@@ -12,7 +12,7 @@ import (
 )
 
 func TestAdd(t *testing.T) {
-	assert.NotPanics(t, func() { model.Setup("testAdd.db") })
+	model.Setup("testAdd.db")
 	defer os.Remove("testAdd.db")
 	model.DB.Create(&model.Group{Name: "existing"})
 

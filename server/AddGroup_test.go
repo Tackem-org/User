@@ -13,7 +13,7 @@ import (
 
 func TestUserServerAddGroups(t *testing.T) {
 	u := server.UserServer{}
-	assert.NotPanics(t, func() { model.Setup("testServerAddGroups.db") })
+	model.Setup("testServerAddGroups.db")
 	defer os.Remove("testServerAddGroups.db")
 	response, err := u.AddGroups(context.Background(), &pb.AddGroupsRequest{Groups: []string{}})
 	assert.True(t, response.Success)

@@ -14,7 +14,7 @@ import (
 
 func TestUserServer_Logout(t *testing.T) {
 	u := server.UserServer{}
-	assert.NotPanics(t, func() { model.Setup("testServerLogout.db") })
+	model.Setup("testServerLogout.db")
 	defer os.Remove("testServerLogout.db")
 	server.Sessions = []server.Session{
 		{

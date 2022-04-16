@@ -9,7 +9,7 @@ import (
 )
 
 func TestSetup(t *testing.T) {
-	assert.NotPanics(t, func() { model.Setup("testSetup.db") })
+	model.Setup("testSetup.db")
 	defer os.Remove("testSetup.db")
 	var count1 int64
 	model.DB.Model(&model.User{}).Count(&count1)
@@ -19,7 +19,7 @@ func TestSetup(t *testing.T) {
 	model.DB.Model(&model.Group{}).Count(&count1)
 	assert.Equal(t, int64(3), count1)
 
-	assert.NotPanics(t, func() { model.Setup("testSetup.db") })
+	model.Setup("testSetup.db")
 	var count2 int64
 	model.DB.Model(&model.User{}).Count(&count2)
 	assert.Equal(t, int64(2), count2)

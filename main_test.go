@@ -40,7 +40,7 @@ func Test_main(t *testing.T) {
 }
 
 func TestTaskGrabber(t *testing.T) {
-	assert.NotPanics(t, func() { model.Setup("testTaskGrabber.db") })
+	model.Setup("testTaskGrabber.db")
 	defer os.Remove("testTaskGrabber.db")
 
 	ur1 := &model.UsernameRequest{

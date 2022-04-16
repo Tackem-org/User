@@ -9,7 +9,7 @@ import (
 )
 
 func TestUserAfterFind(t *testing.T) {
-	assert.NotPanics(t, func() { model.Setup("testAfterFind.db") })
+	model.Setup("testAfterFind.db")
 	defer os.Remove("testAfterFind.db")
 	user := model.User{}
 	model.DB.First(&user, "1")
@@ -19,7 +19,7 @@ func TestUserAfterFind(t *testing.T) {
 }
 
 func TestUserAllPermissionStrings(t *testing.T) {
-	assert.NotPanics(t, func() { model.Setup("testAllPermissionStrings.db") })
+	model.Setup("testAllPermissionStrings.db")
 	defer os.Remove("testAllPermissionStrings.db")
 	user := model.User{}
 	model.DB.First(&user, "2")
