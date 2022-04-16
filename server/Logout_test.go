@@ -2,16 +2,20 @@ package server_test
 
 import (
 	"context"
+	"os"
 	"testing"
 	"time"
 
 	pb "github.com/Tackem-org/Global/pb/user"
+	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/server"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestUserServer_Logout(t *testing.T) {
 	u := server.UserServer{}
+	assert.NotPanics(t, func() { model.Setup("testServerLogout.db") })
+	defer os.Remove("testServerLogout.db")
 	server.Sessions = []server.Session{
 		{
 			UserID:       2,

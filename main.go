@@ -37,18 +37,12 @@ const (
 	databaseFile     = "User.db"
 )
 
-func main() {
-	pflag.Parse()
-
-	system.Run(&setupData.SetupData{
+var (
+	sd = &setupData.SetupData{
 
 		ServiceName: "user",
 		ServiceType: "system",
-		Version: structs.Version{
-			Major:  0,
-			Minor:  0,
-			Hotfix: 0,
-		},
+		Version:     structs.Version{Major: 0, Minor: 0, Hotfix: 0},
 		Multi:       false,
 		SingleRun:   false,
 		StartActive: true,
@@ -78,12 +72,10 @@ func main() {
 			},
 			},
 		},
-		MasterConf: flags.ConfigFolder() + masterConfigFile,
-		LogFile:    flags.LogFolder() + logFile,
-		VerboseLog: flags.Verbose(),
-		GRPCSystems: func(grpcs *grpc.Server) {
-			pbu.RegisterUserServer(grpcs, &server.UserServer{})
-		},
+		MasterConf:  flags.ConfigFolder() + masterConfigFile,
+		LogFile:     flags.LogFolder() + logFile,
+		VerboseLog:  flags.Verbose(),
+		GRPCSystems: GRPCSystems,
 
 		StaticFS: &static.FS,
 		AdminPaths: []*setupData.AdminPathItem{
@@ -209,7 +201,12 @@ func main() {
 		TaskGrabber:  TaskGrabber,
 		MainSetup:    MainSetup,
 		MainShutdown: MainShutdown,
-	})
+	}
+)
+
+func main() {
+	pflag.Parse()
+	system.Run(sd)
 }
 
 func TaskGrabber() []*pbw.TaskMessage {
@@ -242,4 +239,8 @@ func MainShutdown() {
 	file, _ := os.Create(flags.ConfigFolder() + tempSaveFile)
 	defer file.Close()
 	io.Copy(file, reader)
+}
+
+func GRPCSystems(grpcs *grpc.Server) {
+	pbu.RegisterUserServer(grpcs, &server.UserServer{})
 }
