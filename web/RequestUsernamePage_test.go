@@ -15,6 +15,7 @@ import (
 type MockWebClient struct{}
 
 func (mwc *MockWebClient) AddTask(request *pbw.TaskMessage) bool                { return true }
+func (wc *MockWebClient) AddNotification(request *pbw.NotificationMessage) bool { return true }
 func (mwc *MockWebClient) RemoveTask(request *pbw.RemoveTaskRequest) bool       { return true }
 func (mwc *MockWebClient) WebSocketSend(request *pbw.SendWebSocketRequest) bool { return true }
 

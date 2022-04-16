@@ -15,17 +15,10 @@ import (
 
 type MockWebClient struct{}
 
-func (wc *MockWebClient) AddTask(request *pbw.TaskMessage) bool {
-	return true
-}
-
-func (wc *MockWebClient) RemoveTask(request *pbw.RemoveTaskRequest) bool {
-	return true
-}
-
-func (wc *MockWebClient) WebSocketSend(request *pbw.SendWebSocketRequest) bool {
-	return true
-}
+func (wc *MockWebClient) AddTask(request *pbw.TaskMessage) bool                 { return true }
+func (wc *MockWebClient) AddNotification(request *pbw.NotificationMessage) bool { return true }
+func (wc *MockWebClient) RemoveTask(request *pbw.RemoveTaskRequest) bool        { return true }
+func (wc *MockWebClient) WebSocketSend(request *pbw.SendWebSocketRequest) bool  { return true }
 
 func TestAcceptUsernameChange(t *testing.T) {
 	web.I = &MockWebClient{}

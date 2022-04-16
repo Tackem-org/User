@@ -198,9 +198,10 @@ var (
 				Call:              socket.RejectUsernameChange,
 			},
 		},
-		TaskGrabber:  TaskGrabber,
-		MainSetup:    MainSetup,
-		MainShutdown: MainShutdown,
+		TaskGrabber:         TaskGrabber,
+		NotificationGrabber: NotificationGrabber,
+		MainSetup:           MainSetup,
+		MainShutdown:        MainShutdown,
 	}
 )
 
@@ -217,6 +218,16 @@ func TaskGrabber() []*pbw.TaskMessage {
 		rTasks = append(rTasks, tasks.UserNameChangeRequest(&u))
 	}
 	return rTasks
+}
+
+func NotificationGrabber() []*pbw.NotificationMessage {
+	var rNotifications []*pbw.NotificationMessage
+	// var uChanges []model.UsernameRequest
+	// model.DB.Preload(clause.Associations).Find(&uChanges)
+	// for _, u := range uChanges {
+	// 	rNotifications = append(rNotifications, tasks.UserNameChangeRequest(&u))
+	// }
+	return rNotifications
 }
 
 func MainSetup() {

@@ -52,6 +52,20 @@ func TestTaskGrabber(t *testing.T) {
 	assert.Len(t, r, 1)
 }
 
+func TestNotificationGrabber(t *testing.T) {
+	model.Setup("testNotificationGrabber.db")
+	defer os.Remove("testNotificationGrabber.db")
+
+	ur1 := &model.UsernameRequest{
+		RequestUserID: 2,
+		Name:          "new",
+	}
+	model.DB.Create(ur1)
+	r := NotificationGrabber()
+	assert.IsType(t, []*pbw.NotificationMessage{}, r)
+	assert.Len(t, r, 0)
+}
+
 func TestMainSetupAndShutdown(t *testing.T) {
 	logging.I = &MockLogging{}
 	pflag.Set("config", "")
