@@ -20,7 +20,6 @@ import (
 	"github.com/Tackem-org/User/tasks"
 	"github.com/Tackem-org/User/web"
 	"github.com/Tackem-org/User/web/admin"
-	"github.com/spf13/pflag"
 	"google.golang.org/grpc"
 	"gorm.io/gorm/clause"
 
@@ -72,9 +71,6 @@ var (
 			},
 			},
 		},
-		MasterConf:  flags.ConfigFolder() + masterConfigFile,
-		LogFile:     flags.LogFolder() + logFile,
-		VerboseLog:  flags.Verbose(),
 		GRPCSystems: GRPCSystems,
 
 		StaticFS: &static.FS,
@@ -206,7 +202,12 @@ var (
 )
 
 func main() {
-	pflag.Parse()
+	flags.Parse()
+	if sd != nil {
+		sd.MasterConf = flags.ConfigFolder() + masterConfigFile
+		sd.LogFile = flags.LogFolder() + logFile
+		sd.VerboseLog = flags.Verbose()
+	}
 	system.Run(sd)
 }
 

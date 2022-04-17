@@ -1,11 +1,11 @@
 run:
-	go run main.go
+	@go run main.go
 
 debug:
-	go run main.go -v
+	@go run main.go -v
 
 build:
-	go build
+	@go build
 
 test:
 	@FILES="$(shell go list ./... | grep -v /static)"; go test -timeout 30s -cover -coverprofile=cover.out $$FILES

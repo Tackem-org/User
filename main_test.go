@@ -9,6 +9,7 @@ import (
 
 	"github.com/Tackem-org/Global/logging"
 	pbw "github.com/Tackem-org/Global/pb/web"
+	"github.com/Tackem-org/Global/system"
 	"github.com/Tackem-org/Global/system/setupData"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/server"
@@ -32,8 +33,9 @@ func (l *MockLogging) Fatal(message string, values ...interface{}) error {
 }
 
 func TestMain(t *testing.T) {
+	system.Run = func(d *setupData.SetupData) {}
 	sd = &setupData.SetupData{}
-	assert.Panics(t, func() {
+	assert.NotPanics(t, func() {
 		main()
 	})
 }
