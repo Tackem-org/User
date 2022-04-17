@@ -60,6 +60,7 @@ func Setup(dbFile string) {
 
 	AddPermissions(
 		"do_tasks",
+		"notifications",
 		"system_user_change_own_password",
 		"system_user_change_own_username",
 		"system_user_request_change_of_username",
