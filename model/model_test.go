@@ -15,7 +15,7 @@ func TestSetup(t *testing.T) {
 	model.DB.Model(&model.User{}).Count(&count1)
 	assert.Equal(t, int64(2), count1)
 	model.DB.Model(&model.Permission{}).Count(&count1)
-	assert.Equal(t, int64(5), count1)
+	assert.Equal(t, int64(6), count1)
 	model.DB.Model(&model.Group{}).Count(&count1)
 	assert.Equal(t, int64(3), count1)
 
@@ -24,7 +24,7 @@ func TestSetup(t *testing.T) {
 	model.DB.Model(&model.User{}).Count(&count2)
 	assert.Equal(t, int64(2), count2)
 	model.DB.Model(&model.Permission{}).Count(&count2)
-	assert.Equal(t, int64(5), count2)
+	assert.Equal(t, int64(6), count2)
 	model.DB.Model(&model.Group{}).Count(&count2)
 	assert.Equal(t, int64(3), count2)
 }
