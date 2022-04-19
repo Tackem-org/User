@@ -8,10 +8,12 @@ import (
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/socket/admin/editUser"
+	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestChangeUsername(t *testing.T) {
+	pflag.Set("config", "")
 	model.Setup("testChangeUsername.db")
 	defer os.Remove("testChangeUsername.db")
 
@@ -95,4 +97,6 @@ func TestChangeUsername(t *testing.T) {
 	assert.IsType(t, &structs.SocketReturn{}, r8)
 	assert.Nil(t, err8)
 	assert.Equal(t, http.StatusOK, int(r8.StatusCode))
+	os.Remove("Salt.dat")
+	os.Remove("adminpassword")
 }

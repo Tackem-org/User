@@ -10,6 +10,7 @@ import (
 	"github.com/Tackem-org/Global/system/grpcSystem/clients/web"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/socket"
+	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -21,6 +22,7 @@ func (wc *MockWebClient) RemoveTask(request *pbw.RemoveTaskRequest) bool        
 func (wc *MockWebClient) WebSocketSend(request *pbw.SendWebSocketRequest) bool  { return true }
 
 func TestAcceptUsernameChange(t *testing.T) {
+	pflag.Set("config", "")
 	web.I = &MockWebClient{}
 	model.Setup("testAcceptUsernameChange.db")
 	defer os.Remove("testAcceptUsernameChange.db")
@@ -85,4 +87,6 @@ func TestAcceptUsernameChange(t *testing.T) {
 	assert.Nil(t, err5)
 	assert.Equal(t, http.StatusOK, int(sr5.StatusCode))
 	assert.Empty(t, sr5.ErrorMessage)
+	os.Remove("Salt.dat")
+	os.Remove("adminpassword")
 }

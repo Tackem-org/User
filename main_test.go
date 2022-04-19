@@ -41,6 +41,7 @@ func TestMain(t *testing.T) {
 }
 
 func TestTaskGrabber(t *testing.T) {
+	pflag.Set("config", "")
 	model.Setup("testTaskGrabber.db")
 	defer os.Remove("testTaskGrabber.db")
 
@@ -52,9 +53,12 @@ func TestTaskGrabber(t *testing.T) {
 	r := TaskGrabber()
 	assert.IsType(t, []*pbw.TaskMessage{}, r)
 	assert.Len(t, r, 1)
+	os.Remove("Salt.dat")
+	os.Remove("adminpassword")
 }
 
 func TestNotificationGrabber(t *testing.T) {
+	pflag.Set("config", "")
 	model.Setup("testNotificationGrabber.db")
 	defer os.Remove("testNotificationGrabber.db")
 
@@ -66,6 +70,8 @@ func TestNotificationGrabber(t *testing.T) {
 	r := NotificationGrabber()
 	assert.IsType(t, []*pbw.NotificationMessage{}, r)
 	assert.Len(t, r, 0)
+	os.Remove("Salt.dat")
+	os.Remove("adminpassword")
 }
 
 func TestMainSetupAndShutdown(t *testing.T) {
@@ -89,6 +95,7 @@ func TestMainSetupAndShutdown(t *testing.T) {
 	})
 	os.Remove("Salt.dat")
 	os.Remove("User.db")
+	os.Remove("adminpassword")
 
 }
 

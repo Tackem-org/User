@@ -9,10 +9,12 @@ import (
 	pb "github.com/Tackem-org/Global/pb/user"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/server"
+	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestUserServer_Logout(t *testing.T) {
+	pflag.Set("config", "")
 	u := server.UserServer{}
 	model.Setup("testServerLogout.db")
 	defer os.Remove("testServerLogout.db")
@@ -39,4 +41,6 @@ func TestUserServer_Logout(t *testing.T) {
 	assert.IsType(t, &pb.LogoutResponse{}, response2)
 	assert.True(t, response2.Success)
 	assert.Nil(t, err2)
+	os.Remove("Salt.dat")
+	os.Remove("adminpassword")
 }

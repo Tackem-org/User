@@ -4,6 +4,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/Tackem-org/Global/flags"
 	"github.com/Tackem-org/Global/helpers"
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/User/password"
@@ -36,7 +37,7 @@ func Setup(dbFile string) {
 	var count int64
 	DB.Model(&User{}).Count(&count)
 	if count == 0 {
-		f, _ := os.Create("/config/adminpassword")
+		f, _ := os.Create(flags.ConfigFolder() + "adminpassword")
 		newPassword := helpers.RandStr(8)
 		f.WriteString(newPassword)
 		f.Close()

@@ -7,10 +7,12 @@ import (
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/web/admin"
+	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestAdminPermissionsPage(t *testing.T) {
+	pflag.Set("config", "")
 	model.Setup("testAdminPermissionsPage.db")
 	defer os.Remove("testAdminPermissionsPage.db")
 
@@ -21,7 +23,8 @@ func TestAdminPermissionsPage(t *testing.T) {
 
 	assert.IsType(t, &structs.WebReturn{}, r1)
 	assert.Nil(t, err1)
-
+	os.Remove("Salt.dat")
+	os.Remove("adminpassword")
 }
 
 func TestCheckActivePermissions(t *testing.T) {

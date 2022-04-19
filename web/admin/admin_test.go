@@ -7,10 +7,12 @@ import (
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/web/admin"
+	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestAdminRootPage(t *testing.T) {
+	pflag.Set("config", "")
 	model.Setup("testAdminRootPage.db")
 	defer os.Remove("testAdminRootPage.db")
 
@@ -21,4 +23,6 @@ func TestAdminRootPage(t *testing.T) {
 
 	assert.IsType(t, &structs.WebReturn{}, r1)
 	assert.Nil(t, err1)
+	os.Remove("Salt.dat")
+	os.Remove("adminpassword")
 }

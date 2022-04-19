@@ -9,6 +9,7 @@ import (
 	"github.com/Tackem-org/Global/system/grpcSystem/clients/config"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/web"
+	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -40,6 +41,7 @@ func (mc *MockConfig) Set(request *pb.SetConfigRequest) (*pb.SetConfigResponse, 
 }
 
 func TestChangePasswordPage(t *testing.T) {
+	pflag.Set("config", "")
 	config.I = &MockConfig{}
 	model.Setup("testChangePasswordPage.db")
 	defer os.Remove("testChangePasswordPage.db")
@@ -202,4 +204,6 @@ func TestChangePasswordPage(t *testing.T) {
 	assert.Nil(t, err12)
 	assert.True(t, r12.PageData["Success"].(bool))
 	assert.Equal(t, "", r12.PageData["Error"].(string))
+	os.Remove("Salt.dat")
+	os.Remove("adminpassword")
 }

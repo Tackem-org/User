@@ -202,7 +202,6 @@ var (
 )
 
 func main() {
-	flags.Parse()
 	if sd != nil {
 		sd.MasterConf = flags.ConfigFolder() + masterConfigFile
 		sd.LogFile = flags.LogFolder() + logFile
@@ -223,11 +222,7 @@ func TaskGrabber() []*pbw.TaskMessage {
 
 func NotificationGrabber() []*pbw.NotificationMessage {
 	var rNotifications []*pbw.NotificationMessage
-	// var uChanges []model.UsernameRequest
-	// model.DB.Preload(clause.Associations).Find(&uChanges)
-	// for _, u := range uChanges {
-	// 	rNotifications = append(rNotifications, tasks.UserNameChangeRequest(&u))
-	// }
+	// TODO WHEN YOU HAVE NOTIFICATIONS MAKE THEM GRABBABLE FROM HERE
 	return rNotifications
 }
 

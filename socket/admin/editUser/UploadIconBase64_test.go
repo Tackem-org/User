@@ -8,6 +8,7 @@ import (
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/socket/admin/editUser"
+	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,6 +17,7 @@ var tjpg = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD//gATQ3JlYXRlZCB3a
 var tpng = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAABhWlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV8/pCJVhxYUEclQnSyIijhqFYpQIdQKrTqYXPohNGlIUlwcBdeCgx+LVQcXZ10dXAVB8APE0clJ0UVK/F9SaBHjwXE/3t173L0D/PUyU83gGKBqlpFOJoRsbkUIvSKIHvRhCBGJmfqsKKbgOb7u4ePrXZxneZ/7c3QreZMBPoF4humGRbxOPLVp6Zz3iaOsJCnE58SjBl2Q+JHrsstvnIsO+3lm1Mik54ijxEKxjeU2ZiVDJZ4kjimqRvn+rMsK5y3OarnKmvfkLwznteUlrtMcRBILWIQIATKq2EAZFuK0aqSYSNN+wsM/4PhFcsnk2gAjxzwqUCE5fvA/+N2tWZgYd5PCCaDjxbY/hoHQLtCo2fb3sW03ToDAM3CltfyVOjD9SXqtpcWOgN5t4OK6pcl7wOUO0P+kS4bkSAGa/kIBeD+jb8oBkVuga9XtrbmP0wcgQ12lboCDQ2CkSNlrHu/ubO/t3zPN/n4AUCtymWrqe9cAAAAJcEhZcwAALiMAAC4jAXilP3YAAAAHdElNRQfmBA4XIBZhr6fKAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAExJREFUaN7tz0ENAAAIBKDT/p01gm83aEBNfusICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwWUoUBf8cBNPQAAAAASUVORK5CYII="
 
 func TestUploadIconBase64(t *testing.T) {
+	pflag.Set("config", "")
 	model.Setup("testUploadIconBase64.db")
 	defer os.Remove("testUploadIconBase64.db")
 
@@ -111,5 +113,6 @@ func TestUploadIconBase64(t *testing.T) {
 	assert.Nil(t, err9)
 	assert.Equal(t, http.StatusOK, int(r9.StatusCode))
 	assert.Equal(t, "", r9.ErrorMessage)
-
+	os.Remove("Salt.dat")
+	os.Remove("adminpassword")
 }

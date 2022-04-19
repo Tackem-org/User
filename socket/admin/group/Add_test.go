@@ -8,10 +8,12 @@ import (
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/socket/admin/group"
+	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestAdd(t *testing.T) {
+	pflag.Set("config", "")
 	model.Setup("testAdd.db")
 	defer os.Remove("testAdd.db")
 	model.DB.Create(&model.Group{Name: "existing"})
@@ -53,4 +55,6 @@ func TestAdd(t *testing.T) {
 	assert.Nil(t, err4)
 	assert.Equal(t, http.StatusOK, int(r4.StatusCode))
 	assert.Empty(t, r4.ErrorMessage)
+	os.Remove("Salt.dat")
+	os.Remove("adminpassword")
 }

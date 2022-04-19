@@ -9,6 +9,7 @@ import (
 	webClient "github.com/Tackem-org/Global/system/grpcSystem/clients/web"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/web"
+	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,6 +21,7 @@ func (mwc *MockWebClient) RemoveTask(request *pbw.RemoveTaskRequest) bool       
 func (mwc *MockWebClient) WebSocketSend(request *pbw.SendWebSocketRequest) bool { return true }
 
 func TestRequestUsernamePage(t *testing.T) {
+	pflag.Set("config", "")
 	webClient.I = &MockWebClient{}
 	model.Setup("testRequestUsernamePage.db")
 	defer os.Remove("testRequestUsernamePage.db")
@@ -175,4 +177,6 @@ func TestRequestUsernamePage(t *testing.T) {
 	assert.True(t, r11.PageData["RequestMade"].(bool))
 	assert.False(t, r11.PageData["Success"].(bool))
 	assert.Equal(t, "", r11.PageData["Error"].(string))
+	os.Remove("Salt.dat")
+	os.Remove("adminpassword")
 }

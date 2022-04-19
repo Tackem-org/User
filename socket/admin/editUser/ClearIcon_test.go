@@ -8,10 +8,12 @@ import (
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/socket/admin/editUser"
+	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestClearIcon(t *testing.T) {
+	pflag.Set("config", "")
 	model.Setup("testClearIcon.db")
 	defer os.Remove("testClearIcon.db")
 
@@ -51,4 +53,6 @@ func TestClearIcon(t *testing.T) {
 	assert.IsType(t, &structs.SocketReturn{}, r4)
 	assert.Nil(t, err4)
 	assert.Equal(t, http.StatusOK, int(r4.StatusCode))
+	os.Remove("Salt.dat")
+	os.Remove("adminpassword")
 }

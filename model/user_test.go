@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/Tackem-org/User/model"
+	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -19,6 +20,7 @@ func TestUserAfterFind(t *testing.T) {
 }
 
 func TestUserAllPermissionStrings(t *testing.T) {
+	pflag.Set("config", "")
 	model.Setup("testAllPermissionStrings.db")
 	defer os.Remove("testAllPermissionStrings.db")
 	user := model.User{}
@@ -36,4 +38,6 @@ func TestUserAllPermissionStrings(t *testing.T) {
 
 	returnedPermissions := user.AllPermissionStrings()
 	assert.Len(t, returnedPermissions, 2)
+	os.Remove("Salt.dat")
+	os.Remove("adminpassword")
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/Tackem-org/Global/system/grpcSystem/clients/config"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/socket/admin/editUser"
+	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -41,6 +42,7 @@ func (mc *MockConfig) Set(request *pb.SetConfigRequest) (*pb.SetConfigResponse, 
 }
 
 func TestChangePassword(t *testing.T) {
+	pflag.Set("config", "")
 	config.I = &MockConfig{}
 	model.Setup("testChangePassword.db")
 	defer os.Remove("testChangePassword.db")
@@ -114,4 +116,6 @@ func TestChangePassword(t *testing.T) {
 	assert.IsType(t, &structs.SocketReturn{}, r7)
 	assert.Nil(t, err7)
 	assert.Equal(t, http.StatusOK, int(r7.StatusCode))
+	os.Remove("Salt.dat")
+	os.Remove("adminpassword")
 }

@@ -8,11 +8,13 @@ import (
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/web/admin"
+	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm/clause"
 )
 
 func TestAdminUserIDPage(t *testing.T) {
+	pflag.Set("config", "")
 	model.Setup("testAdminUserIDPage.db")
 	defer os.Remove("testAdminUserIDPage.db")
 
@@ -64,4 +66,6 @@ func TestAdminUserIDPage(t *testing.T) {
 	assert.Nil(t, err4)
 	assert.Equal(t, http.StatusOK, int(r4.StatusCode))
 	assert.Equal(t, "", r4.ErrorMessage)
+	os.Remove("Salt.dat")
+	os.Remove("adminpassword")
 }

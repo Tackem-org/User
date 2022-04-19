@@ -10,10 +10,12 @@ import (
 	pb "github.com/Tackem-org/Global/pb/user"
 	"github.com/Tackem-org/User/model"
 	"github.com/Tackem-org/User/server"
+	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestUserServerGetUserData(t *testing.T) {
+	pflag.Set("config", "")
 	u := server.UserServer{}
 	server.Sessions = []server.Session{
 		{
@@ -95,5 +97,7 @@ func TestUserServerGetUserData(t *testing.T) {
 	assert.True(t, response4.Success)
 	assert.Nil(t, err4)
 	assert.Empty(t, response4.Icon)
+	os.Remove("Salt.dat")
+	os.Remove("adminpassword")
 
 }
