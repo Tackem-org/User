@@ -33,7 +33,7 @@ func (l *MockLogging) Fatal(message string, values ...interface{}) error {
 }
 
 func TestMain(t *testing.T) {
-	system.Run = func(d *setupData.SetupData) {}
+	system.Run = func(d *setupData.SetupData, masterConfigFile string, logFile string) {}
 	sd = &setupData.SetupData{}
 	assert.NotPanics(t, func() {
 		main()

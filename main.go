@@ -8,7 +8,6 @@ import (
 
 	"github.com/Tackem-org/Global/flags"
 	"github.com/Tackem-org/Global/logging"
-	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/Global/system"
 	"github.com/Tackem-org/Global/system/setupData"
 	"github.com/Tackem-org/User/model"
@@ -41,10 +40,9 @@ var (
 
 		ServiceName: "user",
 		ServiceType: "system",
-		Version:     structs.Version{Major: 0, Minor: 0, Hotfix: 0},
-		Multi:       false,
 		SingleRun:   false,
 		StartActive: true,
+		VerboseLog:  true,
 		ConfigItems: []*pbr.ConfigItem{
 			{
 				Key:          "user.password.minimum",
@@ -202,12 +200,7 @@ var (
 )
 
 func main() {
-	if sd != nil {
-		sd.MasterConf = flags.ConfigFolder() + masterConfigFile
-		sd.LogFile = flags.LogFolder() + logFile
-		sd.VerboseLog = flags.Verbose()
-	}
-	system.Run(sd)
+	system.Run(sd, masterConfigFile, logFile)
 }
 
 func TaskGrabber() []*pbw.TaskMessage {
