@@ -36,7 +36,10 @@ const (
 )
 
 var (
-	sd = &setupData.SetupData{
+	Version    string = "v0.0.0-devel"
+	Commit     string
+	CommitDate string
+	sd         = &setupData.SetupData{
 
 		ServiceName: "user",
 		ServiceType: "system",
@@ -200,7 +203,7 @@ var (
 )
 
 func main() {
-	system.Run(sd, masterConfigFile, logFile)
+	system.Run(sd, masterConfigFile, logFile, Version, Commit, CommitDate)
 }
 
 func TaskGrabber() []*pbw.TaskMessage {
