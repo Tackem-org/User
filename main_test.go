@@ -33,7 +33,8 @@ func (l *MockLogging) Fatal(message string, values ...interface{}) error {
 }
 
 func TestMain(t *testing.T) {
-	system.Run = func(d *setupData.SetupData, masterConfigFile string, logFile string) {}
+	system.Run = func(version string, d *setupData.SetupData) {
+	}
 	sd = &setupData.SetupData{}
 	assert.NotPanics(t, func() {
 		main()
@@ -76,6 +77,10 @@ func TestNotificationGrabber(t *testing.T) {
 
 func TestMainSetupAndShutdown(t *testing.T) {
 	logging.I = &MockLogging{}
+	setupData.Data = &setupData.SetupData{
+		ServiceName: "user",
+		ServiceType: "system",
+	}
 	pflag.Set("config", "")
 	assert.NotPanics(t, func() {
 		MainShutdown()
@@ -94,7 +99,7 @@ func TestMainSetupAndShutdown(t *testing.T) {
 		MainSetup()
 	})
 	os.Remove("Salt.dat")
-	os.Remove("User.db")
+	os.Remove("user.db")
 	os.Remove("adminpassword")
 
 }

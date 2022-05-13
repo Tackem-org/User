@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/Tackem-org/Global/file"
 	"github.com/Tackem-org/Global/flags"
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/Global/system"
@@ -28,19 +29,9 @@ import (
 	pbw "github.com/Tackem-org/Global/pb/web"
 )
 
-const (
-	tempSaveFile     = "tackemusersessionsdata.tmp"
-	masterConfigFile = "user.json"
-	logFile          = "user.log"
-	databaseFile     = "User.db"
-)
-
 var (
-	Version    string = "v0.0.0-devel"
-	Commit     string
-	CommitDate string
-	sd         = &setupData.SetupData{
-
+	Version string = "v0.0.0-devel"
+	sd             = &setupData.SetupData{
 		ServiceName: "user",
 		ServiceType: "system",
 		SingleRun:   false,
@@ -203,7 +194,7 @@ var (
 )
 
 func main() {
-	system.Run(sd, masterConfigFile, logFile, Version, Commit, CommitDate)
+	system.Run(Version, sd)
 }
 
 func TaskGrabber() []*pbw.TaskMessage {
@@ -222,10 +213,14 @@ func NotificationGrabber() []*pbw.NotificationMessage {
 	return rNotifications
 }
 
+const (
+	tempSaveFile = "tackemusersessionsdata.tmp"
+)
+
 func MainSetup() {
 	logging.Info("Setup Database")
-	model.Setup(flags.ConfigFolder() + databaseFile)
-	if _, err := os.Stat(flags.ConfigFolder() + tempSaveFile); !os.IsNotExist(err) {
+	model.Setup(flags.ConfigFolder() + setupData.Data.Filename("db"))
+	if file.FileExists(flags.ConfigFolder() + tempSaveFile) {
 		file, _ := os.Open(flags.ConfigFolder() + tempSaveFile)
 		defer file.Close()
 		json.NewDecoder(file).Decode(&server.Sessions)
