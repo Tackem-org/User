@@ -1,0 +1,48 @@
+project_name: Tackem-User
+env:
+  - GO111MODULE=on
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+builds:
+  - id: build
+    binary: "{{ tolower .ProjectName}}_v{{ .Version }}"
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
+    goarm:
+      - 6
+      - 7
+    ignore:
+      - goos: linux
+        goarch: 386
+      - goos: windows
+        goarch: arm
+        goarm: 6
+      - goos: darwin
+        goarch: arm
+        goarm: 6
+
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    ldflags:
+      - "-s -w -X main.Version={{.Version}}"
+archives:
+  - format: binary
+    name_template: "{{ .Binary }}_{{ .Os }}_{{ .Arch }}{{ with .Arm }}v{{ . }}{{ end }}"
+snapshot:
+  name_template: '{{ incpatch  .Version }}-devel'
+release:
+  prerelease: auto
+  name_template: "{{.ProjectName}}-v{{.Version}}"
+  extra_files:
+    - glob: ./LICENSE.md
+    - glob: ./README.md

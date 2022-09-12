@@ -1,6 +1,6 @@
 # TODO
 - Normal user systems (edit profile etc)
-  - need to allow the user to pick an Icon and look at making the Icon folder a special folder
+  - need to allow the user to pick an Icon and look at making the Icon folder a special folder or make it base64 in the DB
 - View Other users option with permission
 - make the permissions table in user edit more flexable allow "search", pagination, groups
   - a way of splitting permissions up (maybe some kind of permission type groups that are fixed.) (enum help <https://github.com/go-gorm/gorm/issues/1978>)

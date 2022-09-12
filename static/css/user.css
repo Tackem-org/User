@@ -2,72 +2,44 @@
   height: 1.5rem;
   vertical-align: middle;
 }
-
 #admin-user td:nth-of-type(3), #admin-user td:nth-of-type(4) {
   text-align: center;
 }
-
-#admin-user td > input[type="text"] {
+#admin-user td > input[type=text] {
   background-color: inherit;
   border: none;
   width: 100%;
   height: 100%;
   vertical-align: middle;
 }
-
-#admin-user td > input[type="button"] {
+#admin-user td > input[type=button] {
   width: 100%;
   height: 100%;
   vertical-align: middle;
 }
 
 #admin-user-edit > div:first-of-type {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: reverse;
-      -ms-flex-direction: row-reverse;
-          flex-direction: row-reverse;
+  flex-direction: row-reverse;
   margin-bottom: 1rem;
 }
-
 #admin-user-edit > div:not(:first-of-type) {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -ms-flex-pack: distribute;
-      justify-content: space-around;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: start;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: start;
 }
-
 #admin-user-edit > div:not(:first-of-type) [colspan="2"] {
   text-align: center;
 }
-
 #admin-user-edit > div:not(:first-of-type) #usericon {
   width: 64px;
 }
-
 #admin-user-edit > div:not(:first-of-type) #usernamerequest td {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  flex-direction: row;
+  justify-content: space-between;
 }
-
 #admin-user-edit > div:not(:first-of-type) #usernamerequest td i {
   font-size: 1.5rem;
   cursor: pointer;
@@ -76,16 +48,13 @@
 #admin-user-groups table th:last-of-type {
   background-color: inherit;
 }
-
 #admin-user-groups table tr:last-of-type {
   background-color: white;
 }
-
 #admin-user-groups table tr:last-of-type td:first-of-type {
   padding: 0;
 }
-
-#admin-user-groups table input[type="text"], #admin-user-groups table input[type="button"] {
+#admin-user-groups table input[type=text], #admin-user-groups table input[type=button] {
   border: 0;
   width: 100%;
   margin: 0px;
@@ -93,107 +62,72 @@
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
 }
-
-#admin-user-groups table input[type="text"]::-webkit-input-placeholder, #admin-user-groups table input[type="button"]::-webkit-input-placeholder {
+#admin-user-groups table input[type=text]::-moz-placeholder, #admin-user-groups table input[type=button]::-moz-placeholder {
   text-align: center;
 }
-
-#admin-user-groups table input[type="text"]:-ms-input-placeholder, #admin-user-groups table input[type="button"]:-ms-input-placeholder {
+#admin-user-groups table input[type=text]:-ms-input-placeholder, #admin-user-groups table input[type=button]:-ms-input-placeholder {
   text-align: center;
 }
-
-#admin-user-groups table input[type="text"]::-ms-input-placeholder, #admin-user-groups table input[type="button"]::-ms-input-placeholder {
-  text-align: center;
-}
-
-#admin-user-groups table input[type="text"]::placeholder, #admin-user-groups table input[type="button"]::placeholder {
+#admin-user-groups table input[type=text]::placeholder, #admin-user-groups table input[type=button]::placeholder {
   text-align: center;
 }
 
 #user-changepassword, #user-changeusername, #user-requestusername {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
   background-color: #eeeeee;
 }
-
 #user-changepassword > div, #user-changeusername > div, #user-requestusername > div {
   background-color: #ffffff;
   width: 40rem;
   margin: 1rem auto auto auto;
   text-align: center;
-  border: 1px solid #00000033;
+  border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 4px;
-  -webkit-box-shadow: 0px 30px 50px 0px #00000033;
-          box-shadow: 0px 30px 50px 0px #00000033;
+  box-shadow: 0px 30px 50px 0px rgba(0, 0, 0, 0.2);
 }
-
 #user-changepassword > div > form, #user-changeusername > div > form, #user-requestusername > div > form {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-flow: column;
-          flex-flow: column;
-  -ms-flex-pack: distribute;
-      justify-content: space-around;
-  -webkit-box-align: stretch;
-      -ms-flex-align: stretch;
-          align-items: stretch;
+  flex-flow: column;
+  justify-content: space-around;
+  align-items: stretch;
   padding: 0;
 }
-
 #user-changepassword > div > form > div, #user-changeusername > div > form > div, #user-requestusername > div > form > div {
   padding: 0.5rem;
 }
-
 #user-changepassword > div > form .error, #user-changeusername > div > form .error, #user-requestusername > div > form .error {
   background-color: red;
   line-height: 3rem;
   font-size: 2rem;
   text-transform: uppercase;
 }
-
 #user-changepassword > div > form .success, #user-changeusername > div > form .success, #user-requestusername > div > form .success {
   line-height: 3rem;
   font-size: 2rem;
   text-transform: uppercase;
   background-color: limegreen;
 }
-
 #user-changepassword > div > form input, #user-changeusername > div > form input, #user-requestusername > div > form input {
   text-align: center;
   display: block;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   width: 100%;
   outline: none;
   height: 3rem;
   font-size: 1.5rem;
   border-radius: 4px;
 }
-
-#user-changepassword > div > form input::-webkit-input-placeholder, #user-changeusername > div > form input::-webkit-input-placeholder, #user-requestusername > div > form input::-webkit-input-placeholder {
+#user-changepassword > div > form input::-moz-placeholder, #user-changeusername > div > form input::-moz-placeholder, #user-requestusername > div > form input::-moz-placeholder {
   opacity: 1;
 }
-
 #user-changepassword > div > form input:-ms-input-placeholder, #user-changeusername > div > form input:-ms-input-placeholder, #user-requestusername > div > form input:-ms-input-placeholder {
   opacity: 1;
 }
-
-#user-changepassword > div > form input::-ms-input-placeholder, #user-changeusername > div > form input::-ms-input-placeholder, #user-requestusername > div > form input::-ms-input-placeholder {
-  opacity: 1;
-}
-
 #user-changepassword > div > form input::placeholder, #user-changeusername > div > form input::placeholder, #user-requestusername > div > form input::placeholder {
   opacity: 1;
 }
-
-#user-changepassword > div > form input > input:not([type="submit"]), #user-changeusername > div > form input > input:not([type="submit"]), #user-requestusername > div > form input > input:not([type="submit"]) {
+#user-changepassword > div > form input > input:not([type=submit]), #user-changeusername > div > form input > input:not([type=submit]), #user-requestusername > div > form input > input:not([type=submit]) {
   width: 100%;
   padding: 0 0 0 10px;
   margin: 0;
@@ -206,13 +140,11 @@
   position: relative;
   display: inline-block;
 }
-
-#user-changepassword > div > form input > input[type="submit"], #user-changeusername > div > form input > input[type="submit"], #user-requestusername > div > form input > input[type="submit"] {
+#user-changepassword > div > form input > input[type=submit], #user-changeusername > div > form input > input[type=submit], #user-requestusername > div > form input > input[type=submit] {
   border: none;
   display: block;
   font-weight: bold;
   cursor: pointer;
-  -webkit-transition: all 0.2s ease;
   transition: all 0.2s ease;
   font-size: 18px;
   position: relative;
@@ -220,5 +152,4 @@
   cursor: pointer;
   text-align: center;
   margin-bottom: 1rem;
-}
-/*# sourceMappingURL=user.css.map */
+}/*# sourceMappingURL=user.css.map */
