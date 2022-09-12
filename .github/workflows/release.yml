@@ -33,13 +33,13 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-      -
-        name: Tests
-        run: |
-          go mod tidy
-          go test -v ./...
-        with:
-          working-directory: ./main
+      # -
+      #   name: Tests
+      #   run: |
+      #     go mod tidy
+      #     go test -v ./...
+      #   with:
+      #     working-directory: ./main
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
