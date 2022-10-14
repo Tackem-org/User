@@ -8,9 +8,9 @@ import (
 	"github.com/Tackem-org/Global/helpers"
 	"github.com/Tackem-org/Global/logging"
 	"github.com/Tackem-org/User/password"
-	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"modernc.org/sqlite"
 )
 
 var (
