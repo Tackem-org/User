@@ -18,7 +18,6 @@
     });
 
     function ClickCheckbox() {
-        console.log("G", parseInt(this.getAttribute('data-group')), "P", parseInt(this.getAttribute('data-permission')));
         socket.Send({
             command: 'user.admin.group.set',
             checked: this.checked,
@@ -64,14 +63,11 @@
         location.parentNode.insertBefore(template, location);
 
         let elem = document.getElementById('group' + data['data']['groupid']);
-        console.log("ELEM:", elem);
         elem.querySelectorAll('input[type="checkbox"]').forEach((e) => {
-            console.log("CHECKBOXES");
             e.addEventListener('click', ClickCheckbox);
         });
 
         elem.querySelectorAll('input[type="button"]').forEach((e) => {
-            console.log("BUTTONS");
             e.addEventListener('click', ClickButton);
         });
         SortTablebyID();
