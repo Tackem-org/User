@@ -24,7 +24,7 @@ func ChangePasswordPage(in *structs.WebRequest) (*structs.WebReturn, error) {
 			errorString = "original password blank"
 		} else if np1 == "" || np2 == "" {
 			errorString = "new password cannot be blank"
-		} else if uint(len(np1)) <= minPassLength || uint(len(np2)) <= minPassLength {
+		} else if uint(len(np1)) < minPassLength || uint(len(np2)) < minPassLength {
 			errorString = "new password too short"
 		} else if np1 != np2 {
 			errorString = "new password don't match"

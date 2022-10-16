@@ -51,14 +51,6 @@ func Setup(dbFile string) {
 			IsAdmin:  true,
 			Icon:     "",
 		})
-		DB.Create(&User{
-			Username: "user",
-			Password: password.Hash("user"),
-			Disabled: false,
-			IsAdmin:  false,
-			Icon:     "",
-		})
-
 	}
 
 	AddPermissions(

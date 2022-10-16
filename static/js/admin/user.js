@@ -4,20 +4,21 @@
     let passwordTimeout = null;
     let userID = parseInt(window.location.href.split("/").pop());
 
-    $(() => {
+    var ready = (callback) => {
+        if (document.readyState != "loading") callback();
+        else document.addEventListener("DOMContentLoaded", callback);
+    };
+
+    ready(() => {
         socket.AddReturnFunction(UpdateTimestamp);
         socket.AddReturnAction("user.acceptusernamechange", AcceptUsernameChange);
         socket.AddReturnAction("user.rejectusernamechange", RejectUsernameChange);
         socket.AddReturnAction("user.admin.edituser.uploadiconbase64", UploadIconBase64);
         socket.AddReturnAction("user.admin.edituser.clearicon", ClearIcon);
-        setupEvents();
-    });
 
-    function setupEvents() {
-        $("input").off("click");
 
-        $('#username').on('input', function () {
-            if ($(this).val() == "") {
+        document.getElementById('username').addEventListener('input', function () {
+            if (this.value == "") {
                 return
             }
             if (usernameTimeout != null) {
@@ -29,27 +30,34 @@
                 socket.Send({
                     command: 'user.admin.edituser.changeusername',
                     userid: userID,
-                    username: $(this).val()
+                    username: this.value
                 });
             }, 1000 * timer);
         });
 
-        $('#acceptusernamerequest').on('click', function () {
-            socket.Send({
-                command: 'user.acceptusernamechange',
-                userid: userID,
+        let acceptusernamerequest = document.getElementById('acceptusernamerequest');
+        if (acceptusernamerequest != null) {
+            acceptusernamerequest.addEventListener('click', function () {
+                socket.Send({
+                    command: 'user.acceptusernamechange',
+                    userid: userID,
+                });
             });
-        });
+        }
 
-        $('#rejectusernamerequest').on('click', function () {
-            socket.Send({
-                command: 'user.rejectusernamechange',
-                userid: userID,
+        let rejectusernamerequest = document.getElementById('rejectusernamerequest')
+        if (rejectusernamerequest != null) {
+
+            rejectusernamerequest.addEventListener('click', function () {
+                socket.Send({
+                    command: 'user.rejectusernamechange',
+                    userid: userID,
+                });
             });
-        });
+        }
 
-        $('#password').on('input', function () {
-            if ($(this).val() == "") {
+        document.getElementById('password').addEventListener('input', function () {
+            if (this.value == "") {
                 return
             }
             if (passwordTimeout != null) {
@@ -61,28 +69,28 @@
                 socket.Send({
                     command: 'user.admin.edituser.changepassword',
                     userid: userID,
-                    password: $(this).val(),
+                    password: this.value,
                 });
             }, 1000 * timer);
         });
 
-        $('[name="disabled"]').on('click', function () {
+        document.getElementById('disabled').addEventListener('click', function () {
             socket.Send({
                 command: 'user.admin.edituser.changedisabled',
                 userid: userID,
-                checked: $(this).prop('checked'),
+                checked: this.checked,
             });
         });
 
-        $('[name="isadmin"]').on('click', function () {
+        document.getElementById('isadmin').addEventListener('click', function () {
             socket.Send({
                 command: 'user.admin.edituser.changeisadmin',
                 userid: userID,
-                checked: $(this).prop('checked'),
+                checked: this.checked,
             });
         });
 
-        $('[name="icon"]').on('change', function () {
+        document.getElementById('icon').addEventListener('change', function () {
             var reader = new FileReader();
             reader.onloadend = function () {
                 socket.Send({
@@ -94,7 +102,7 @@
             reader.readAsDataURL(this.files[0]);
         });
 
-        $('[name="clearicon"]').on('click', function () {
+        document.getElementById('clearicon').addEventListener('click', function () {
             if (confirm('Are you Sure you want to clear the icon')) {
                 socket.Send({
                     command: 'user.admin.edituser.clearicon',
@@ -103,7 +111,7 @@
             }
         });
 
-        $('[name="delete"]').on('click', function () {
+        document.getElementById('delete').addEventListener('click', function () {
             if (confirm('Are you Sure you want to delete this user')) {
                 socket.Send({
                     command: 'user.admin.edituser.deleteuser',
@@ -112,46 +120,47 @@
             }
         });
 
-
-
-        $('[name="groups[]"]').on('click', function () {
-            socket.Send({
-                command: 'user.admin.edituser.changegroup',
-                userid: userID,
-                checked: $(this).prop('checked'),
-                group: $(this).data('group'),
+        document.querySelectorAll('[name="groups[]"]').forEach((e) => {
+            e.addEventListener("click", function () {
+                socket.Send({
+                    command: 'user.admin.edituser.changegroup',
+                    userid: userID,
+                    checked: this.checked,
+                    group: parseInt(this.getAttribute('data-group')),
+                });
             });
         });
 
-        $('[name="permissions[]"]').on('click', function () {
-            socket.Send({
-                command: 'user.admin.edituser.changepermission',
-                userid: userID,
-                checked: $(this).prop('checked'),
-                permission: $(this).data('permission'),
+        document.querySelectorAll('[name="permissions[]"]').forEach((e) => {
+            e.addEventListener("click", function () {
+                socket.Send({
+                    command: 'user.admin.edituser.changepermission',
+                    userid: userID,
+                    checked: this.checked,
+                    permission: parseInt(this.getAttribute('data-permission')),
+                });
             });
         });
-    }
+    });
 
     function AcceptUsernameChange(data) {
-        $('#username').val(data['data']['name']);
-        $('#usernamerequest').remove();
+        document.getElementById('username').value = data['data']['name'];
+        document.getElementById('usernamerequest').remove();
     }
     function RejectUsernameChange(data) {
-        $('#usernamerequest').remove();
+        document.getElementById('usernamerequest').remove();
     }
     function UploadIconBase64(data) {
-        console.log(data);
-        $('#usericon').attr('src', data['data']['icon']);
+        document.getElementById('usericon').setAttribute('src', data['data']['icon']);
     }
     function ClearIcon(data) {
-        $('#usericon').attr('src', '');
-        $('[name="icon"]').val(null);
+        document.getElementById('usericon').removeAttribute('src');
+        document.querySelector('[name="icon"]').value = null;
     }
 
     function UpdateTimestamp(data) {
         if ('data' in data && 'updatedat' in data['data']) {
-            let $uat = $('#updatedat').html(data['data']['updatedat']);
+            document.getElementById('updatedat').innerHTML = data['data']['updatedat'];
         }
     }
 })();

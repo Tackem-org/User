@@ -91,9 +91,10 @@ var (
 				Call:       web.RootPage,
 			},
 			{
-				Path:       "/changepassword",
-				Permission: "system_user_change_own_password",
-				Call:       web.ChangePasswordPage,
+				Path:        "/changepassword",
+				Permission:  "system_user_change_own_password",
+				PostAllowed: true,
+				Call:        web.ChangePasswordPage,
 			},
 			{
 				Path:       "/changeusername",
