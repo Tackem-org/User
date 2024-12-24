@@ -24,20 +24,27 @@ func TestUserAllPermissionStrings(t *testing.T) {
 	model.Setup("testAllPermissionStrings.db")
 	defer os.Remove("testAllPermissionStrings.db")
 	user := model.User{}
-	model.DB.First(&user, "2")
+	model.DB.First(&user, "1")
 	group := model.Group{}
 	model.DB.First(&group, "1")
 	permission1 := model.Permission{}
 	model.DB.First(&permission1, "1")
 	permission2 := model.Permission{}
 	model.DB.First(&permission2, "2")
+	permission3 := model.Permission{}
+	model.DB.First(&permission3, "3")
 
-	model.DB.Model(&group).Association("Permissions").Append(&permission1)
+	model.AddPermissions("permission1", "permission2", "permission3")
+
+	model.AddGroups("group1")
+
 	model.DB.Model(&user).Association("Groups").Append(&group)
+	model.DB.Model(&user).Association("Permissions").Append(&permission1)
 	model.DB.Model(&user).Association("Permissions").Append(&permission2)
+	model.DB.Model(&group).Association("Permissions").Append(&permission3)
 
 	returnedPermissions := user.AllPermissionStrings()
-	assert.Len(t, returnedPermissions, 2)
+	assert.Len(t, returnedPermissions, 3)
 	os.Remove("Salt.dat")
 	os.Remove("adminpassword")
 }
