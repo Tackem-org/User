@@ -65,9 +65,6 @@
 #admin-user-groups table input[type=text]::-moz-placeholder, #admin-user-groups table input[type=button]::-moz-placeholder {
   text-align: center;
 }
-#admin-user-groups table input[type=text]:-ms-input-placeholder, #admin-user-groups table input[type=button]:-ms-input-placeholder {
-  text-align: center;
-}
 #admin-user-groups table input[type=text]::placeholder, #admin-user-groups table input[type=button]::placeholder {
   text-align: center;
 }
@@ -119,9 +116,6 @@
   border-radius: 4px;
 }
 #user-changepassword > div > form input::-moz-placeholder, #user-changeusername > div > form input::-moz-placeholder, #user-requestusername > div > form input::-moz-placeholder {
-  opacity: 1;
-}
-#user-changepassword > div > form input:-ms-input-placeholder, #user-changeusername > div > form input:-ms-input-placeholder, #user-requestusername > div > form input:-ms-input-placeholder {
   opacity: 1;
 }
 #user-changepassword > div > form input::placeholder, #user-changeusername > div > form input::placeholder, #user-requestusername > div > form input::placeholder {
