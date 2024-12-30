@@ -19,7 +19,7 @@ func TestAdminUserIDPage(t *testing.T) {
 	defer os.Remove("testAdminUserIDPage.db")
 
 	var user model.User
-	model.DB.Preload(clause.Associations).Where(&model.User{ID: uint64(2)}).Find(&user)
+	model.DB.Preload(clause.Associations).Where(&model.User{ID: uint64(1)}).Find(&user)
 	var permission model.Permission
 	model.DB.Where(&model.Permission{ID: uint64(1)}).First(&permission)
 	model.DB.Model(&user).Association("Permissions").Append(&permission)
@@ -58,7 +58,7 @@ func TestAdminUserIDPage(t *testing.T) {
 
 	r4, err4 := admin.AdminUserIDPage(&structs.WebRequest{
 		PathVariables: map[string]interface{}{
-			"userid": 2,
+			"userid": 1,
 		},
 	})
 
