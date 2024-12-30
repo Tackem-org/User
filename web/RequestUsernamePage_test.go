@@ -8,6 +8,7 @@ import (
 	"github.com/Tackem-org/Global/structs"
 	webClient "github.com/Tackem-org/Global/system/grpcSystem/clients/web"
 	"github.com/Tackem-org/User/model"
+	"github.com/Tackem-org/User/password"
 	"github.com/Tackem-org/User/web"
 	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
@@ -25,6 +26,7 @@ func TestRequestUsernamePage(t *testing.T) {
 	webClient.I = &MockWebClient{}
 	model.Setup("testRequestUsernamePage.db")
 	defer os.Remove("testRequestUsernamePage.db")
+	model.DB.Create(&model.User{Username: "user", Password: password.Hash("user")})
 
 	var count int64
 	model.DB.Model(&model.UsernameRequest{}).Count(&count)

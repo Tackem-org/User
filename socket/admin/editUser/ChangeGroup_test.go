@@ -7,6 +7,7 @@ import (
 
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
+	"github.com/Tackem-org/User/password"
 	"github.com/Tackem-org/User/socket/admin/editUser"
 	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
@@ -16,6 +17,7 @@ func TestChangeGroup(t *testing.T) {
 	pflag.Set("config", "")
 	model.Setup("testChangeGroup.db")
 	defer os.Remove("testChangeGroup.db")
+	model.DB.Create(&model.User{Username: "user", Password: password.Hash("user")})
 
 	r1, err1 := editUser.ChangeGroup(&structs.SocketRequest{
 		Data: map[string]interface{}{},

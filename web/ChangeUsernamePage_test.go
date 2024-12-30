@@ -6,6 +6,7 @@ import (
 
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/User/model"
+	"github.com/Tackem-org/User/password"
 	"github.com/Tackem-org/User/web"
 	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
@@ -15,7 +16,7 @@ func TestChangeUsernamePage(t *testing.T) {
 	pflag.Set("config", "")
 	model.Setup("testChangeUsernamePage.db")
 	defer os.Remove("testChangeUsernamePage.db")
-
+	model.DB.Create(&model.User{Username: "user", Password: password.Hash("user")})
 	r1, err1 := web.ChangeUsernamePage(&structs.WebRequest{
 		User: &structs.UserData{ID: 2},
 		Post: map[string]interface{}{},

@@ -8,6 +8,7 @@ import (
 
 	pb "github.com/Tackem-org/Global/pb/user"
 	"github.com/Tackem-org/User/model"
+	"github.com/Tackem-org/User/password"
 	"github.com/Tackem-org/User/server"
 	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
@@ -20,6 +21,7 @@ func TestUserServerLogin(t *testing.T) {
 	model.Setup("testServerLogin.db")
 	defer os.Remove("testServerLogin.db")
 
+	model.DB.Create(&model.User{Username: "user", Password: password.Hash("user")})
 	response1, err1 := u.Login(context.Background(), &pb.LoginRequest{
 		Username:   "user",
 		Password:   "fail",

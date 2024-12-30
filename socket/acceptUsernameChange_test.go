@@ -9,6 +9,7 @@ import (
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/Global/system/grpcSystem/clients/web"
 	"github.com/Tackem-org/User/model"
+	"github.com/Tackem-org/User/password"
 	"github.com/Tackem-org/User/socket"
 	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
@@ -26,7 +27,8 @@ func TestAcceptUsernameChange(t *testing.T) {
 	web.I = &MockWebClient{}
 	model.Setup("testAcceptUsernameChange.db")
 	defer os.Remove("testAcceptUsernameChange.db")
-	model.DB.Create(&model.User{Username: "test", Password: "test"})
+	model.DB.Create(&model.User{Username: "user", Password: password.Hash("user")})
+	model.DB.Create(&model.User{Username: "test", Password: password.Hash("test")})
 	model.DB.Create(&model.UsernameRequest{RequestUserID: 2, Name: "bob"})
 	model.DB.Create(&model.UsernameRequest{RequestUserID: 3, Name: "admin"})
 

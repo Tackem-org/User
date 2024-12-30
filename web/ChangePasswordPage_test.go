@@ -8,9 +8,11 @@ import (
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/Global/system/grpcSystem/clients/config"
 	"github.com/Tackem-org/User/model"
+	"github.com/Tackem-org/User/password"
 	"github.com/Tackem-org/User/web"
 	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
+	"gorm.io/gorm/clause"
 )
 
 type MockConfig struct{}
@@ -45,6 +47,13 @@ func TestChangePasswordPage(t *testing.T) {
 	config.I = &MockConfig{}
 	model.Setup("testChangePasswordPage.db")
 	defer os.Remove("testChangePasswordPage.db")
+
+	model.DB.Create(&model.User{Username: "user", Password: password.Hash("user")})
+	var user model.User
+	model.DB.Preload(clause.Associations).Where(&model.User{ID: uint64(2)}).Find(&user)
+	if user.ID != 2 {
+		t.Error("user not found")
+	}
 
 	r1, err1 := web.ChangePasswordPage(&structs.WebRequest{
 		User: &structs.UserData{ID: 2},

@@ -19,19 +19,19 @@ func TestUserServerGetUserData(t *testing.T) {
 	u := server.UserServer{}
 	server.Sessions = []server.Session{
 		{
-			UserID:       3,
+			UserID:       2,
 			SessionToken: "passuser1",
 			IPAddress:    "127.0.0.1",
 			ExpireTime:   time.Now().Add(time.Second),
 		},
 		{
-			UserID:       4,
+			UserID:       3,
 			SessionToken: "passuser2",
 			IPAddress:    "127.0.0.2",
 			ExpireTime:   time.Now().Add(time.Second),
 		},
 		{
-			UserID:       5,
+			UserID:       4,
 			SessionToken: "passuser3",
 			IPAddress:    "127.0.0.3",
 			ExpireTime:   time.Now().Add(time.Second),
@@ -39,30 +39,9 @@ func TestUserServerGetUserData(t *testing.T) {
 	}
 	model.Setup("testUserServerGetUserData.db")
 	defer os.Remove("testUserServerGetUserData.db")
-	user1 := model.User{
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-		Username:  "user1",
-		Password:  "user1",
-		Icon:      "data:test",
-	}
-	user2 := model.User{
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-		Username:  "user2",
-		Password:  "user2",
-		Icon:      "icon.png",
-	}
-	user3 := model.User{
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-		Username:  "user3",
-		Password:  "user3",
-		Icon:      "",
-	}
-	model.DB.Create(&user1)
-	model.DB.Create(&user2)
-	model.DB.Create(&user3)
+	model.DB.Create(&model.User{Username: "user1", Password: "user1", Icon: "data:test"})
+	model.DB.Create(&model.User{Username: "user2", Password: "user2", Icon: "icon.png"})
+	model.DB.Create(&model.User{Username: "user3", Password: "user3", Icon: ""})
 	response1, err1 := u.GetUserData(context.Background(), &pb.GetUserDataRequest{
 		SessionToken: "fail",
 		IpAddress:    "127.0.0.1",
@@ -78,6 +57,7 @@ func TestUserServerGetUserData(t *testing.T) {
 	assert.IsType(t, &pb.UserDataResponse{}, response2)
 	assert.True(t, response2.Success)
 	assert.Nil(t, err2)
+
 	assert.True(t, strings.HasPrefix(response2.Icon, "data:"))
 
 	response3, err3 := u.GetUserData(context.Background(), &pb.GetUserDataRequest{

@@ -6,16 +6,21 @@ import (
 	"testing"
 
 	"github.com/Tackem-org/Global/structs"
+	"github.com/Tackem-org/Global/system/grpcSystem/clients/web"
 	"github.com/Tackem-org/User/model"
+	"github.com/Tackem-org/User/password"
 	"github.com/Tackem-org/User/socket"
 	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestRejectUsernameChange(t *testing.T) {
+
+	web.I = &MockWebClient{}
 	pflag.Set("config", "")
 	model.Setup("testRejectUsernameChange.db")
 	defer os.Remove("testRejectUsernameChange.db")
+	model.DB.Create(&model.User{Username: "user", Password: password.Hash("user")})
 	model.DB.Create(&model.UsernameRequest{RequestUserID: 2, Name: "bob"})
 
 	sr1, err1 := socket.RejectUsernameChange(&structs.SocketRequest{

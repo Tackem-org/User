@@ -9,6 +9,7 @@ import (
 	"github.com/Tackem-org/Global/structs"
 	"github.com/Tackem-org/Global/system/grpcSystem/clients/config"
 	"github.com/Tackem-org/User/model"
+	"github.com/Tackem-org/User/password"
 	"github.com/Tackem-org/User/socket/admin/editUser"
 	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
@@ -46,6 +47,7 @@ func TestChangePassword(t *testing.T) {
 	config.I = &MockConfig{}
 	model.Setup("testChangePassword.db")
 	defer os.Remove("testChangePassword.db")
+	model.DB.Create(&model.User{Username: "user", Password: password.Hash("user")})
 
 	r1, err1 := editUser.ChangePassword(&structs.SocketRequest{
 		Data: map[string]interface{}{},
