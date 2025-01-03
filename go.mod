@@ -5,7 +5,7 @@ go 1.23.4
 replace github.com/Tackem-org/Global => ../Global
 
 require (
-	github.com/Tackem-org/Global v0.0.0-20220902225434-0b10f050c29a
+	github.com/Tackem-org/Global v0.0.0-20250102235414-110eceded1dd
 	github.com/google/uuid v1.6.0
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.10.0
@@ -21,10 +21,10 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/ncruces/go-strftime v0.1.9 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
-	golang.org/x/exp v0.0.0-20231108232855-2478ac86f678 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20241223144023-3abc09e42ca8 // indirect
-	modernc.org/libc v1.61.5 // indirect
-	modernc.org/mathutil v1.7.0 // indirect
+	golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250102185135-69823020774d // indirect
+	modernc.org/libc v1.61.6 // indirect
+	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.8.0 // indirect
 	modernc.org/sqlite v1.34.4 // indirect
 )
